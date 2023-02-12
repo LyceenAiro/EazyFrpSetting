@@ -1,0 +1,21 @@
+[common]
+#设置frp服务器地址
+server_addr = 未设置
+#通讯端口
+server_port = 未设置
+#通讯密匙
+#token = 无
+
+[Link01]
+#协议类型
+type = tcp
+#本机网卡IP
+local_ip = 请设置
+#本地转发端口
+local_port = 请设置
+#映射出端口
+#绑定服务器的映射端口,请与选择的协议类型一致
+remote_port = 请设置
+
+#自动回应
+heartbeat_timeout = 30
