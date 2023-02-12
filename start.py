@@ -4,7 +4,7 @@ import os
 import time
 import socket
 import shutil
-omkey = "version_230208;frpc_xFrp_v1.4;LyceenAiro"
+omkey = "version_230208;frpc_xFrp_v1.3;LyceenAiro"
 names = locals()
 #函数列表
 def 
