@@ -23,6 +23,13 @@ def ipcheck(ip):
         flag = False
     return flag
 
+def portcheck(port):
+    #检验端口合法性
+    if 65535 >= int(port) >= 1024 :
+        return True
+    else:
+        return False
+
 #开始
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
 #必要文件读取
@@ -90,6 +97,8 @@ while True:
                 break
             #通讯地址
             elif inp == "1":
+                os.system("cls")
+                print("当前与服务器的ip地址是"+server[2].split('=')[1])
                 ipset = input("配置:")
                 flag = ipcheck(ipset)
                 if flag == True:
@@ -97,11 +106,30 @@ while True:
                     server[2] = ipset
                 else:
                     input("IP地址不合法")
-
+                del ipset,flag
             #通讯端口
             elif inp == "2":
+                os.system("cls")
+                print("当前设置的服务端口是"+server[4].split('=')[1])
+                portset = input("配置:")
+                flag = portcheck(portset)
+                if flag == True:
+                    portset = "server_port =" + portset
+                    server[4] = portset
+                else:
+                    input("端口必须在1024~65565的范围内")
+                del portset,flag
             #通讯密匙
             elif inp == "3":
+                os.system("cls")
+                print("请输入密钥")
+                portset = input("配置:")
+                if portset == "":
+                    portset = "#token ="
+                else:
+                    portset = "token =" + portset
+                server[6] = portset
+                del portset
             else:
                 input("没有所选的指令")
     elif inp == "1":
