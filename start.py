@@ -7,7 +7,21 @@ import shutil
 omkey = "version_230208;frpc_xFrp_v1.4;LyceenAiro"
 names = locals()
 #函数列表
-def 
+def ipcheck(ip):
+    #检验ip地址合法性
+    try:
+        if len(ip.split("."))==4:
+            for i in ip.split(".") :
+                try:
+                    if not(0<=int(i)<=255):
+                        flag = False
+                except:
+                    flag = False
+        else:
+            flag = False
+    except:
+        flag = False
+    return flag
 
 #开始
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
@@ -48,6 +62,7 @@ while True:
 """
 #配置主界面
 while True:
+    os.system("cls")
     print(
         "[0]连接服务器\n"+
         "[1]映射链接\n"+
@@ -62,6 +77,7 @@ while True:
         #配置Frp服务器的链接和密匙
         """
         while True:
+            os.system("cls")
             print(
                 "[0]返回菜单\n"
                 "[1]通讯地址\n"+
@@ -69,10 +85,22 @@ while True:
                 "[3]通讯密匙"
             )
             inp = input("配置:")
+            #返回菜单
             if inp == "0":
                 break
+            #通讯地址
             elif inp == "1":
+                ipset = input("配置:")
+                flag = ipcheck(ipset)
+                if flag == True:
+                    ipset = "server_addr =" + ipset
+                    server[2] = ipset
+                else:
+                    input("IP地址不合法")
+
+            #通讯端口
             elif inp == "2":
+            #通讯密匙
             elif inp == "3":
             else:
                 input("没有所选的指令")
@@ -86,11 +114,14 @@ while True:
         #2-2 连接服务器
         #配置Frp服务器的链接和密匙
         """
-    elif inp == "3":
+    elif inp == "3" or "q":
         """
         #2-3 连接服务器
         #配置Frp服务器的链接和密匙
         """
+        if inp == "q":
+            exit()
+        break
     else:
         input("没有所选的指令")
 
