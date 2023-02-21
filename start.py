@@ -1,9 +1,7 @@
 """#1 自检及文件读取阶段"""
 #初始化
 import os
-import time
 import socket
-import shutil
 omkey = "version_230221;frpc_xFrp_v1.4_Dev;LyceenAiro"
 names = locals()
 #函数列表
@@ -30,6 +28,10 @@ def portcheck(port):
     else:
         return False
 
+
+
+
+
 #开始
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
 #必要文件读取
@@ -38,6 +40,8 @@ try:
     server = server.readlines()
     more = open("./config/more.ini","r+",encoding="utf-8")
     more = more.readlines()
+    linkexample = open("./config/LinkExample.ini","r+",encoding="utf-8")
+    linkexample = linkexample.readlines()
     with open("frpc.exe","r"):
         print(end="")
     with open("LICENSE","r"):
@@ -102,8 +106,7 @@ while True:
                 ipset = input("配置:")
                 flag = ipcheck(ipset)
                 if flag == True:
-                    ipset = "server_addr =" + ipset
-                    server[2] = ipset
+                    server[2] = "server_addr =" + ipset + "\n"
                 else:
                     input("IP地址不合法")
                 del ipset,flag
@@ -114,8 +117,7 @@ while True:
                 portset = input("配置:")
                 flag = portcheck(portset)
                 if flag == True:
-                    portset = "server_port =" + portset
-                    server[4] = portset
+                    server[4] = "server_port =" + portset + "\n"
                 else:
                     input("端口必须在1024~65565的范围内")
                 del portset,flag
@@ -125,9 +127,9 @@ while True:
                 print("请输入密钥")
                 portset = input("配置:")
                 if portset == "":
-                    portset = "#token ="
+                    portset = "#token =\n"
                 else:
-                    portset = "token =" + portset
+                    portset = "token =" + portset + "\n"
                 server[6] = portset
                 del portset
             else:
@@ -143,13 +145,49 @@ while True:
                 "[0]返回菜单/n"+
                 "[c]创建新的链接")
             for i in range(linknum):
-                print(f"[{i+1}]"+linkfine[i][1]+linkfine[i][3].split("=")[1]+linkfine[i][7].split("=")[1]+" -> "+linkfine[i][9].split("=")[1],end="")
+                setin = "link" + str(i+1)
+                print(f"[{i+1}]"+names[setin][1]+link[i][3].split("=")[1]+names[setin][7].split("=")[1]+" -> "+names[setin][9].split("=")[1])
             inp = input("配置:")
             #返回菜单
             if inp == "0":
                 break
             #创建新的链接
             elif inp == "c":
+                os.system("cls")
+                creatlink = linkexample
+                #链接名配置
+                inp = input("链接名称\n\n配置:")
+                if inp == "":
+                    str(linknum)
+                    i = "link" + str(linknum+1)
+                    creatlink[1] = "[" + i + "]"
+                #协议设置
+                inp = input("[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n\n配置:")
+                if inp == "1":
+                    creatlink[3] = "type = tcp\n"
+                elif inp == "2":
+                    creatlink[3] = "type = udp\n"
+                elif inp == "3":
+                    creatlink[3] = "type = xtcp\n"
+                    i = "host"
+                elif inp == "4":
+                    creatlink[3] = "type = xtcp\n"
+                else:
+                    continue
+                #配置本机网卡
+                ip = socket.gethostbyname(socket.gethostname())
+                inp = input(f"配置网卡IP(留空自动获取)\n\n配置:")
+                if inp == "":
+                    creatlink[5] = "local_ip = " + ip + "\n"
+                else:
+                    flag = ipcheck(inp)
+            #其他链接配置
+            if True:
+            #try:
+                setin = "link" + inp
+                names[setin]
+            #except:
+
 
     elif inp == "2":
         """
