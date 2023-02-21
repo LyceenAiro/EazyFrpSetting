@@ -4,7 +4,7 @@ import os
 import time
 import socket
 import shutil
-omkey = "version_230208;frpc_xFrp_v1.4_Dev;LyceenAiro"
+omkey = "version_230221;frpc_xFrp_v1.4_Dev;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
@@ -137,6 +137,20 @@ while True:
         #2-1 映射链接
         #配置与Frp服务器的映射链接
         """
+        while True:
+            os.system("cls")
+            print(
+                "[0]返回菜单/n"+
+                "[c]创建新的链接")
+            for i in range(linknum):
+                print(f"[{i+1}]"+linkfine[i][1]+linkfine[i][3].split("=")[1]+linkfine[i][7].split("=")[1]+" -> "+linkfine[i][9].split("=")[1],end="")
+            inp = input("配置:")
+            #返回菜单
+            if inp == "0":
+                break
+            #创建新的链接
+            elif inp == "c":
+
     elif inp == "2":
         """
         #2-2 其他配置
