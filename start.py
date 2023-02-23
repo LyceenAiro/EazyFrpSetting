@@ -176,11 +176,47 @@ while True:
                     continue
                 #配置本机网卡
                 ip = socket.gethostbyname(socket.gethostname())
-                inp = input(f"配置网卡IP(留空自动获取)\n\n配置:")
+                inp = input("配置网卡IP(留空自动获取)\n\n配置:")
                 if inp == "":
                     creatlink[5] = "local_ip = " + ip + "\n"
+                    del ip
                 else:
+                    del ip
                     flag = ipcheck(inp)
+                    if flag == True:
+                        creatlink[5] = "local_ip = " + inp + "\n"
+                        del flag
+                    else:
+                        input("IP地址不合法,请重新创建")
+                        del flag
+                        continue
+                #配置本地转发端口
+                inp = input("配置本地转发端口\n\n配置:")
+                flag = portcheck(inp)
+                if flag == True:
+                    creatlink[7] = "local_port = " + inp + "\n"
+                    del flag
+                else:
+                    del flag
+                    continue
+                #配置映射出端口
+                inp = input("配置映射端口\n\n配置:")
+                flag = portcheck(inp)
+                if flag == True:
+                    creatlink[9] = "remote_port = " + inp + "\n"
+                    del flag
+                else:
+                    del flag
+                    continue
+                #拓展配置
+                if creatlink[3].split("=")[1] == "xtcp":
+                    #配置点对点端密匙
+                    inp = input("配置点对点端\n\n配置:")
+                    creatlink[11] = "sk = " + inp + "\n"
+                        #配置点对点服务名称
+                        if 
+                #保存并创建链接
+                    
             #其他链接配置
             if True:
             #try:
