@@ -211,11 +211,20 @@ while True:
                 #拓展配置
                 if creatlink[3].split("=")[1] == "xtcp":
                     #配置点对点端密匙
-                    inp = input("配置点对点端\n\n配置:")
+                    inp = input("配置点对点端密匙\n\n配置:")
                     creatlink[11] = "sk = " + inp + "\n"
+                    creatlink[13] = "#server_name = \n"
+                    creatlink[14] = "#client\n"
+                    if i != "host":
                         #配置点对点服务名称
-                        if 
+                        inp = input("配置点对点端服务名称\n\n配置:")
+                        creatlink[13] = "server_name = " + inp + "\n"
+                        creatlink[14] = "#client\n"
                 #保存并创建链接
+                linknum = linknum + 1
+                linkfine = "link" + str(linknum)
+                names[linkfine] = creatlink
+                del linkfine
                     
             #其他链接配置
             if True:
