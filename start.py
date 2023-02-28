@@ -76,6 +76,7 @@ while True:
 while True:
     os.system("cls")
     print(
+        "主菜单\n"
         "[0]连接服务器\n"+
         "[1]映射链接\n"+
         "[2]其他配置\n"+
@@ -91,7 +92,8 @@ while True:
         while True:
             os.system("cls")
             print(
-                "[0]返回菜单\n"
+                "主菜单-连接服务器\n"+
+                "[0]返回菜单\n"+
                 "[1]通讯地址\n"+
                 "[2]通讯端口\n"+
                 "[3]通讯密匙"
@@ -143,11 +145,16 @@ while True:
         while True:
             os.system("cls")
             print(
-                "[0]返回菜单/n"+
-                "[c]创建新的链接")
+                "主菜单-映射链接\n"+
+                "[0]返回菜单\n"+
+                "[c][创建新的链接]")
             for i in range(linknum):
                 setin = "link" + str(i+1)
-                print(f"[{i+1}]"+names[setin][1]+link[i][3].split("=")[1]+names[setin][7].split("=")[1]+" -> "+names[setin][9].split("=")[1])
+                print(f"[{i+1}]"+ 
+                    names[setin][1].strip(),
+                    names[setin][3].split("=")[1].strip(),
+                    names[setin][7].split("=")[1].strip()+" -> "+
+                    names[setin][9].split("=")[1].strip())
             inp = input("配置:")
             #返回菜单
             if inp == "0":
@@ -155,6 +162,7 @@ while True:
             #创建新的链接
             elif inp == "c":
                 os.system("cls")
+                print("主菜单-映射链接-创建链接")
                 creatlink = linkexample
                 #链接名配置
                 inp = input("链接名称\n\n配置:")
@@ -210,12 +218,13 @@ while True:
                     del flag
                     continue
                 #拓展配置
+                creatlink[14] = "#Frp\n"
                 if creatlink[3].split("=")[1] == "xtcp":
                     #配置点对点端密匙
                     inp = input("配置点对点端密匙\n\n配置:")
                     creatlink[11] = "sk = " + inp + "\n"
                     creatlink[13] = "#server_name = \n"
-                    creatlink[14] = "#client\n"
+                    creatlink[14] = "#server\n"
                     if i != "host":
                         #配置点对点服务名称
                         inp = input("配置点对点端服务名称\n\n配置:")
@@ -232,7 +241,29 @@ while True:
             #try:
                 setin = "link" + inp
                 names[setin]
+                os.system("cls")
+                print(f"主菜单-映射链接-{setin}\n"+
+                    names[setin][14]+
+                    "\n[0]返回"+
+                    "\n[1]链接名称",names[setin][1].strip()+
+                    "\n[2]协议类型",names[setin][3].split("=")[1].strip()+
+                    "\n[3]本机网卡",names[setin][5].split("=")[1].strip()+
+                    "\n[4]转发端口",names[setin][7].split("=")[1].strip()+
+                    "\n[5]映射端口",names[setin][9].split("=")[1].strip()
+                )
+                if names[setin][14] == "#client\n":
+                    print(
+                        "[6]对点密匙",names[setin][11].split("=")[1].strip()+
+                        "\n[7]对点服务",names[setin][13].split("=")[1].strip()
+                    )
+                elif names[setin][14] == "#server\n":
+                    print(
+                        "[8]对点密匙",names[setin][11].split("=")[1].strip()
+                    )
+                inp = input("\n配置:")
+
             #except:
+                #input("没有指定的链接")
 
 
     elif inp == "2":
@@ -242,7 +273,7 @@ while True:
         """
         while True:
             os.system("cls")
-            inp = input("[0]返回菜单\n[1]自动回应\n\n配置:")
+            inp = input("主菜单-其他配置\n[0]返回菜单\n[1]自动回应\n\n配置:")
             #返回菜单
             if inp == "0":
                 break
