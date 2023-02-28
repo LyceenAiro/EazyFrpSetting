@@ -36,12 +36,12 @@ def portcheck(port):
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
 #必要文件读取
 try:
-    server = open("./config/server.ini","r+",encoding="utf-8")
-    server = server.readlines()
-    more = open("./config/more.ini","r+",encoding="utf-8")
-    more = more.readlines()
-    linkexample = open("./config/LinkExample.ini","r+",encoding="utf-8")
-    linkexample = linkexample.readlines()
+    server_file = open("./config/server.ini","r+",encoding="utf-8")
+    server = server_file.readlines()
+    more_file = open("./config/more.ini","r+",encoding="utf-8")
+    more = more_file.readlines()
+    linkexample_file = open("./config/LinkExample.ini","r+",encoding="utf-8")
+    linkexample = linkexample_file.readlines()
     with open("frpc.exe","r"):
         print(end="")
     with open("LICENSE","r"):
@@ -55,9 +55,10 @@ link = []
 while True:
     linknum = linknum + 1
     linkfine = "link" + str(linknum)
+    linkopen = "linko" + str(linknum)
     try:
-        names[linkfine] = open(f"./config/{linkfine}.ini","r+",encoding="utf-8")
-        names[linkfine] = names[linkfine].readlines()
+        names[linkopen] = open(f"./config/{linkfine}.ini","r+",encoding="utf-8")
+        names[linkfine] = names[linkopen].readlines()
         link.append(linkfine)
     except:
         linknum = linknum - 1
@@ -239,11 +240,43 @@ while True:
         #2-2 其他配置
         #其他软件配置
         """
+        while True:
+            os.system("cls")
+            inp = input("[0]返回菜单\n[1]自动回应\n\n配置:")
+            #返回菜单
+            if inp == "0":
+                break
+            #配置自动回应
+            if inp == "1":
+                inp = input("修改自动回应的时间,现在的设置是"+more[1].split('=')[1])
+                try:
+                    settime = int(inp)
+                except:
+                    input("你输入的格式错误")
+                    continue
+                if settime >= 0 :
+                    more[1] = "heartbeat_timeout = " + inp + "\n"
+                del settime
+            if inp == "":
+                continue
+            else:
+                input("没有所选的指令")
     elif inp == "3" or "q":
         """
         #2-3 连接服务器
         #保存配置文件并启动服务
         """
+        #保存server.ini
+        for i in server:
+            server_file.write(i)
+        #保存more.ini
+        for i in more:
+            more_file.write(i)
+        #序列保存Link列表
+        while linknum != 0:
+            setin = "linko" + str(linknum)
+            for i in names[setin]:
+                names[setin].write(i)
         if inp == "q":
             exit()
         break
