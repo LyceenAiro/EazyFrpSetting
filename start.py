@@ -36,15 +36,15 @@ def portcheck(port):
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
 #必要文件读取
 try:
-    server_file = open("./config/server.ini","r+",encoding="utf-8")
-    server = server_file.readlines()
-    more_file = open("./config/more.ini","r+",encoding="utf-8")
-    more = more_file.readlines()
-    linkexample_file = open("./config/LinkExample.ini","r+",encoding="utf-8")
-    linkexample = linkexample_file.readlines()
-    with open("frpc.exe","r"):
+    server = open("./config/server.ini","r+",encoding="utf-8")
+    server = server.readlines()
+    more = open("./config/more.ini","r+",encoding="utf-8")
+    more = more.readlines()
+    linkexample = open("./config/LinkExample.ini","r+",encoding="utf-8")
+    linkexample = linkexample.readlines()
+    with open("frpc.exe","r+"):
         print(end="")
-    with open("LICENSE","r"):
+    with open("LICENSE","r+"):
         print(end="")
 except:
     input("发生错误,请检查文件完整性")
@@ -165,13 +165,15 @@ while True:
                 print("主菜单-映射链接-创建链接")
                 creatlink = linkexample
                 #链接名配置
-                inp = input("链接名称\n\n配置:")
+                inp = input("链接名称:")
                 if inp == "":
                     str(linknum)
                     i = "link" + str(linknum+1)
-                    creatlink[1] = "[" + i + "]"
+                    creatlink[1] = "[" + i + "]\n"
+                else:
+                    creatlink[1] = "[" + inp + "]\n"
                 #协议设置
-                inp = input("[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n\n配置:")
+                inp = input("[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n配置:")
                 if inp == "1":
                     creatlink[3] = "type = tcp\n"
                 elif inp == "2":
@@ -185,7 +187,7 @@ while True:
                     continue
                 #配置本机网卡
                 ip = socket.gethostbyname(socket.gethostname())
-                inp = input("配置网卡IP(留空自动获取)\n\n配置:")
+                inp = input("配置网卡IP(留空自动获取):")
                 if inp == "":
                     creatlink[5] = "local_ip = " + ip + "\n"
                     del ip
@@ -200,7 +202,7 @@ while True:
                         del flag
                         continue
                 #配置本地转发端口
-                inp = input("配置本地转发端口\n\n配置:")
+                inp = input("配置本地转发端口:")
                 flag = portcheck(inp)
                 if flag == True:
                     creatlink[7] = "local_port = " + inp + "\n"
@@ -209,7 +211,7 @@ while True:
                     del flag
                     continue
                 #配置映射出端口
-                inp = input("配置映射端口\n\n配置:")
+                inp = input("配置映射端口:")
                 flag = portcheck(inp)
                 if flag == True:
                     creatlink[9] = "remote_port = " + inp + "\n"
@@ -221,13 +223,13 @@ while True:
                 creatlink[14] = "#Frp\n"
                 if creatlink[3].split("=")[1] == "xtcp":
                     #配置点对点端密匙
-                    inp = input("配置点对点端密匙\n\n配置:")
+                    inp = input("配置点对点端密匙:")
                     creatlink[11] = "sk = " + inp + "\n"
                     creatlink[13] = "#server_name = \n"
                     creatlink[14] = "#server\n"
                     if i != "host":
                         #配置点对点服务名称
-                        inp = input("配置点对点端服务名称\n\n配置:")
+                        inp = input("配置点对点端服务名称:")
                         creatlink[13] = "server_name = " + inp + "\n"
                         creatlink[14] = "#client\n"
                 #保存并创建链接
@@ -237,7 +239,7 @@ while True:
                 del linkfine
                     
             #其他链接配置
-            if True:
+            else :
             #try:
                 setin = "link" + inp
                 names[setin]
@@ -297,17 +299,31 @@ while True:
         #2-3 连接服务器
         #保存配置文件并启动服务
         """
+        os.system("cls")
         #保存server.ini
-        for i in server:
-            server_file.write(i)
+        with open("./config/server.ini","w+",encoding="utf-8") as u:
+            for i in server:
+                u.write(i)
         #保存more.ini
-        for i in more:
-            more_file.write(i)
+        
+        with open("./config/more.ini","w+",encoding="utf-8") as u:
+            for i in more:
+                u.write(i)
         #序列保存Link列表
         while linknum != 0:
             setin = "linko" + str(linknum)
-            for i in names[setin]:
-                names[setin].write(i)
+            #保存现存链接
+            try:
+                for i in names[setin]:
+                    names[setin].write(i)
+            #保存新建的链接
+            except:
+                setin = "link" + str(linknum)
+                filein = "link" + str(linknum) + ".ini"
+                with open(f"./config/{filein}","w+",encoding="utf-8") as u:
+                    for i in names[setin]:
+                        u.write(i)
+            linknum = linknum - 1
         if inp == "q":
             exit()
         break
@@ -317,10 +333,6 @@ while True:
     else:
         #无命令
         input("没有所选的指令")
-
-
-    
-
 
 
 
