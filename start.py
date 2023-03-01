@@ -12,20 +12,23 @@ def ipcheck(ip):
             for i in ip.split(".") :
                 try:
                     if not(0<=int(i)<=255):
-                        flag = False
+                        return False
                 except:
-                    flag = False
+                    return False
         else:
-            flag = False
+            return False
     except:
-        flag = False
-    return flag
+        return False
+    
 
 def portcheck(port):
     #检验端口合法性
-    if 65535 >= int(port) >= 1024 :
-        return True
-    else:
+    try:
+        if 65535 >= int(port) >= 1024 :
+            return True
+        else:
+            return False
+    except:
         return False
 
 
@@ -108,10 +111,10 @@ while True:
                 print("当前与服务器的ip地址是"+server[2].split('=')[1])
                 ipset = input("配置:")
                 flag = ipcheck(ipset)
-                if flag == True:
-                    server[2] = "server_addr =" + ipset + "\n"
-                else:
+                if flag == False:
                     input("IP地址不合法")
+                else:
+                    server[2] = "server_addr =" + ipset + "\n"
                 del ipset,flag
             #通讯端口
             elif inp == "2":
@@ -280,7 +283,7 @@ while True:
             if inp == "0":
                 break
             #配置自动回应
-            if inp == "1":
+            elif inp == "1":
                 inp = input("修改自动回应的时间,现在的设置是"+more[1].split('=')[1])
                 try:
                     settime = int(inp)
@@ -290,7 +293,7 @@ while True:
                 if settime >= 0 :
                     more[1] = "heartbeat_timeout = " + inp + "\n"
                 del settime
-            if inp == "":
+            elif inp == "":
                 continue
             else:
                 input("没有所选的指令")
