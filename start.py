@@ -305,7 +305,6 @@ while True:
             for i in server:
                 u.write(i)
         #保存more.ini
-        
         with open("./config/more.ini","w+",encoding="utf-8") as u:
             for i in more:
                 u.write(i)
