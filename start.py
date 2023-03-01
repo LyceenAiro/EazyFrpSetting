@@ -2,7 +2,7 @@
 #初始化
 import os
 import socket
-omkey = "version_230228;frpc_xFrp_v1.4_Dev;LyceenAiro"
+omkey = "version_230301;frpc_xFrp_v1.4_alpha;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
