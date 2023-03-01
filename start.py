@@ -309,6 +309,7 @@ while True:
             for i in more:
                 u.write(i)
         #序列保存Link列表
+        pinf = linknum
         while linknum != 0:
             setin = "linko" + str(linknum)
             #保存现存链接
@@ -323,6 +324,7 @@ while True:
                     for i in names[setin]:
                         u.write(i)
             linknum = linknum - 1
+        del linknum
         if inp == "q":
             exit()
         break
@@ -342,4 +344,15 @@ while True:
 #保存设置之后启动frpc并且显示映射信息
 """
 #启动服务
+os.system("cls")
+frpc = server
+for i in range(pinf):
+    setin = "link" + str(i+1)
+    frpc = frpc + names[setin]
+frpc = frpc + more
+del pinf
+with open("frpc.ini","w+",encoding="utf-8") as u:
+    for i in frpc:
+        u.write(i)
+del frpc,server,more
 os.system("frpc.exe -c frpc.ini")
