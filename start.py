@@ -2,7 +2,7 @@
 #初始化
 import os
 import socket
-omkey = "version_230301;frpc_xFrp_v1.4_alpha;LyceenAiro"
+omkey = "version_230302;frpc_xFrp_v1.4_beta;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
@@ -30,7 +30,6 @@ def portcheck(port):
             return False
     except:
         return False
-
 
 
 
@@ -211,6 +210,7 @@ while True:
                     creatlink[7] = "local_port = " + inp + "\n"
                     del flag
                 else:
+                    input("端口必须在1024~65565的范围内")
                     del flag
                     continue
                 #配置映射出端口
@@ -221,6 +221,7 @@ while True:
                     del flag
                 else:
                     del flag
+                    input("端口必须在1024~65565的范围内")
                     continue
                 #拓展配置
                 creatlink[14] = "#Frp\n"
@@ -240,86 +241,119 @@ while True:
                 linkfine = "link" + str(linknum)
                 names[linkfine] = creatlink
                 del linkfine
-                    
             #其他链接配置
             try:
-                setin = "link" + inp
-                names[setin]
-                os.system("cls")
-                print(f"主菜单-映射链接-{setin}\n"+
-                    names[setin][14]+
-                    "\n[0]返回"+
-                    "\n[1]链接名称",names[setin][1].strip()+
-                    "\n[2]协议类型",names[setin][3].split("=")[1].strip()+
-                    "\n[3]本机网卡",names[setin][5].split("=")[1].strip()+
-                    "\n[4]转发端口",names[setin][7].split("=")[1].strip()+
-                    "\n[5]映射端口",names[setin][9].split("=")[1].strip()
-                )
-                if names[setin][14] == "#client\n":
-                    print(
-                        "[6]对点密匙",names[setin][11].split("=")[1].strip()+
-                        "\n[7]对点服务",names[setin][13].split("=")[1].strip()
-                    )
-                elif names[setin][14] == "#server\n":
-                    print(
-                        "[6]对点密匙",names[setin][11].split("=")[1].strip()
-                    )
-                inp = input("\n配置:")
-                if inp == "0":
-                    continue
-                elif inp == "1":
+                while True:
+                    setin = "link" + inp
                     os.system("cls")
-                    print(f"主菜单-映射链接-{setin}-链接名称\n当前的配置:"+names[setin][1].strip())
-                    inp = input("新的配置:")
-                    if inp != "":
-                        names[setin][1] = "[" + inp + "]\n"
-                    else:
-                        input("配置失败,内容不能为空")
-                elif inp == "2":
-                    os.system("cls")
-                    print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client")
-                    inp = input("新的配置:")
-                    if inp == "1":
-                        names[setin][3] = "type = tcp\n"
-                        names[setin][14] = "#Frp\n"
+                    print(f"主菜单-映射链接-{setin}\n"+
+                        names[setin][14]+
+                        "\n[0]返回"+
+                        "\n[1]链接名称",names[setin][1].strip()+
+                        "\n[2]协议类型",names[setin][3].split("=")[1].strip()+
+                        "\n[3]本机网卡",names[setin][5].split("=")[1].strip()+
+                        "\n[4]转发端口",names[setin][7].split("=")[1].strip()+
+                        "\n[5]映射端口",names[setin][9].split("=")[1].strip()
+                    )
+                    if names[setin][14] == "#client\n":
+                        print(
+                            "[6]对点密匙",names[setin][11].split("=")[1].strip()+
+                            "\n[7]对点服务",names[setin][13].split("=")[1].strip()
+                        )
+                    elif names[setin][14] == "#server\n":
+                        print(
+                            "[6]对点密匙",names[setin][11].split("=")[1].strip()
+                        )
+                    inp = input("\n配置:")
+                    if inp == "0":
+                        break
+                    elif inp == "1":
+                        os.system("cls")
+                        print(f"主菜单-映射链接-{setin}-链接名称\n当前的配置:"+names[setin][1].strip())
+                        inp = input("新的配置:")
+                        if inp != "":
+                            names[setin][1] = "[" + inp + "]\n"
+                        else:
+                            input("配置失败,内容不能为空")
                     elif inp == "2":
-                        names[setin][3] = "type = udp\n"
-                        names[setin][14] = "#Frp\n"
+                        os.system("cls")
+                        print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client")
+                        inp = input("新的配置:")
+                        if inp == "1":
+                            names[setin][3] = "type = tcp\n"
+                            names[setin][14] = "#Frp\n"
+                        elif inp == "2":
+                            names[setin][3] = "type = udp\n"
+                            names[setin][14] = "#Frp\n"
+                        elif inp == "3":
+                            names[setin][3] = "type = xtcp\n"
+                            names[setin][14] = "#server\n"
+                        elif inp == "4":
+                            names[setin][3] = "type = xtcp\n"
+                            names[setin][14] = "#client\n"
                     elif inp == "3":
-                        names[setin][3] = "type = xtcp\n"
-                        names[setin][14] = "#server\n"
+                        os.system("cls")
+                        print(f"主菜单-映射链接-{setin}-本机网卡\n当前的配置:"+names[setin][5].strip())
+                        ip = socket.gethostbyname(socket.gethostname())
+                        inp = input("新的配置(输入a自动配置):")
+                        if inp == "a":
+                            names[setin][5] = "local_ip = " + ip + "\n"
+                            del ip
+                        elif inp == "":
+                            del ip
+                            input("配置不生效,内容不能为空")
+                        else:
+                            del ip
+                            flag = ipcheck(inp)
+                            if flag == True:
+                                names[setin][5] = "local_ip = " + inp + "\n"
+                                del flag
+                            else:
+                                input("IP地址不合法")
+                                del flag
                     elif inp == "4":
-                        names[setin][3] = "type = xtcp\n"
-                        names[setin][14] = "#client\n"
-
-                elif inp == "3":
-                    os.system("cls")
-                    print(f"主菜单-映射链接-{setin}-本机网卡\n当前的配置:"+names[setin][5].strip())
-                    inp = input("新的配置:")
-
-                elif inp == "4":
-                    os.system("cls")
-                    print(f"主菜单-映射链接-{setin}-转发端口\n当前的配置:"+names[setin][7].strip())
-                    inp =input("新的配置:")
-
-                elif inp == "5":
-                    os.system("cls")
-                    print(f"主菜单-映射链接-{setin}-映射端口\n当前的配置:"+names[setin][9].strip())
-                    inp = input("新的配置:")
-
-                elif names[setin][14].split("=")[1].strip() == "#client" or "#server":
-                    if inp == "6":
                         os.system("cls")
-                        print(f"主菜单-映射链接-{setin}-对点密匙\n当前的配置:"+names[setin][11].strip())
-                        inp = input("新的配置:")
-
-                    elif inp == "7" and names[setin][14].split("=")[1].strip() == "#client":
+                        print(f"主菜单-映射链接-{setin}-转发端口\n当前的配置:"+names[setin][7].strip())
+                        inp =input("新的配置:")
+                        flag = portcheck(inp)
+                        if flag == True:
+                            names[setin][7] = "remote_port = " + inp + "\n"
+                            del flag
+                        else:
+                            del flag
+                            input("端口必须在1024~65565的范围内")
+                    elif inp == "5":
                         os.system("cls")
-                        print(f"主菜单-映射链接-{setin}-对点服务\n当前的配置:"+names[setin][13].strip())
+                        print(f"主菜单-映射链接-{setin}-映射端口\n当前的配置:"+names[setin][9].strip())
                         inp = input("新的配置:")
-
+                        flag = portcheck(inp)
+                        if flag == True:
+                            names[setin][9] = "remote_port = " + inp + "\n"
+                            del flag
+                        else:
+                            del flag
+                            input("端口必须在1024~65565的范围内")
+                    elif names[setin][14].split("=")[1].strip() == "#client" or "#server":
+                        if inp == "6":
+                            os.system("cls")
+                            print(f"主菜单-映射链接-{setin}-对点密匙\n当前的配置:"+names[setin][11].strip())
+                            inp = input("新的配置:")
+                            if inp != "":
+                                names[setin][11] = "sk = " + inp + "\n"
+                            else:
+                                input("配置不生效,内容不能为空")
+                        elif inp == "7" and names[setin][14].split("=")[1].strip() == "#client":
+                            os.system("cls")
+                            print(f"主菜单-映射链接-{setin}-对点服务\n当前的配置:"+names[setin][13].strip())
+                            inp = input("新的配置:")
+                            if inp != "":
+                                names[setin][13] = "server_name = " + inp + "\n"
+                            else:
+                                input("配置不生效,内容不能为空")
             except:
                 input("没有指定的链接")
+
+
 
 
     elif inp == "2":
@@ -389,7 +423,6 @@ while True:
     else:
         #无命令
         input("没有所选的指令")
-
 
 
 
