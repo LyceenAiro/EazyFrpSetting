@@ -242,8 +242,7 @@ while True:
                 del linkfine
                     
             #其他链接配置
-            else :
-            #try:
+            try:
                 setin = "link" + inp
                 names[setin]
                 os.system("cls")
@@ -263,12 +262,64 @@ while True:
                     )
                 elif names[setin][14] == "#server\n":
                     print(
-                        "[8]对点密匙",names[setin][11].split("=")[1].strip()
+                        "[6]对点密匙",names[setin][11].split("=")[1].strip()
                     )
                 inp = input("\n配置:")
+                if inp == "0":
+                    continue
+                elif inp == "1":
+                    os.system("cls")
+                    print(f"主菜单-映射链接-{setin}-链接名称\n当前的配置:"+names[setin][1].strip())
+                    inp = input("新的配置:")
+                    if inp != "":
+                        names[setin][1] = "[" + inp + "]\n"
+                    else:
+                        input("配置失败,内容不能为空")
+                elif inp == "2":
+                    os.system("cls")
+                    print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client")
+                    inp = input("新的配置:")
+                    if inp == "1":
+                        names[setin][3] = "type = tcp\n"
+                        names[setin][14] = "#Frp\n"
+                    elif inp == "2":
+                        names[setin][3] = "type = udp\n"
+                        names[setin][14] = "#Frp\n"
+                    elif inp == "3":
+                        names[setin][3] = "type = xtcp\n"
+                        names[setin][14] = "#server\n"
+                    elif inp == "4":
+                        names[setin][3] = "type = xtcp\n"
+                        names[setin][14] = "#client\n"
 
-            #except:
-                #input("没有指定的链接")
+                elif inp == "3":
+                    os.system("cls")
+                    print(f"主菜单-映射链接-{setin}-本机网卡\n当前的配置:"+names[setin][5].strip())
+                    inp = input("新的配置:")
+
+                elif inp == "4":
+                    os.system("cls")
+                    print(f"主菜单-映射链接-{setin}-转发端口\n当前的配置:"+names[setin][7].strip())
+                    inp =input("新的配置:")
+
+                elif inp == "5":
+                    os.system("cls")
+                    print(f"主菜单-映射链接-{setin}-映射端口\n当前的配置:"+names[setin][9].strip())
+                    inp = input("新的配置:")
+
+                elif names[setin][14].split("=")[1].strip() == "#client" or "#server":
+                    if inp == "6":
+                        os.system("cls")
+                        print(f"主菜单-映射链接-{setin}-对点密匙\n当前的配置:"+names[setin][11].strip())
+                        inp = input("新的配置:")
+
+                    elif inp == "7" and names[setin][14].split("=")[1].strip() == "#client":
+                        os.system("cls")
+                        print(f"主菜单-映射链接-{setin}-对点服务\n当前的配置:"+names[setin][13].strip())
+                        inp = input("新的配置:")
+
+            except:
+                input("没有指定的链接")
 
 
     elif inp == "2":
@@ -284,7 +335,8 @@ while True:
                 break
             #配置自动回应
             elif inp == "1":
-                inp = input("修改自动回应的时间,现在的设置是"+more[1].split('=')[1])
+                os.system("cls")
+                inp = input("主菜单-其他配置-自动回应\n修改自动回应的时间,现在的设置是"+more[1].split('=')[1]+"\n配置:")
                 try:
                     settime = int(inp)
                 except:
