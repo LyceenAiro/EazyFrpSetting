@@ -61,6 +61,7 @@ while True:
     try:
         names[linkopen] = open(f"./config/{linkfine}.ini","r+",encoding="utf-8")
         names[linkfine] = names[linkopen].readlines()
+        names[linkopen].close()
         link.append(linkfine)
     except:
         linknum = linknum - 1
@@ -383,9 +384,15 @@ while True:
                 del settime
             elif inp == "2":
                 while True:
+                    os.system("cls")
                     inp = input("主菜单-其他配置-清除链接\n自动清除所有链接并保存关闭程序,已有的链接数:"+str(linknum)+"\n[iknow]确认删除\n[q]返回\n\n配置:")
                     if inp == "iknow":
-                        for i in 
+                        inp = input("你确定要清除所有链接吗?(y确定)")
+                        if inp == "y":
+                            for i in range(linknum):
+                                setfile = "link" + str(i+1) + ".ini"
+                                os.remove(f"./config/{setfile}")
+                            exit()
                     elif inp == "q":
                         break
                     elif inp == "":
@@ -457,6 +464,5 @@ with open("frpc.ini","w+",encoding="utf-8") as u:
     for i in frpc:
         u.write(i)
 del frpc,server,more
-
 #启动服务
 os.system("frpc.exe -c frpc.ini")
