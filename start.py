@@ -247,10 +247,10 @@ while True:
                 try:
                     setin = "link" + inp
                     tryis = names[setin][14]
+                    del tryis
                 except:
                     input("没有指定的链接")
                     continue
-            del tryis
             while True:
                 os.system("cls")
                 print(f"主菜单-映射链接-{setin}\n"+names[setin][14]+
