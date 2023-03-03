@@ -242,13 +242,14 @@ while True:
                 linkfine = "link" + str(linknum)
                 names[linkfine] = creatlink
                 del linkfine
-            #其他链接配置
-            try:
-                setin = "link" + inp
-                tryis = names[setin][14]
-            except:
-                input("没有指定的链接")
-                continue
+            else:
+                #其他链接配置
+                try:
+                    setin = "link" + inp
+                    tryis = names[setin][14]
+                except:
+                    input("没有指定的链接")
+                    continue
             del tryis
             while True:
                 os.system("cls")
@@ -322,7 +323,7 @@ while True:
                     inp =input("新的配置:")
                     flag = portcheck(inp)
                     if flag == True:
-                        names[setin][7] = "remote_port = " + inp + "\n"
+                        names[setin][7] = "local_port = " + inp + "\n"
                         del flag
                     else:
                         del flag
