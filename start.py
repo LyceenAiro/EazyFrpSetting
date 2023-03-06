@@ -155,9 +155,10 @@ while True:
                 "[c][创建新的链接]")
             for i in range(linknum):
                 setin = "link" + str(i+1)
-                print(f"[{i+1}]"+ 
-                    names[setin][1].strip(),
-                    names[setin][3].split("=")[1].strip(),
+                print(f"[{i+1}]",
+                    names[setin][1].strip("[").rstrip("]\n"),"|",
+                    names[setin][3].split("=")[1].strip(),"|",
+                    names[setin][5].split("=")[1].strip(),"|",
                     names[setin][7].split("=")[1].strip()+" -> "+
                     names[setin][9].split("=")[1].strip())
             inp = input("配置:")
@@ -243,6 +244,8 @@ while True:
                 linknum = linknum + 1
                 linkfine = "link" + str(linknum)
                 names[linkfine] = creatlink
+                linkfine = "linko" + str(linknum)
+                names[linkfine] = "Newlink"
                 del linkfine
             else:
                 #其他链接配置
@@ -257,7 +260,7 @@ while True:
                     os.system("cls")
                     print(f"主菜单-映射链接-{setin}\n"+names[setin][14]+
                         "[q]返回"+
-                        "\n[1]链接名称",names[setin][1].strip()+
+                        "\n[1]链接名称",names[setin][1].strip("[").rstrip("]\n")+
                         "\n[2]协议类型",names[setin][3].split("=")[1].strip()+
                         "\n[3]本机网卡",names[setin][5].split("=")[1].strip()+
                         "\n[4]转发端口",names[setin][7].split("=")[1].strip()+
@@ -277,7 +280,7 @@ while True:
                         break
                     elif inp == "1":
                         os.system("cls")
-                        print(f"主菜单-映射链接-{setin}-链接名称\n当前的配置:"+names[setin][1].strip())
+                        print(f"主菜单-映射链接-{setin}-链接名称\n当前的配置:"+names[setin][1].strip("[").rstrip("]\n"))
                         inp = input("新的配置:")
                         if inp != "":
                             names[setin][1] = "[" + inp + "]\n"
