@@ -1,4 +1,4 @@
-# EazyFrpSetting  
+# EazyFrpSetting  version-1
 
 需要使用该软件配置Frp首先你需要Frp的软件本体  
 -GitHub:https://github.com/fatedier/frp  
