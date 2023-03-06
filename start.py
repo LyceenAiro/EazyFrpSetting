@@ -9,18 +9,19 @@ omkey = "version_230120;frpc_xFrp_v1.3;LyceenAiro"
 print("欢迎使用ParticlesFrp简易配置客户端[v1.3]")
 #文件检查
 try:
+    with open("frpc.exe","r"):
+        print("加载frpc.exe")
     with open("./config/frpc_User","r"):
-        print(end="")
+        print("加载frpc_User")
     with open("./config/frpc_P2PUser","r"):
-        print(end="")
+        print("加载frpc_P2PUser")
     with open("./config/frpc_P2PHost","r"):
-        print(end="")
-    with open("LICENSE","r"):
-        print(end="")
+        print("加载frpc_Host")
 except:
     input("发生错误,请检查文件完整性")
     exit()
 #配置选择
+os.system("cls")
 print("\n选择端类型\n[1]转发服务\n[2]P2P主机端\n[3]P2P访问端\n")
 inp = input("配置:")
 #配置信息设置
@@ -475,5 +476,6 @@ if mode == "xTCP":
 else:
     print(time.strftime("%Y/%m/%d %H:%M:%S",time.localtime(time.time())),end=" [I] [service.ip:count] ")
     print(f"映射的地址是 {oip}:{ocount}")
-del mode,oip,ocount,oid,osv
+del mode,oip,ocount,oid,osv,i,omkey,shutil,socket,time
 os.system("frpc.exe -c frpc.ini")
+input("程序已关闭...")
