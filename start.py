@@ -82,11 +82,11 @@ while True:
     os.system("cls")
     print(
         "主菜单\n"
+        "[q]保存并启动\n"+
         "[0]服务连接\n"+
         "[1]映射链接\n"+
         "[2]其他配置\n"+
-        "[3]保存并启动\n"+
-        "[q]保存并退出"
+        "[3]保存并退出"
     )
     inp = input("配置:")
     if inp == "0":
@@ -98,14 +98,14 @@ while True:
             os.system("cls")
             print(
                 "主菜单-服务连接\n"+
-                "[0]返回菜单\n"+
+                "[q]返回菜单\n"+
                 "[1]通讯地址\n"+
                 "[2]通讯端口\n"+
                 "[3]通讯密匙"
             )
             inp = input("配置:")
             #返回菜单
-            if inp == "0":
+            if inp == "q":
                 break
             #通讯地址
             elif inp == "1":
@@ -151,7 +151,7 @@ while True:
             os.system("cls")
             print(
                 "主菜单-映射链接\n"+
-                "[0]返回菜单\n"+
+                "[q]返回菜单\n"+
                 "[c][创建新的链接]")
             for i in range(linknum):
                 setin = "link" + str(i+1)
@@ -162,7 +162,7 @@ while True:
                     names[setin][9].split("=")[1].strip())
             inp = input("配置:")
             #返回菜单
-            if inp == "0":
+            if inp == "q":
                 break
             #创建新的链接
             elif inp == "c":
@@ -256,7 +256,7 @@ while True:
                 while True:
                     os.system("cls")
                     print(f"主菜单-映射链接-{setin}\n"+names[setin][14]+
-                        "[0]返回"+
+                        "[q]返回"+
                         "\n[1]链接名称",names[setin][1].strip()+
                         "\n[2]协议类型",names[setin][3].split("=")[1].strip()+
                         "\n[3]本机网卡",names[setin][5].split("=")[1].strip()+
@@ -273,7 +273,7 @@ while True:
                             "[6]对点密匙",names[setin][11].split("=")[1].strip()
                         )
                     inp = input("\n配置:")
-                    if inp == "0":
+                    if inp == "q":
                         break
                     elif inp == "1":
                         os.system("cls")
@@ -369,9 +369,9 @@ while True:
         """
         while True:
             os.system("cls")
-            inp = input("主菜单-其他配置\n[0]返回菜单\n[1]自动回应\n[2]清除链接\n\n配置:")
+            inp = input("主菜单-其他配置\n[q]返回菜单\n[1]自动回应\n[2]清除链接\n\n配置:")
             #返回菜单
-            if inp == "0":
+            if inp == "q":
                 break
             #配置自动回应
             elif inp == "1":
@@ -430,7 +430,7 @@ while True:
                 for i in names[setin]:
                     u.write(i)
             pinf = pinf - 1
-        if inp == "q":
+        if inp == "3":
             exit()
         break
     elif inp == "":
