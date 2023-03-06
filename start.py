@@ -2,7 +2,7 @@
 #初始化
 import os
 import socket
-omkey = "version_230306;frpc_xFrp_v1.5_alpha;LyceenAiro"
+omkey = "version_230306;frpc_xFrp_v1.5_beta;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
@@ -169,7 +169,7 @@ while True:
             elif inp == "c":
                 os.system("cls")
                 print("主菜单-映射链接-创建链接")
-                creatlink = linkexample
+                creatlink = linkexample.copy()
                 #链接名配置
                 inp = input("链接名称:")
                 if inp == "":
