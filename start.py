@@ -420,6 +420,7 @@ while True:
         with open("./config/more.ini","w+",encoding="utf-8") as u:
             for i in more:
                 u.write(i)
+
         #序列保存Link列表
         pinf = linknum
         while pinf != 0:
@@ -432,6 +433,9 @@ while True:
             pinf = pinf - 1
         if inp == "3":
             exit()
+        #检测link列表
+        elif linknum == 0:
+            input("没有需要启动的链接,程序已关闭...")
         break
     elif inp == "":
         #空白内容检测
