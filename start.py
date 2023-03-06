@@ -4,7 +4,7 @@ import os
 import time
 import socket
 import shutil
-omkey = "version_230120;frpc_xFrp_v1.3;LyceenAiro"
+omkey = "version_230306;frpc_xFrp_v1.3;LyceenAiro"
 #开始
 print("欢迎使用ParticlesFrp简易配置客户端[v1.3]")
 #文件检查
