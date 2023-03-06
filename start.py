@@ -2,7 +2,7 @@
 #初始化
 import os
 import socket
-omkey = "version_230303;frpc_xFrp_v1.4;LyceenAiro"
+omkey = "version_230306;frpc_xFrp_v1.5_alpha;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
@@ -35,7 +35,7 @@ def portcheck(port):
 
 
 #开始
-print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
+print("欢迎使用ParticlesFrp简易配置客户端[v1.5]")
 #必要文件读取
 try:
     print("正在加载server.ini by LyceenAiro/FES")
@@ -49,14 +49,13 @@ try:
         linkexample = u.readlines()
     with open("frpc.exe","r+"):
         print("正在加载frpc.exe by Frp")
-    with open("LICENSE","r+"):
-        print("正在加载LICENSE by Frp")
 except:
     input("发生错误,请检查文件完整性")
     exit()
 #链接文件读取
 linknum = 0
 link = []
+print("读取文件中...")
 while True:
     linknum = linknum + 1
     linkfine = "link" + str(linknum)
@@ -431,7 +430,6 @@ while True:
                 for i in names[setin]:
                     u.write(i)
             pinf = pinf - 1
-        del pinf
         if inp == "q":
             exit()
         break
@@ -463,10 +461,19 @@ for i in range(linknum):
     setin = "link" + str(i+1)
     frpc = frpc + names[setin]
 frpc = frpc + more
-del linknum
 with open("frpc.ini","w+",encoding="utf-8") as u:
     for i in frpc:
         u.write(i)
-del frpc,server,more,linkexample,i,u,setin,time,socket,os,link,linkopen,names,filein,inp
+pinf = linknum
+#缓存清除
+while pinf != 0:
+    setin = "link" + str(pinf)
+    setin2 = "linko" + str(pinf)
+    del names[setin],names[setin2]
+    pinf = pinf - 1
+del pinf,setin,setin2,linknum
+del frpc,server,more,linkexample,i,u,link,linkopen,names,filein,inp
+del time,socket,omkey
 #启动服务
 os.system("frpc.exe -c frpc.ini")
+input("程序已关闭...")
