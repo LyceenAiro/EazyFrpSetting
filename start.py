@@ -38,16 +38,19 @@ def portcheck(port):
 print("欢迎使用ParticlesFrp简易配置客户端[v1.4]")
 #必要文件读取
 try:
-    server = open("./config/server.ini","r+",encoding="utf-8")
-    server = server.readlines()
-    more = open("./config/more.ini","r+",encoding="utf-8")
-    more = more.readlines()
-    linkexample = open("./config/LinkExample.ini","r+",encoding="utf-8")
-    linkexample = linkexample.readlines()
+    print("正在加载server.ini by LyceenAiro/FES")
+    with open("./config/server.ini","r+",encoding="utf-8") as u:
+        server = u.readlines()
+    print("正在加载more.ini by LyceenAiro/FES")
+    with open("./config/more.ini","r+",encoding="utf-8") as u:
+        more = u.readlines()
+    print("正在加载LinkExample.ini by LyceenAiro/FES")
+    with open("./config/LinkExample.ini","r+",encoding="utf-8") as u:
+        linkexample = u.readlines()
     with open("frpc.exe","r+"):
-        print(end="")
+        print("正在加载frpc.exe by Frp")
     with open("LICENSE","r+"):
-        print(end="")
+        print("正在加载LICENSE by Frp")
 except:
     input("发生错误,请检查文件完整性")
     exit()
@@ -464,6 +467,6 @@ del linknum
 with open("frpc.ini","w+",encoding="utf-8") as u:
     for i in frpc:
         u.write(i)
-del frpc,server,more
+del frpc,server,more,linkexample,i,u,setin,time,socket,os,link,linkopen,names,filein,inp
 #启动服务
 os.system("frpc.exe -c frpc.ini")
