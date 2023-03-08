@@ -178,7 +178,7 @@ while True:
                 print("主菜单-映射链接-创建链接")
                 creatlink = linkexample.copy()
                 #链接名配置
-                inp = input("链接名称:")
+                inp = input("·链接名称(可选):")
                 if inp == "":
                     str(linknum)
                     i = "link" + str(linknum+1)
@@ -200,7 +200,7 @@ while True:
                     continue
                 #配置本机网卡
                 ip = socket.gethostbyname(socket.gethostname())
-                inp = input("配置网卡IP(留空自动获取):")
+                inp = input("·配置网卡IP(留空自动获取):")
                 if inp == "":
                     creatlink[5] = "local_ip = " + ip + "\n"
                     print(f"自动获取了IP:{ip}")
@@ -213,39 +213,39 @@ while True:
                         del flag
                     else:
                         input("IP地址不合法,请重新创建")
-                        del flag
+                        del flag,creatlink
                         continue
                 #配置本地转发端口
-                inp = input("配置本地转发端口:")
+                inp = input("·配置本地转发端口:")
                 flag = portcheck(inp)
                 if flag == True:
                     creatlink[7] = "local_port = " + inp + "\n"
                     del flag
                 else:
                     input("端口必须在1024~65565的范围内")
-                    del flag
+                    del flag,creatlink
                     continue
                 #配置映射出端口
-                inp = input("配置映射端口:")
+                inp = input("·配置映射端口:")
                 flag = portcheck(inp)
                 if flag == True:
                     creatlink[9] = "remote_port = " + inp + "\n"
                     del flag
                 else:
-                    del flag
+                    del flag,creatlink
                     input("端口必须在1024~65565的范围内")
                     continue
                 #拓展配置
                 creatlink[14] = "#Frp\n"
                 if creatlink[3].split("=")[1] == "xtcp":
                     #配置点对点端密匙
-                    inp = input("配置点对点端密匙:")
+                    inp = input("·配置点对点端密匙:")
                     creatlink[11] = "sk = " + inp + "\n"
                     creatlink[13] = "#server_name = \n"
                     creatlink[14] = "#server\n"
                     if i != "host":
                         #配置点对点服务名称
-                        inp = input("配置点对点端服务名称:")
+                        inp = input("·配置点对点端服务名称:")
                         creatlink[13] = "server_name = " + inp + "\n"
                         creatlink[14] = "#client\n"
                 #保存并创建链接
@@ -254,7 +254,7 @@ while True:
                 names[linkfine] = creatlink
                 linkfine = "linko" + str(linknum)
                 names[linkfine] = "Newlink"
-                del linkfine
+                del linkfine,creatlink
             else:
                 #其他链接配置
                 try:
@@ -431,7 +431,6 @@ while True:
         with open("./config/more.ini","w+",encoding="utf-8") as u:
             for i in more:
                 u.write(i)
-
         #序列保存Link列表
         pinf = linknum
         while pinf != 0:
@@ -488,7 +487,7 @@ while pinf != 0:
     pinf = pinf - 1
 del pinf,setin,setin2,linknum
 del frpc,server,more,linkexample,i,u,link,linkopen,names,filein,inp
-del time,socket,omkey
+del time,socket,ipcheck,portcheck,omkey
 #启动服务
 os.system("frpc.exe -c frpc.ini")
 input("程序已关闭...")
