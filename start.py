@@ -2,7 +2,7 @@
 #初始化
 import os
 import socket
-omkey = "version_230306;frpc_xFrp_v1.5_beta;LyceenAiro"
+omkey = "version_230308;frpc_xFrp_v1.5;LyceenAiro"
 names = locals()
 #函数列表
 def ipcheck(ip):
@@ -38,24 +38,29 @@ def portcheck(port):
 print("欢迎使用ParticlesFrp简易配置客户端[v1.5]")
 #必要文件读取
 try:
-    print("正在加载server.ini by LyceenAiro/FES")
+    print("(0/5)正在加载server.ini by LyceenAiro/EazyFrpSetting")
     with open("./config/server.ini","r+",encoding="utf-8") as u:
         server = u.readlines()
-    print("正在加载more.ini by LyceenAiro/FES")
+    print("(1/5)正在加载more.ini by LyceenAiro/EazyFrpSetting")
     with open("./config/more.ini","r+",encoding="utf-8") as u:
         more = u.readlines()
-    print("正在加载LinkExample.ini by LyceenAiro/FES")
+    print("(2/5)正在加载LinkExample.ini by LyceenAiro/EazyFrpSetting")
     with open("./config/LinkExample.ini","r+",encoding="utf-8") as u:
         linkexample = u.readlines()
-    with open("frpc.exe","r+"):
-        print("正在加载frpc.exe by Frp")
 except:
-    input("发生错误,请检查文件完整性")
+    input("发生错误,请检查EazyFrpSetting文件完整性")
+    exit()
+try:
+    print("(3/5)正在寻找frpc.exe by fatedier/frp")
+    with open("frpc.exe","r+"):
+        print(end="")
+except:
+    input("未找到frpc.exe,请将frpc.exe放入根目录\nfrp-github:https://github.com/fatedier/frp")
     exit()
 #链接文件读取
+print("(4/5)正在读取link文件")
 linknum = 0
 link = []
-print("读取文件中...")
 while True:
     linknum = linknum + 1
     linkfine = "link" + str(linknum)
@@ -68,7 +73,9 @@ while True:
     except:
         linknum = linknum - 1
         del linkfine
+        print("(5/5)加载完成")
         break
+
 
 
 
@@ -196,6 +203,7 @@ while True:
                 inp = input("配置网卡IP(留空自动获取):")
                 if inp == "":
                     creatlink[5] = "local_ip = " + ip + "\n"
+                    print(f"自动获取了IP:{ip}")
                     del ip
                 else:
                     del ip
