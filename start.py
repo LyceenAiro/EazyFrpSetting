@@ -1,9 +1,9 @@
+import os
 while True:
 
 
     """#1 自检及文件读取阶段"""
     #初始化
-    import os
     import socket
     version = "v1.6_alpha"
     author = "LyceenAiro"
