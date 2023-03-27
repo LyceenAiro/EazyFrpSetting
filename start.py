@@ -195,7 +195,7 @@ while True:
                     else:
                         creatlink[1] = "[" + inp + "]\n"
                     #协议设置
-                    inp = input("[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n配置:")
+                    inp = input("[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n[5]stcp\n配置:")
                     if inp == "1":
                         creatlink[3] = "type = tcp\n"
                     elif inp == "2":
@@ -205,6 +205,8 @@ while True:
                         i = "host"
                     elif inp == "4":
                         creatlink[3] = "type = xtcp\n"
+                    elif inp == "5":
+                        creatlink[3] = "type = stcp\n"
                     else:
                         continue
                     #配置本机网卡
@@ -248,15 +250,24 @@ while True:
                     creatlink[14] = "#Frp\n"
                     if creatlink[3].split("=")[1] == "xtcp":
                         #配置点对点端密匙
-                        inp = input("·配置点对点端密匙:")
-                        creatlink[11] = "sk = " + inp + "\n"
-                        creatlink[13] = "#server_name = \n"
+                        inp = input("·配置隧道密匙(可选):")
+                        if inp == "":
+                            creatlink[11] = "sk = " + inp + "\n"
+                        else:
+                            creatlink[11] = "#sk = \n"
                         creatlink[14] = "#server\n"
                         if i != "host":
                             #配置点对点服务名称
-                            inp = input("·配置点对点端服务名称:")
+                            inp = input("·配置隧道服务名称:")
                             creatlink[13] = "server_name = " + inp + "\n"
                             creatlink[14] = "#client\n"
+                    elif creatlink[3].split("=")[1] == "stcp":
+                        inp = input("·配置隧道密匙(可选):")
+                        if inp == "":
+                            creatlink[11] = "sk = " + inp + "\n"
+                        else:
+                            creatlink[11] = "#sk = \n"
+                        creatlink[14] = "#sFrp\n"
                     #保存并创建链接
                     linknum = linknum + 1
                     linkfine = "link" + str(linknum)
@@ -288,7 +299,7 @@ while True:
                                 "[6]对点密匙",names[setin][11].split("=")[1].strip()+
                                 "\n[7]对点服务",names[setin][13].split("=")[1].strip()
                             )
-                        elif names[setin][14] == "#server\n":
+                        elif names[setin][14] != "#Frp\n":
                             print(
                                 "[6]对点密匙",names[setin][11].split("=")[1].strip()
                             )
@@ -305,7 +316,7 @@ while True:
                                 input("配置失败,内容不能为空")
                         elif inp == "2":
                             os.system("cls")
-                            print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].split('=')[1].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client")
+                            print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].split('=')[1].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n[5]stcp")
                             inp = input("新的配置:")
                             if inp == "1":
                                 names[setin][3] = "type = tcp\n"
@@ -319,6 +330,9 @@ while True:
                             elif inp == "4":
                                 names[setin][3] = "type = xtcp\n"
                                 names[setin][14] = "#client\n"
+                            elif inp == "5":
+                                names[setin][3] = "type = stcp\n"
+                                names[setin][14] = "#sFrp\n"
                         elif inp == "3":
                             os.system("cls")
                             print(f"主菜单-映射链接-{setin}-本机网卡\n当前的配置:"+names[setin][5].split('=')[1].strip())
@@ -361,15 +375,15 @@ while True:
                             else:
                                 del flag
                                 input("端口必须在1024~65565的范围内")
-                        elif names[setin][14].strip() == "#client" or "#server":
+                        elif names[setin][14].strip() != "#Frp":
                             if inp == "6":
                                 os.system("cls")
-                                print(f"主菜单-映射链接-{setin}-对点密匙\n当前的配置:"+names[setin][11].split('=')[1].strip())
+                                print(f"主菜单-映射链接-{setin}-隧道密匙\n当前的配置:"+names[setin][11].split('=')[1].strip())
                                 inp = input("新的配置:")
                                 if inp != "":
                                     names[setin][11] = "sk = " + inp + "\n"
                                 else:
-                                    input("配置不生效,内容不能为空")
+                                    names[setin][11] = "#sk = \n"
                             elif inp == "7" and names[setin][14].strip() == "#client":
                                 os.system("cls")
                                 print(f"主菜单-映射链接-{setin}-对点服务\n当前的配置:"+names[setin][13].split('=')[1].strip())
