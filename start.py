@@ -5,9 +5,9 @@ while True:
     """#1 自检及文件读取阶段"""
     #初始化
     import socket
-    version = "v1.6_alpha"
+    version = "v1.6_beta"
     author = "LyceenAiro"
-    update = "2023-3-17"
+    update = "2023-3-27"
     LICENSEs = "MIT"
     names = locals()
     #函数列表
