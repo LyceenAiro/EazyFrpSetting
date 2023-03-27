@@ -248,7 +248,7 @@ while True:
                         continue
                     #拓展配置
                     creatlink[14] = "#Frp\n"
-                    if creatlink[3].split("=")[1] == "xtcp\n":
+                    if creatlink[3].split("=")[1].strip() == "xtcp":
                         #配置点对点端密匙
                         inp = input("·配置隧道密匙(可选):")
                         if inp == "":
@@ -261,7 +261,7 @@ while True:
                             inp = input("·配置隧道服务名称:")
                             creatlink[13] = "server_name = " + inp + "\n"
                             creatlink[14] = "#client\n"
-                    elif creatlink[3].split("=")[1] == "stcp\n":
+                    elif creatlink[3].split("=")[1].strip() == "stcp":
                         inp = input("·配置隧道密匙(可选):")
                         if inp == "":
                             creatlink[11] = "sk = " + inp + "\n"
@@ -296,7 +296,7 @@ while True:
                         )
                         if names[setin][14] == "#client\n":
                             print(
-                                "[6]对点密匙",names[setin][11].split("=")[1].strip()+
+                                "[6]隧道密匙",names[setin][11].split("=")[1].strip()+
                                 "\n[7]对点服务",names[setin][13].split("=")[1].strip()
                             )
                         elif names[setin][14] != "#Frp\n":
