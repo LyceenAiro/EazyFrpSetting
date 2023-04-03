@@ -6,7 +6,3 @@
 -GitHub:https://github.com/fatedier/frp  
 -需求文件:frpc.exe  
 -本软件暂不支持server端快速搭建  
-  
-
--特性:多隧道管理  
--维护[主要]:未来的更多功能和问题修复  
