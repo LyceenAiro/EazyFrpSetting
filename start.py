@@ -14,7 +14,8 @@ while True:
     LICENSEs = "MIT"
     names = locals()
     chars = string.ascii_letters + "@#&"
-    del string
+    ip = socket.gethostbyname(socket.gethostname())
+    del string,socket
     #函数列表
     def ipcheck(ip):
         #检验ip地址合法性
@@ -71,12 +72,11 @@ while True:
         with open("frpc.exe","r+"):
             print(end="")
     except:
-        input("frpc.exe正在运行或不存在\n请检查frpc.exe是否存在或重新启动\nfrp-github:https://github.com/fatedier/frp")
+        input("frpc.exe正在运行或不存在,请检查frpc.exe是否被安全中心隔离\n如果frpc.exe存在请重新启动该软件\nfrp-github:https://github.com/fatedier/frp")
         exit()
     #链接文件读取
     print("(4/5)正在读取link文件")
     linknum = 0
-    link = []
     while True:
         linknum = linknum + 1
         linkfine = "link" + str(linknum)
@@ -85,7 +85,10 @@ while True:
             names[linkopen] = open(f"./config/{linkfine}.ini","r+",encoding="utf-8")
             names[linkfine] = names[linkopen].readlines()
             names[linkopen].close()
-            link.append(linkfine)
+            #校准IP
+            if more[5].split('=')[1].strip() == "true":
+                names[linkfine][5] = "local_ip = " + ip
+                print("·更新了链接"+names[linkfine][1].strip("[").rstrip("]\n")+"的IP信息")
         except:
             linknum = linknum - 1
             del linkfine
@@ -220,14 +223,11 @@ while True:
                         input("没有所选的协议")
                         continue
                     #配置本机网卡
-                    ip = socket.gethostbyname(socket.gethostname())
                     inp = input("·配置网卡IP(留空自动获取):")
                     if inp == "":
                         creatlink[5] = "local_ip = " + ip + "\n"
                         print(f"自动获取了IP:{ip}")
-                        del ip
                     else:
-                        del ip
                         flag = ipcheck(inp)
                         if flag == True:
                             creatlink[5] = "local_ip = " + inp + "\n"
@@ -413,7 +413,7 @@ while True:
             """
             while True:
                 os.system("cls")
-                inp = input("主菜单-其他配置\n[q]返回菜单\n[1]自动回应\n[2]清除链接\n[3]随机生成\n[4]版本信息\n\n配置:")
+                inp = input("主菜单-其他配置\n[q]返回菜单\n[1]自动回应\n[2]清除链接\n[3]随机生成\n[4]自动获取\n[5]版本信息\n\n配置:")
                 #返回菜单
                 if inp == "q":
                     break
@@ -463,9 +463,15 @@ while True:
                     else:
                         input("长度范围应该在1~30")
                     del x
-                            
-
                 elif inp == "4":
+                    os.system("cls")
+                    print("主菜单-其他配置-自动获取\n启动时自动更新所有链接的网卡IP设置,现在的配置:"+more[5].split('=')[1].strip()+"\n[1]开启\n[2]关闭")
+                    inp = input("配置:")
+                    if inp == "1":
+                        more[5] = "#auto_socket = true"
+                    elif inp == "2":
+                        more[5] = "#auto_socket = false"
+                elif inp == "5":
                     os.system("cls")
                     print("主菜单-其他配置-版本信息\n版本",version,"\n版期",update,"\n作者",author,"\n许可",LICENSEs)
                     input()
@@ -542,8 +548,8 @@ while True:
         del names[setin],names[setin2]
         pinf = pinf - 1
     del pinf,setin,setin2,linknum
-    del frpc,server,more,linkexample,i,u,link,linkopen,names,filein,inp,chars
-    del time,socket,random,ipcheck,portcheck,randomstr,version,author,LICENSEs,update
+    del frpc,server,more,linkexample,i,u,linkopen,names,filein,inp,chars,ip
+    del time,random,ipcheck,portcheck,randomstr,version,author,LICENSEs,update
     #启动服务
     os.system("frpc.exe -c frpc.ini")
     inp = input("Frp已结束运行...")
