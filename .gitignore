@@ -8,6 +8,8 @@
 /dist
 /start.spec
 /frpc.ini
+/Pipfile
+/pyshell.bat
 
 #测试文件
 /config/Link1.ini

@@ -132,7 +132,7 @@ while True:
                     if flag == False:
                         input("IP地址不合法")
                     else:
-                        server[2] = "server_addr =" + ipset + "\n"
+                        server[2] = "server_addr = " + ipset + "\n"
                     del ipset,flag
                 #通讯端口
                 elif inp == "2":
@@ -141,7 +141,7 @@ while True:
                     portset = input("配置:")
                     flag = portcheck(portset)
                     if flag == True:
-                        server[4] = "server_port =" + portset + "\n"
+                        server[4] = "server_port = " + portset + "\n"
                     else:
                         input("端口必须在1024~65565的范围内")
                     del portset,flag
@@ -153,7 +153,7 @@ while True:
                     if portset == "":
                         portset = "#token =\n"
                     else:
-                        portset = "token =" + portset + "\n"
+                        portset = "token = " + portset + "\n"
                     server[6] = portset
                     del portset
                 else:
