@@ -5,11 +5,16 @@ while True:
     """#1 自检及文件读取阶段"""
     #初始化
     import socket
-    version = "v1.6_beta"
+    import random
+    import string
+    import time
+    version = "v1.6"
     author = "LyceenAiro"
-    update = "2023-3-27"
+    update = "2023-4-3"
     LICENSEs = "MIT"
     names = locals()
+    chars = string.ascii_letters + "@#&"
+    del string
     #函数列表
     def ipcheck(ip):
         #检验ip地址合法性
@@ -37,7 +42,8 @@ while True:
         except:
             return False
 
-
+    def randomstr(str_size,allowed_chars):
+        return ''.join(random.choice(allowed_chars) for x in range(str_size))
 
 
     #开始
@@ -47,21 +53,25 @@ while True:
         print("(0/5)正在加载server.ini by LyceenAiro/EazyFrpSetting")
         with open("./config/server.ini","r+",encoding="utf-8") as u:
             server = u.readlines()
+            testfile = server[0].strip("[").rstrip("]\n")
         print("(1/5)正在加载more.ini by LyceenAiro/EazyFrpSetting")
         with open("./config/more.ini","r+",encoding="utf-8") as u:
             more = u.readlines()
+            testfile = int(more[3].split('=')[1].strip())
         print("(2/5)正在加载LinkExample.ini by LyceenAiro/EazyFrpSetting")
         with open("./config/LinkExample.ini","r+",encoding="utf-8") as u:
             linkexample = u.readlines()
+            testfile = linkexample[14].strip()
     except:
-        input("发生错误,请检查EazyFrpSetting文件完整性,EFS-github:https://github.com/LyceenAiro/EazyFrpSetting")
+        input("发生错误,请检查EazyFrpSetting文件完整性\n如果你更新了新版本的启动程序最好同步更新config文件内的文件\nEFS-github:https://github.com/LyceenAiro/EazyFrpSetting")
         exit()
+    del testfile
     try:
         print("(3/5)正在寻找frpc.exe by fatedier/frp")
         with open("frpc.exe","r+"):
             print(end="")
     except:
-        input("frpc.exe正在运行或不存在,\nfrp-github:https://github.com/fatedier/frp")
+        input("frpc.exe正在运行或不存在\n请检查frpc.exe是否存在或重新启动\nfrp-github:https://github.com/fatedier/frp")
         exit()
     #链接文件读取
     print("(4/5)正在读取link文件")
@@ -80,9 +90,7 @@ while True:
             linknum = linknum - 1
             del linkfine
             print("(5/5)加载完成")
-            import time
             time.sleep(0.5)
-            del time
             break
 
 
@@ -190,8 +198,9 @@ while True:
                     inp = input("·链接名称(可选):")
                     if inp == "":
                         str(linknum)
-                        i = "link" + str(linknum+1)
+                        i = randomstr(int(more[3].split('=')[1].strip()),chars)
                         creatlink[1] = "[" + i + "]\n"
+                        print(f"自动生成链接名:{i}")
                     else:
                         creatlink[1] = "[" + inp + "]\n"
                     #协议设置
@@ -208,6 +217,7 @@ while True:
                     elif inp == "5":
                         creatlink[3] = "type = stcp\n"
                     else:
+                        input("没有所选的协议")
                         continue
                     #配置本机网卡
                     ip = socket.gethostbyname(socket.gethostname())
@@ -403,7 +413,7 @@ while True:
             """
             while True:
                 os.system("cls")
-                inp = input("主菜单-其他配置\n[q]返回菜单\n[1]自动回应\n[2]清除链接\n[3]版本信息\n\n配置:")
+                inp = input("主菜单-其他配置\n[q]返回菜单\n[1]自动回应\n[2]清除链接\n[3]随机生成\n[4]版本信息\n\n配置:")
                 #返回菜单
                 if inp == "q":
                     break
@@ -437,6 +447,25 @@ while True:
                         else:
                             input("没有所选指令")
                 elif inp == "3":
+                    os.system("cls")
+                    print("主菜单-其他配置-随机生成\n现在随机生成链接名的长度:"+more[3].split('=')[1].strip())
+                    inp = input("配置新长度:")
+                    if inp == "" or inp == "q":
+                        continue
+                    try:
+                        x = int(inp)
+                    except:
+                        inp("长度只能是数字")
+                        del x
+                        continue
+                    if 1 <= x <= 30:
+                        more[3] = "#num = " + inp
+                    else:
+                        input("长度范围应该在1~30")
+                    del x
+                            
+
+                elif inp == "4":
                     os.system("cls")
                     print("主菜单-其他配置-版本信息\n版本",version,"\n版期",update,"\n作者",author,"\n许可",LICENSEs)
                     input()
@@ -489,7 +518,6 @@ while True:
     #3 启动程序
     #保存设置之后启动frpc并且显示映射信息
     """
-    import time
     os.system("cls")
     #连接可视
     for i in range(linknum):
@@ -514,8 +542,8 @@ while True:
         del names[setin],names[setin2]
         pinf = pinf - 1
     del pinf,setin,setin2,linknum
-    del frpc,server,more,linkexample,i,u,link,linkopen,names,filein,inp
-    del time,socket,ipcheck,portcheck,version,author,LICENSEs,update
+    del frpc,server,more,linkexample,i,u,link,linkopen,names,filein,inp,chars
+    del time,socket,random,ipcheck,portcheck,randomstr,version,author,LICENSEs,update
     #启动服务
     os.system("frpc.exe -c frpc.ini")
     inp = input("Frp已结束运行...")
