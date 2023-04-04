@@ -461,16 +461,16 @@ while True:
                     if 1 <= x <= 30:
                         more[3] = "#num = " + inp
                     else:
-                        input("长度范围应该在1~30")
+                        input("长度范围应该在1~30\n")
                     del x
                 elif inp == "4":
                     os.system("cls")
                     print("主菜单-其他配置-自动获取\n启动时自动更新所有链接的网卡IP设置,现在的配置:"+more[5].split('=')[1].strip()+"\n[1]开启\n[2]关闭")
                     inp = input("配置:")
                     if inp == "1":
-                        more[5] = "#auto_socket = true"
+                        more[5] = "#auto_socket = true\n"
                     elif inp == "2":
-                        more[5] = "#auto_socket = false"
+                        more[5] = "#auto_socket = false\n"
                 elif inp == "5":
                     os.system("cls")
                     print("主菜单-其他配置-版本信息\n版本",version,"\n版期",update,"\n作者",author,"\n许可",LICENSEs)
