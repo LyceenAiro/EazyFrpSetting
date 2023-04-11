@@ -10,8 +10,7 @@
 /frpc.ini
 /Pipfile
 /pyshell.bat
+/~*
 
 #测试文件
-/config/Link1.ini
-/config/Link2.ini
-/config/Link3.ini
+/config/link?.ini
