@@ -1,4 +1,12 @@
 import os
+import sys
+
+#全局函数
+def restart():
+    #重启
+    sp = sys.executable
+    os.execl(sp, sp, * sys.argv)
+
 while True:
 
 
@@ -8,9 +16,9 @@ while True:
     import random
     import string
     import time
-    version = "v1.6"
+    version = "v1.7_alpha"
     author = "LyceenAiro"
-    update = "2023-4-3"
+    update = "2023-4-27"
     LICENSEs = "MIT"
     names = locals()
     chars = string.ascii_letters + "@#&"
@@ -286,6 +294,7 @@ while True:
                     names[linkfine] = "Newlink"
                     del linkfine,creatlink
                 else:
+                    pnum = int(inp)
                     #其他链接配置
                     try:
                         setin = "link" + inp
@@ -313,6 +322,7 @@ while True:
                             print(
                                 "[6]对点密匙",names[setin][11].split("=")[1].strip()
                             )
+                        print("[9]删除链接")
                         inp = input("\n配置:")
                         if inp == "q":
                             break
@@ -385,6 +395,31 @@ while True:
                             else:
                                 del flag
                                 input("端口必须在1024~65565的范围内")
+                        elif inp == "9":
+                            os.system("cls")
+                            print(f"主菜单-映射链接-{setin}-删除链接")
+                            inp = input("此操作会直接删除链接配置文件，无法恢复\n[iknow]确认删除\n\n配置:")
+                            if inp == "iknow":
+                                del names[setin]
+                                setfile = "link" + str(pnum) + ".ini"
+                                try:
+                                    os.remove(f"./config/{setfile}")
+                                except:
+                                    pass
+                                while True:
+                                    pnum += 1
+                                    try:
+                                        setin = "link" + str(pnum) 
+                                        setinold = "link" + str(pnum-1)
+                                        names[setinold] = names[setin]
+                                        os.rename(f"./config/{setin}.ini",f"./config/{setinold}.ini")
+                                    except:
+                                        linknum -= 1
+                                        if linknum > pnum-1:
+                                            del names[setinold]
+                                        del setinold,pnum
+                                        break
+                                break
                         elif names[setin][14].strip() != "#Frp":
                             if inp == "6":
                                 os.system("cls")
@@ -402,7 +437,6 @@ while True:
                                     names[setin][13] = "server_name = " + inp + "\n"
                                 else:
                                     input("配置不生效,内容不能为空")
-
 
 
 
@@ -432,14 +466,14 @@ while True:
                 elif inp == "2":
                     while True:
                         os.system("cls")
-                        inp = input("主菜单-其他配置-清除链接\n自动清除所有链接并保存关闭程序,已有的链接数:"+str(linknum)+"\n[iknow]确认删除\n[q]返回\n\n配置:")
+                        inp = input("主菜单-其他配置-清除链接\n自动清除所有链接并重启程序,已有的链接数:"+str(linknum)+"\n[iknow]确认删除\n[q]返回\n\n配置:")
                         if inp == "iknow":
                             inp = input("你确定要清除所有链接吗?(y确定)")
                             if inp == "y":
                                 for i in range(linknum):
                                     setfile = "link" + str(i+1) + ".ini"
                                     os.remove(f"./config/{setfile}")
-                                exit()
+                                restart()
                         elif inp == "q":
                             break
                         elif inp == "":
