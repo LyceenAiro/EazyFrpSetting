@@ -7,10 +7,13 @@
 /build
 /dist
 /start.spec
+/main.spec
 /frpc.ini
 /Pipfile
 /pyshell.bat
 /~*
+*/__pycache__
+*/*/__pycache__
 
 #测试文件
 /config/link?.ini

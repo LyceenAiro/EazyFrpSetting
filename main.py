@@ -1,21 +1,15 @@
-import os
-import sys
-
-#全局函数
-def restart():
-    #重启
-    sp = sys.executable
-    os.execl(sp, sp, * sys.argv)
-
-
-
-
 """#1 自检及文件读取阶段"""
 #初始化
+import os
+import sys
 import socket
 import random
 import string
 import time
+
+from svscript.function import *
+from svmodule.start.module import *
+
 version = "v1.7_alpha"
 author = "LyceenAiro"
 update = "2023-4-27"
@@ -24,66 +18,14 @@ names = locals()
 chars = string.ascii_letters + "@#&"
 ip = socket.gethostbyname(socket.gethostname())
 del string,socket
-#函数列表
-def ipcheck(ip):
-    #检验ip地址合法性
-    try:
-        if len(ip.split("."))==4:
-            for i in ip.split(".") :
-                try:
-                    if not(0<=int(i)<=255):
-                        return False
-                except:
-                    return False
-        else:
-            return False
-    except:
-        return False
-    
 
-def portcheck(port):
-    #检验端口合法性
-    try:
-        if 65535 >= int(port) >= 1024 :
-            return True
-        else:
-            return False
-    except:
-        return False
-
-def randomstr(str_size,allowed_chars):
-    return ''.join(random.choice(allowed_chars) for x in range(str_size))
 
 
 #开始
 print(f"欢迎使用Frp简易配置客户端[{version}]")
 #必要文件读取
-try:
-    print("(0/5)正在加载server.ini by LyceenAiro/EazyFrpSetting")
-    with open("./config/server.ini","r+",encoding="utf-8") as u:
-        server = u.readlines()
-        testfile = server[0].strip("[").rstrip("]\n")
-    print("(1/5)正在加载more.ini by LyceenAiro/EazyFrpSetting")
-    with open("./config/more.ini","r+",encoding="utf-8") as u:
-        more = u.readlines()
-        testfile = int(more[3].split('=')[1].strip())
-    print("(2/5)正在加载LinkExample.ini by LyceenAiro/EazyFrpSetting")
-    with open("./config/LinkExample.ini","r+",encoding="utf-8") as u:
-        linkexample = u.readlines()
-        testfile = linkexample[14].strip()
-except:
-    input("发生错误,请检查EazyFrpSetting文件完整性\n如果你更新了新版本的启动程序最好同步更新config文件内的文件\nEFS-github:https://github.com/LyceenAiro/EazyFrpSetting")
-    exit()
-del testfile
-try:
-    print("(3/5)正在寻找frpc.exe by fatedier/frp")
-    with open("frpc.exe","r+"):
-        print(end="")
-except:
-    input("frpc.exe正在运行或不存在,请检查frpc.exe是否被安全中心隔离\n如果frpc.exe存在请重新启动该软件\nfrp-github:https://github.com/fatedier/frp")
-    exit()
-#链接文件读取
-print("(4/5)正在读取link文件")
+start1()
+start2()
 linknum = 0
 while True:
     linknum = linknum + 1
