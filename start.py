@@ -95,7 +95,7 @@ while True:
             names[linkopen].close()
             #校准IP
             if more[5].split('=')[1].strip() == "true":
-                names[linkfine][5] = "local_ip = " + ip
+                names[linkfine][5] = "local_ip = " + ip + "\n"
                 print("·更新了链接"+names[linkfine][1].strip("[").rstrip("]\n")+"的IP信息")
         except:
             linknum = linknum - 1
