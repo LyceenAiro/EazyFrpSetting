@@ -511,7 +511,7 @@ while True:
                 continue
             else:
                 input("没有所选的指令")
-    elif inp == "3" or "q":
+    elif inp in ("3","q"):
         """
         #2-3 服务连接
         #保存配置文件并启动服务
