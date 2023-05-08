@@ -225,6 +225,9 @@ while True:
                     creatlink[3] = "type = xtcp\n"
                 elif inp == "5":
                     creatlink[3] = "type = stcp\n"
+                    i = "host"
+                elif inp == "6":
+                    creatlink[3] = "type = stcp\n"
                 else:
                     input("没有所选的协议")
                     continue
@@ -264,7 +267,7 @@ while True:
                     continue
                 #拓展配置
                 creatlink[14] = "#Frp\n"
-                if creatlink[3].split("=")[1].strip() == "xtcp":
+                if creatlink[3].split("=")[1].strip() in ("xtcp","stpc"):
                     #配置点对点端密匙
                     inp = input("·配置隧道密匙(可选):")
                     if inp == "":
@@ -277,13 +280,6 @@ while True:
                         inp = input("·配置隧道服务名称:")
                         creatlink[13] = "server_name = " + inp + "\n"
                         creatlink[14] = "#client\n"
-                elif creatlink[3].split("=")[1].strip() == "stcp":
-                    inp = input("·配置隧道密匙(可选):")
-                    if inp == "":
-                        creatlink[11] = "sk = " + inp + "\n"
-                    else:
-                        creatlink[11] = "#sk = \n"
-                    creatlink[14] = "#sFrp\n"
                 #保存并创建链接
                 linknum = linknum + 1
                 linkfine = "link" + str(linknum)
@@ -334,7 +330,7 @@ while True:
                             input("配置失败,内容不能为空")
                     elif inp == "2":
                         os.system("cls")
-                        print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].split('=')[1].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n[5]stcp")
+                        print(f"主菜单-映射链接-{setin}-协议类型\n当前的配置:"+names[setin][3].split('=')[1].strip()+"\n[1]tcp\n[2]udp\n[3]xtcp-host\n[4]xtcp-client\n[5]stcp-host\n[6]stcp-client")
                         inp = input("新的配置:")
                         if inp == "1":
                             names[setin][3] = "type = tcp\n"
@@ -348,9 +344,12 @@ while True:
                         elif inp == "4":
                             names[setin][3] = "type = xtcp\n"
                             names[setin][14] = "#client\n"
-                        elif inp == "5":
+                        elif inp == "6":
                             names[setin][3] = "type = stcp\n"
-                            names[setin][14] = "#sFrp\n"
+                            names[setin][14] = "#server\n"
+                        elif inp == "6":
+                            names[setin][3] = "type = stcp\n"
+                            names[setin][14] = "#client\n"
                     elif inp == "3":
                         os.system("cls")
                         print(f"主菜单-映射链接-{setin}-本机网卡\n当前的配置:"+names[setin][5].split('=')[1].strip())
