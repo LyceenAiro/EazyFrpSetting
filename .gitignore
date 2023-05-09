@@ -5,11 +5,5 @@
 /older
 /build
 /dist
-/start.spec
 /frpc.ini
-/Pipfile
-/pyshell.bat
 /~*
-
-#测试文件
-/config/link?.ini
