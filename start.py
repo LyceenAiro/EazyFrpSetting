@@ -6,9 +6,11 @@ import string
 import time
 import os
 import sys
-version = "v1.7_alpha"
+from threading import Thread
+os.system("cls")
+version = "v1.7_beta"
 author = "LyceenAiro"
-update = "2023-4-27"
+update = "2023-5-9"
 LICENSEs = "MIT"
 names = locals()
 chars = string.ascii_letters + "@#&"
@@ -555,7 +557,22 @@ while True:
 #3 启动程序
 #保存设置之后启动frpc并且显示映射信息
 """
+def ChickToQuit(key = "p"):
+    #重启函数
+    print(f"·输入 {key} 来重启Frp")
+    while True:
+        chick = input()
+        if chick == key:
+            restart()
+
+def startFrp():
+    #启动函数
+    os.system("frpc.exe -c frpc.ini")
+
+openFrp = Thread(target = startFrp)
+task = Thread(target = ChickToQuit)
 os.system("cls")
+task.start()
 #连接可视
 for i in range(linknum):
     setin = "link" + str(i+1)
@@ -582,6 +599,4 @@ del pinf,setin,setin2,linknum
 del frpc,server,more,linkexample,i,u,linkopen,names,filein,inp,chars,ip
 del time,random,ipcheck,portcheck,randomstr,version,author,LICENSEs,update
 #启动服务
-os.system("frpc.exe -c frpc.ini")
-inp = input("Frp已结束运行...")
-restart()
+openFrp.start()
