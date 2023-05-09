@@ -77,8 +77,13 @@ except:
 del testfile
 try:
     print("(3/5)正在寻找frpc.exe by fatedier/frp")
-    with open("frpc.exe","r+"):
-        print(end="")
+    for _ in range(4):
+        try:
+            with open("frpc.exe","r+"):
+                pass
+            break
+        except:
+            time.sleep(1)
 except:
     input("frpc.exe正在运行或不存在,请检查frpc.exe是否被安全中心隔离\n如果frpc.exe存在请重新启动该软件\nfrp-github:https://github.com/fatedier/frp")
     exit()
