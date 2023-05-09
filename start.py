@@ -5,7 +5,6 @@ import random
 import string
 import time
 import os
-import sys
 from threading import Thread
 os.system("cls")
 version = "v1.7_beta"
@@ -21,9 +20,7 @@ del string,socket
 #函数列表
 def restart():
     #重启
-    sp = sys.executable
-    os.execl(sp, sp, * sys.argv)
-
+    os.startfile("restart.bat")
 
 def ipcheck(ip):
     #检验ip地址合法性

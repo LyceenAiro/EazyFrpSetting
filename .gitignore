@@ -9,6 +9,7 @@
 /frpc.ini
 /Pipfile
 /pyshell.bat
+/StartFrp.exe
 /~*
 
 #测试文件
