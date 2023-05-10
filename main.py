@@ -11,3 +11,9 @@ class MainWindow(QMainWindow):
 
     def band(self):
         pass
+
+if __name__ == "__main__":
+    app = QApplication([]) # 启动一个应用
+    window = MainWindow() # 实例化主窗口
+    window.show() # 展示主窗口
+    app.exec() # 应用自循环 
