@@ -8,6 +8,7 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - 将frpc.exe放入根目录中
 - 启动该软件
 ## 开发流程
+- [x] 最初开发库构建
 - [ ] 图形化界面
 - [ ] 完全重构代码(功能支持)
 - [ ] 开发者工具
@@ -23,6 +24,15 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - 未来更多...
 
 ## 开发者工具
+### ui文件一键编译
+- 使用ui_install.bat
+### ui文件自动编译
+- 保持打开auto_ui_install.bat
+- 默认配置下5秒钟会自动更新一次编译
+### 发布文件一键编译(测试)
+- 使用main_install.bat
+- [x] 编译
+- [ ] 打包
 
 ## LICENSE
 [MIT License](./LICENSE)
