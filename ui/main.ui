@@ -91,7 +91,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="servertoken">
+           <widget class="QLineEdit" name="server_token">
             <property name="placeholderText">
              <string>token</string>
             </property>

@@ -77,10 +77,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.label_3)
 
-        self.servertoken = QLineEdit(self.centralwidget)
-        self.servertoken.setObjectName(u"servertoken")
+        self.server_token = QLineEdit(self.centralwidget)
+        self.server_token.setObjectName(u"server_token")
 
-        self.horizontalLayout_3.addWidget(self.servertoken)
+        self.horizontalLayout_3.addWidget(self.server_token)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u7aef\u53e3", None))
         self.server_Port.setPlaceholderText(QCoreApplication.translate("MainWindow", u"1024-65535", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u5bc6\u94a5", None))
-        self.servertoken.setPlaceholderText(QCoreApplication.translate("MainWindow", u"token", None))
+        self.server_token.setPlaceholderText(QCoreApplication.translate("MainWindow", u"token", None))
         self.server_save.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58", None))
     # retranslateUi
 
