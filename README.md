@@ -21,16 +21,16 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [ ] 输入纠错
 - [ ] 隧道管理
 - [ ] 其他功能
-- 未来更多...
+未来更多...
 
 ## 开发者工具
 ### ui文件一键编译
-- 使用ui_install.bat
+- 使用[ui_install.bat](./ui_install.bat)
 ### ui文件自动编译
-- 保持打开auto_ui_install.bat
+- 保持打开[auto_ui_install.bat](./auto_ui_install.bat)
 - 默认配置下5秒钟会自动更新一次编译
 ### 发布文件一键编译(测试)
-- 使用main_install.bat
+- 使用[main_install.bat](./main_install.bat)
 - [x] 编译
 - [ ] 打包
 
