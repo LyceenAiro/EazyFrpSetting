@@ -1,13 +1,28 @@
 # EazyFrpSetting
-快速批量管理Frp隧道的客户端  
--GitHub:https://github.com/LyceenAiro/EazyFrpSetting
-  
-需要使用该软件配置Frp首先你需要Frp的软件本体  
--GitHub:https://github.com/fatedier/frp  
--需求文件:frpc.exe  
-## dev分支现在为version-3版本的准备分支,未来将移动至master
--v2.0+  
--特性[计划]:图形化界面|完全重构代码|开发者工具|version-3  
-  
-  
-README正在重写！
+dev分支现在为version-3版本的准备分支,未来将移动至master 
+## 特性
+快速批量管理Frp隧道的[客户端](https://github.com/LyceenAiro/EazyFrpSetting)  
+## 使用
+需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
+- 需求文件:frpc.exe  
+- 将frpc.exe放入根目录中
+- 启动该软件
+## 开发流程
+- [ ] 图形化界面
+- [ ] 完全重构代码(功能支持)
+- [ ] 开发者工具
+- [ ] version-3发布
+- [ ] 界面美化
+### 功能支持[计划]
+- [ ] 修改服务器配置
+- [ ] 添加链接
+- [ ] 启动功能
+- [ ] 输入纠错
+- [ ] 隧道管理
+- [ ] 其他功能
+- 未来更多...
+
+## 开发者工具
+
+## LICENSE
+[MIT License](./LICENSE)
