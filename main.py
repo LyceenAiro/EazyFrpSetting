@@ -10,7 +10,14 @@ class MainWindow(QMainWindow):
         self.band()
 
     def band(self):
-        pass
+        self.ip = self.ui.server_IP.text()
+        self.ui.server_save.clicked.connect(lambda :print(self.ip))
+
+    # def set_server_ip(self, ip:str):
+    #     self.ui.server_IP.setText(ip)
+
+    # def server_save(self):
+    #     self.ui.server_save.clicked.connect(lambda :print(self.ip))
 
 if __name__ == "__main__":
     app = QApplication([]) # 启动一个应用

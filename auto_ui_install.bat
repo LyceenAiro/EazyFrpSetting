@@ -10,9 +10,9 @@ for %%A in ("%file1%") do set "file1date=%%~tA"
 for %%B in ("%file2%") do set "file2date=%%~tB"
 if "%file1date%" gtr "%file2date%" (
   PySide6-uic ui/main.ui -o ui/main_ui.py
-  echo [RUNNING][%time%]main_ui.py was update!
+  echo [INFO][%time%]main_ui.py was update!
 ) else (
-  echo [INFO][%time%]main_ui is latest!
+  echo [INFO][%time%]
 )
 @echo off
 goto loop
