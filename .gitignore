@@ -1,21 +1,25 @@
-#构建文件
+# 构建文件
 __pycache__
 build
 dist
 
-#程序ico源
+# 程序ico源
 logo.psd
 logo.png
 
-#frpc衍生文件
+# 图标源
+/ui/icon/*.png
+
+# frpc衍生文件
 frpc.exe
 frpc.ini
 
-#编译相关数据库
+# 编译相关数据库
 auto_ui_install.txt
 
-#调试文件
+# 调试文件
+/data/*.ini
 ~*
 
-#历史版本存放文件
+# 历史版本存放文件
 older
