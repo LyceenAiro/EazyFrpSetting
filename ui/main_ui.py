@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QStackedWidget,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QHeaderView, QLabel,
+    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
+    QStackedWidget, QTableView, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -119,9 +119,6 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page0)
         self.page1 = QWidget()
         self.page1.setObjectName(u"page1")
-        self.lineEdit = QLineEdit(self.page1)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(40, 110, 113, 20))
         self.line_3 = QFrame(self.page1)
         self.line_3.setObjectName(u"line_3")
         self.line_3.setGeometry(QRect(0, 40, 641, 16))
@@ -131,7 +128,25 @@ class Ui_MainWindow(object):
         self.label_5.setObjectName(u"label_5")
         self.label_5.setGeometry(QRect(0, 0, 431, 31))
         self.label_5.setFont(font)
+        self.linktable = QTableView(self.page1)
+        self.linktable.setObjectName(u"linktable")
+        self.linktable.setGeometry(QRect(10, 100, 611, 371))
+        self.link_create = QPushButton(self.page1)
+        self.link_create.setObjectName(u"link_create")
+        self.link_create.setGeometry(QRect(520, 60, 101, 41))
+        self.link_delete = QPushButton(self.page1)
+        self.link_delete.setObjectName(u"link_delete")
+        self.link_delete.setGeometry(QRect(320, 60, 101, 41))
+        self.link_modify = QPushButton(self.page1)
+        self.link_modify.setObjectName(u"link_modify")
+        self.link_modify.setGeometry(QRect(420, 60, 101, 41))
         self.stackedWidget.addWidget(self.page1)
+        self.line_3.raise_()
+        self.label_5.raise_()
+        self.link_create.raise_()
+        self.link_delete.raise_()
+        self.link_modify.raise_()
+        self.linktable.raise_()
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
         self.line_6 = QFrame(self.page_2)
@@ -214,7 +229,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -238,8 +253,10 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u7aef\u53e3", None))
         self.server_token.setPlaceholderText(QCoreApplication.translate("MainWindow", u"token", None))
         self.server_save.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58", None))
-        self.lineEdit.setText(QCoreApplication.translate("MainWindow", u"\u914d\u7f6e\u94fe\u63a5", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u914d\u7f6e\u94fe\u63a5", None))
+        self.link_create.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa", None))
+        self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
+        self.link_modify.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u8f91", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.window_close.setText("")

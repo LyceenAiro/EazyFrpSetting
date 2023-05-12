@@ -1,3 +1,6 @@
+import os
+import qdarkstyle
+
 from PySide6.QtWidgets import QMainWindow, QWidget, QStackedWidget, QPushButton, QVBoxLayout, QApplication
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap, QColor
@@ -7,7 +10,6 @@ from ui.main_ui import Ui_MainWindow
 from signal.main_signal import my_signal
 from makefile.tags import tags
 
-import qdarkstyle
 class MainWindow(QMainWindow):
 
     ##
@@ -19,6 +21,9 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.ui.setupUi(self)
+
+        # 数据读取
+        self.datainit()
         
         # UI初始化
         self.UIinit()
@@ -78,12 +83,30 @@ class MainWindow(QMainWindow):
     def UIinit(self):
         self.FlagsUiSetting()
         self.LeftUISetting()
+        self.left_highlight_botton = self.ui.page_main
+        self.set_left_highlight_botton()
+        self.LinkUISetting()
         self.readme()
         # self.ui.stackedWidget.setCurrentIndex(0)
+        
         self.setTabOrder(self.ui.server_IP, self.ui.server_Port)
         self.setTabOrder(self.ui.server_Port, self.ui.server_token)
         
-    
+    ##
+    ## 数据读取
+    ##
+    def datainit(self):
+        if not os.path.exists("data"):
+            os.makedirs("data")
+        try:
+            with open("./data/server.ini","r+",encoding="utf-8") as u:
+                server = u.readlines()
+            self.ui.show_IP.setText(server[1].split("=")[1].strip())
+            self.ui.show_Port.setText(server[2].split("=")[1].strip())
+            self.ui.show_token.setText(server[3].split("=")[1].strip())
+        except:
+            pass
+
     ##
     ## 自述配置
     ##
@@ -91,33 +114,7 @@ class MainWindow(QMainWindow):
         self.ui.version.setText(self.tags.version)
 
     ## 
-    ## 左侧栏设置
-    ##
-    def LeftUISetting(self):
-        self.botton_highlight_color = QColor(130, 130, 130)
-        self.botton_highlight_color2 = QColor(100, 100, 180)
-        self.botton_highlight_color3 = QColor(100, 100, 210)
-        botten = [self.ui.page_server,
-                  self.ui.page_link,
-                  self.ui.page_other,
-                  self.ui.page_tags]
-        for i in botten:
-            i.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_color.name()};
-                }}
-            """)
-
-        #初始化
-        self.left_highlight_botton = self.ui.page_main
-        self.set_left_highlight_botton()
-
-    ## 
-    ## 标题栏设置
+    ## 按钮设置
     ##
     def FlagsUiSetting(self):
         highlight_color = QColor(130, 130, 180)
@@ -139,6 +136,58 @@ class MainWindow(QMainWindow):
         icon = QIcon("ui/icon/mini.png")
         self.ui.window_mini.setIcon(icon)
         self.ui.window_mini.setIconSize(self.ui.window_close.size())
+
+    def LeftUISetting(self):
+        self.botton_highlight_color = QColor(130, 130, 130)
+        self.botton_highlight_color2 = QColor(100, 100, 180)
+        self.botton_highlight_color3 = QColor(100, 100, 210)
+        botten = [self.ui.page_server,
+                  self.ui.page_link,
+                  self.ui.page_other,
+                  self.ui.page_tags]
+        for i in botten:
+            i.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: transparent;
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.botton_highlight_color.name()};
+                }}
+            """)
+
+    def LinkUISetting(self):
+        self.botton_highlight_link = QColor(200, 80, 80)
+        self.botton_highlight_link2 = QColor(80, 200, 80)
+        self.botton_highlight_link3 = QColor(100, 100, 180)
+        self.ui.link_delete.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: transparent;
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.botton_highlight_link.name()};
+                }}
+            """)
+        self.ui.link_create.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: transparent;
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.botton_highlight_link2.name()};
+                }}
+            """)
+        self.ui.link_modify.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: transparent;
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.botton_highlight_link3.name()};
+                }}
+            """)
+        self.ui.linktable.setStyleSheet("border-radius: 0px")
 
     def setmain(self):
         self.ui.stackedWidget.setCurrentIndex(0)

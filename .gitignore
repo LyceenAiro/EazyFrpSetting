@@ -18,7 +18,7 @@ frpc.ini
 auto_ui_install.txt
 
 # 调试文件
-/data/*.ini
+/data
 ~*
 
 # 历史版本存放文件
