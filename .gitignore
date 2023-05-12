@@ -8,7 +8,7 @@ logo.psd
 logo.png
 
 # 图标源
-/ui/icon/*.png
+# /ui/icon/*.png
 
 # frpc衍生文件
 frpc.exe

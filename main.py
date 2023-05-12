@@ -1,13 +1,15 @@
 import os
 import qdarkstyle
+import subprocess
+import threading
 
 from PySide6.QtWidgets import QMainWindow, QWidget, QStackedWidget, QPushButton, QVBoxLayout, QApplication
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QThread
 from PySide6.QtGui import QIcon, QPixmap, QColor
 from PySide6 import QtWidgets
 
 from ui.main_ui import Ui_MainWindow
-from signal.main_signal import my_signal
+from script.start import FrpClient
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -30,6 +32,7 @@ class MainWindow(QMainWindow):
 
         # 绑定动作
         self.band()
+        self.bandFrp()        
 
         # 窗口移动项
         self.mouse_press_position = None
@@ -45,12 +48,26 @@ class MainWindow(QMainWindow):
         self.ui.page_other.clicked.connect(self.setother)
         self.ui.page_tags.clicked.connect(self.settags)
 
+        # main
+        self.ui.main_start.clicked.connect(self.main_start)
+        self.ui.main_stop.clicked.connect(self.main_stop)
+        self.ui.main_clear.clicked.connect(self.clear_log)
+
         # server
         self.ui.server_save.clicked.connect(self.server_save)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
-        self.ui.window_close.clicked.connect(self.close)
+        self.ui.window_close.clicked.connect(self.closewindow)
+    
+    def bandFrp(self):
+        # FrpClient
+        self._frp_client = FrpClient()
+        self._frp_client.log_message.connect(self.on_log_message)
+        self._frp_client.started.connect(self.on_frp_started)
+        self._frp_client.finished.connect(self.on_frp_finished)
+        self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
+        self._frp_client.stopped.connect(self.on_frp_stopped)
 
     ##
     ## UI变化反馈
@@ -86,11 +103,13 @@ class MainWindow(QMainWindow):
         self.left_highlight_botton = self.ui.page_main
         self.set_left_highlight_botton()
         self.LinkUISetting()
+        self.MainUISetting()
         self.readme()
         # self.ui.stackedWidget.setCurrentIndex(0)
-        
         self.setTabOrder(self.ui.server_IP, self.ui.server_Port)
         self.setTabOrder(self.ui.server_Port, self.ui.server_token)
+
+        
         
     ##
     ## 数据读取
@@ -189,6 +208,81 @@ class MainWindow(QMainWindow):
             """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
 
+    def MainUISetting(self):
+        self.background_color_low = QColor(40, 40, 60)
+        self.background_color_high = QColor(60, 60, 80)
+        self.highlight_color_main_stop = QColor(130, 130, 180)
+        self.highlight_color_main_start = QColor(80, 160, 80)
+        self.setstarthigh()
+        self.ui.main_clear.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {self.background_color_high.name()};
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.botton_highlight_link.name()};
+                }}
+            """)
+        icon = QIcon("ui/icon/play.png")
+        self.ui.main_start.setIcon(icon)
+        self.ui.main_start.setIconSize(self.ui.window_close.size())
+        icon = QIcon("ui/icon/stop.png")
+        self.ui.main_stop.setIcon(icon)
+        self.ui.main_stop.setIconSize(self.ui.window_close.size())
+        icon = QIcon("ui/icon/trash.png")
+        self.ui.main_clear.setIcon(icon)
+        self.ui.main_clear.setIconSize(self.ui.window_close.size())
+        
+        self.ui.main_log.setStyleSheet(f"""
+                border-radius: 0px;
+                border-color: {self.background_color_high.name()};
+            """)
+        self.ui.main_log.setReadOnly(True)
+        self.ui.main_start.setEnabled(True)
+        self.ui.main_stop.setEnabled(False)
+    
+    def setstarthigh(self):
+        self.ui.main_start.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {self.background_color_high.name()};
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.highlight_color_main_start.name()};
+                }}
+            """)
+        
+        self.ui.main_stop.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {self.background_color_low.name()};
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.highlight_color_main_stop.name()};
+                }}
+            """)
+    
+    def setstophigh(self):
+        self.ui.main_start.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {self.background_color_low.name()};
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.highlight_color_main_start.name()};
+                }}
+            """)
+        
+        self.ui.main_stop.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {self.background_color_high.name()};
+                    border-radius: 0px;
+                }}
+                QPushButton:hover {{
+                    background-color: {self.highlight_color_main_stop.name()};
+                }}
+            """)
+
     def setmain(self):
         self.ui.stackedWidget.setCurrentIndex(0)
         self.unset_left_highlight_botton()
@@ -219,9 +313,27 @@ class MainWindow(QMainWindow):
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
     
+    def closewindow(self):  
+        self._frp_client.stop()
+        self._frp_client.finished.disconnect()
+        self._frp_client.stopped.disconnect()
+        self._frp_client.log_message.disconnect()
+        self._frp_client.deleteLater()
+        self.close()
     ##
     ## 主要模块
     ##
+    def main_start(self):
+        
+        self._frp_client.start()
+
+    
+    def main_stop(self):
+        self._frp_client.stop()
+    
+    def clear_log(self):
+        self.ui.main_log.setPlainText('')
+
     def server_save(self):
         ip = self.ui.server_IP.text()
         port = self.ui.server_Port.text()
@@ -254,8 +366,33 @@ class MainWindow(QMainWindow):
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
         
+    ##
+    ## 信号动作
+    ##
+    def on_log_message(self, message):
+        self.ui.main_log.insertPlainText(message)
 
+    def on_frp_started(self):
+        self.ui.main_log.insertPlainText("frp client started.\n")
+        self.ui.main_start.setEnabled(False)
+        self.ui.main_stop.setEnabled(True)
+        self.setstophigh()
+
+    def on_frp_finished(self):
+        self._frp_client.stop()
+        self.ui.main_start.setEnabled(True)
+        self.ui.main_stop.setEnabled(False)
+        self.setstarthigh()
+        self.bandFrp()
     
+    def on_frp_finished_tell(self):
+        self.ui.main_log.insertPlainText("frp client stopped.\n")
+
+    def on_frp_stopped(self):
+        self.ui.main_start.setEnabled(True)
+        self.ui.main_stop.setEnabled(False)
+        self.setstarthigh()
+
     ##
     ## 判断模块
     ##

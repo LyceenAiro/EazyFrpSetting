@@ -2,13 +2,28 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>501</height>
+    <height>500</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>500</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Frp快速配置</string>
@@ -49,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -57,7 +72,7 @@
        <rect>
         <x>0</x>
         <y>40</y>
-        <width>641</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -81,9 +96,82 @@
        </font>
       </property>
       <property name="text">
-       <string>主页</string>
+       <string>开始</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="main_start">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>50</y>
+        <width>281</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="main_log">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>621</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="main_clear">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>50</y>
+        <width>61</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="main_stop">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>50</y>
+        <width>281</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <zorder>main_log</zorder>
+     <zorder>line_5</zorder>
+     <zorder>label_10</zorder>
+     <zorder>main_start</zorder>
+     <zorder>main_clear</zorder>
+     <zorder>main_stop</zorder>
     </widget>
     <widget class="QWidget" name="page0">
      <widget class="Line" name="line_4">
@@ -488,10 +576,10 @@
     <widget class="QPushButton" name="window_close">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>170</x>
        <y>0</y>
-       <width>41</width>
-       <height>21</height>
+       <width>50</width>
+       <height>25</height>
       </rect>
      </property>
      <property name="contextMenuPolicy">
@@ -504,10 +592,10 @@
     <widget class="QPushButton" name="window_mini">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>120</x>
        <y>0</y>
-       <width>41</width>
-       <height>21</height>
+       <width>50</width>
+       <height>25</height>
       </rect>
      </property>
      <property name="font">
@@ -537,7 +625,7 @@
      </font>
     </property>
     <property name="text">
-     <string>主页</string>
+     <string>开始</string>
     </property>
    </widget>
    <widget class="QPushButton" name="page_server">
