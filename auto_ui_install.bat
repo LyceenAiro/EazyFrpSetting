@@ -1,4 +1,4 @@
-@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230510
+@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230512
 @echo off
 
 set "file1=.\ui\main.ui" > nul
