@@ -2,8 +2,9 @@ import os
 import qdarkstyle
 import subprocess
 import threading
+import configparser
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QStackedWidget, QPushButton, QVBoxLayout, QApplication
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSizePolicy
 from PySide6.QtCore import Qt, QThread
 from PySide6.QtGui import QIcon, QPixmap, QColor
 from PySide6 import QtWidgets
@@ -24,11 +25,11 @@ class MainWindow(QMainWindow):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.ui.setupUi(self)
 
-        # 数据读取
-        self.datainit()
-        
         # UI初始化
         self.UIinit()
+
+        # 数据读取
+        self.datainit()
 
         # 绑定动作
         self.band()
@@ -55,6 +56,12 @@ class MainWindow(QMainWindow):
 
         # server
         self.ui.server_save.clicked.connect(self.server_save)
+
+        # link
+        self.ui.link_create.clicked.connect(self.on_add_button_clicked)
+        self.ui.link_delete.clicked.connect(self.on_delete_button_clicked)
+        self.ui.link_modify.clicked.connect(self.on_edit_button_clicked)
+        self.ui.linktable.itemSelectionChanged.connect(self.on_table_item_selection_changed)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
@@ -105,12 +112,10 @@ class MainWindow(QMainWindow):
         self.LinkUISetting()
         self.MainUISetting()
         self.readme()
-        # self.ui.stackedWidget.setCurrentIndex(0)
+        self.ui.stackedWidget.setCurrentIndex(0)
         self.setTabOrder(self.ui.server_IP, self.ui.server_Port)
         self.setTabOrder(self.ui.server_Port, self.ui.server_token)
-
-        
-        
+     
     ##
     ## 数据读取
     ##
@@ -125,6 +130,10 @@ class MainWindow(QMainWindow):
             self.ui.show_token.setText(server[3].split("=")[1].strip())
         except:
             pass
+        
+        if not os.path.exists("./data/linktable.ini"):
+            os.makedirs("./data/linktable.ini")
+        self.load_table_data("./data/linktable.ini")
 
     ##
     ## 自述配置
@@ -207,7 +216,18 @@ class MainWindow(QMainWindow):
                 }}
             """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
+        self.ui.linktable.setColumnCount(7)
+        self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
+        self.ui.linktable.setColumnWidth(1, 60)
+        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务"])
+        self.ui.linktable.horizontalHeader().setStretchLastSection(True)
+        self.ui.linktable.verticalHeader().setVisible(False)
+        self.ui.linktable.setSelectionBehavior(QTableWidget.SelectRows)
+        self.ui.linktable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
+        self.ui.link_delete.setEnabled(False)
+        self.ui.link_modify.setEnabled(False)
+        
     def MainUISetting(self):
         self.background_color_low = QColor(40, 40, 60)
         self.background_color_high = QColor(60, 60, 80)
@@ -313,21 +333,24 @@ class MainWindow(QMainWindow):
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
     
-    def closewindow(self):  
+    def closewindow(self):
         self._frp_client.stop()
         self._frp_client.finished.disconnect()
         self._frp_client.stopped.disconnect()
         self._frp_client.log_message.disconnect()
         self._frp_client.deleteLater()
         self.close()
+
     ##
     ## 主要模块
     ##
     def main_start(self):
-        
+        if self.checkfile() == False:
+            self.ui.main_log.insertPlainText("necessary settings are still missing.\n")
+            return
+        self.frpcData_save()
         self._frp_client.start()
 
-    
     def main_stop(self):
         self._frp_client.stop()
     
@@ -366,6 +389,68 @@ class MainWindow(QMainWindow):
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
         
+    def link_ini_save(self):
+        link = configparser.ConfigParser()
+        linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name"]
+        with open("./data/linktable.ini","r+",encoding="utf-8") as u:
+            for a in u.readlines():
+                b = a.split(",")
+                tags = 1
+                link.add_section(b[0])
+                while not tags >= 7:
+                    if b[tags] == "":
+                        link[b[0]]["#"+linksetup[tags]] = b[tags]
+                    else:
+                        link[b[0]][linksetup[tags]] = b[tags]
+                    tags += 1
+        with open('./data/link.ini', 'w') as configfile:
+            link.write(configfile)
+
+    def frpcData_save(self):
+        self.link_ini_save()
+
+        with open("./data/server.ini","r+",encoding="utf-8") as u:
+            frpc = u.readlines()
+        
+        with open('./data/link.ini', 'r+', encoding='utf-8') as u:
+            frpc += u.readlines()
+
+        with open("./data/frpc.ini","w+",encoding="utf-8") as u:
+            for i in frpc:
+                u.write(i)
+    
+    def save_table_data(self, filename):
+        with open(filename, 'w', encoding='utf-8') as f:
+            # 写入数据
+            for i in range(self.ui.linktable.rowCount()):
+                row_data = []
+                for j in range(self.ui.linktable.columnCount()):
+                    item = self.ui.linktable.item(i, j)
+                    if item is not None:
+                        row_data.append(item.text())
+                    else:
+                        row_data.append('')
+                    row_data.append(',')
+                row_data.append('End')
+                f.write(''.join(row_data) + '\n')
+    
+    def load_table_data(self, filename):
+        with open(filename, 'r', encoding='utf-8') as f:            
+            # 读取数据
+            row = 0
+            for line in f:
+                data = line.strip().split(',')
+                self.ui.linktable.insertRow(row)
+                for col, text in enumerate(data):
+                    if text == "End":
+                        break
+                    elif text == "":
+                        item = QtWidgets.QTableWidgetItem('')
+                    else:
+                        item = QtWidgets.QTableWidgetItem(text)
+                    self.ui.linktable.setItem(row, col, item)
+                row += 1
+
     ##
     ## 信号动作
     ##
@@ -392,7 +477,153 @@ class MainWindow(QMainWindow):
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
         self.setstarthigh()
+    
+    def add_table_row(self, data):
+        row_count = self.ui.linktable.rowCount()
+        self.ui.linktable.insertRow(row_count)
+        for i, item in enumerate(data):
+            table_item = QTableWidgetItem(item)
+            self.ui.linktable.setItem(row_count, i, table_item)
+    
+    def on_table_item_selection_changed(self):
+        selected_rows = self.ui.linktable.selectionModel().selectedRows()
+        if len(selected_rows) > 0:
+            self.ui.link_modify.setEnabled(True)
+            self.ui.link_delete.setEnabled(True)
+        else:
+            self.ui.link_modify.setEnabled(False)
+            self.ui.link_delete.setEnabled(False)
 
+    def on_edit_button_clicked(self):
+        selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
+        data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
+
+        # 创建编辑对话框
+        dialog = QDialog(self)
+        dialog.setWindowTitle("编辑链接")
+
+        frame = QFrame(dialog)
+        frame.setFrameShape(QFrame.Box)
+        frame.setStyleSheet("border-radius: 0px")
+        frame.setLineWidth(2)
+        frame.setFixedSize(200, 270)
+
+        layout = QVBoxLayout()
+
+        label = QLabel("编辑链接")
+        layout.addWidget(label)
+        
+        edit1 = QLineEdit(data[0])
+        edit1.setPlaceholderText("服务名称")
+        layout.addWidget(edit1)
+
+        edit2 = QLineEdit(data[1])
+        edit2.setPlaceholderText("协议")
+        layout.addWidget(edit2)
+
+        edit3 = QLineEdit(data[2])
+        edit3.setPlaceholderText("源地址")
+        layout.addWidget(edit3)
+
+        edit4 = QLineEdit(data[3])
+        edit4.setPlaceholderText("源端口")
+        layout.addWidget(edit4)
+
+        edit5 = QLineEdit(data[4])
+        edit5.setPlaceholderText("目的端口")
+        layout.addWidget(edit5)
+
+        edit6 = QLineEdit(data[5])
+        edit6.setPlaceholderText("密钥")
+        layout.addWidget(edit6)
+
+        edit7 = QLineEdit(data[6])
+        edit7.setPlaceholderText("目的服务")
+        layout.addWidget(edit7)
+
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        layout.addWidget(button_box)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            # 更新数据
+            self.ui.linktable.setItem(selected_row, 0, QTableWidgetItem(edit1.text()))
+            self.ui.linktable.setItem(selected_row, 1, QTableWidgetItem(edit2.text()))
+            self.ui.linktable.setItem(selected_row, 2, QTableWidgetItem(edit3.text()))
+            self.ui.linktable.setItem(selected_row, 3, QTableWidgetItem(edit4.text()))
+            self.ui.linktable.setItem(selected_row, 4, QTableWidgetItem(edit5.text()))
+            self.ui.linktable.setItem(selected_row, 5, QTableWidgetItem(edit6.text()))
+            self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
+            self.save_table_data("./data/linktable.ini")
+ 
+    def on_add_button_clicked(self):
+        # 创建添加对话框
+        dialog = QDialog(self)
+        dialog.setWindowTitle("创建链接")
+        dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+
+        frame = QFrame(dialog)
+        frame.setFrameShape(QFrame.Box)
+        frame.setStyleSheet("border-radius: 0px")
+        frame.setLineWidth(2)
+        frame.setFixedSize(200, 270)
+
+        layout = QVBoxLayout()
+
+        label = QLabel("创建链接")
+        layout.addWidget(label)
+
+        edit1 = QLineEdit()
+        edit1.setPlaceholderText("服务名称")
+        layout.addWidget(edit1)
+
+        edit2 = QLineEdit()
+        edit2.setPlaceholderText("协议")
+        layout.addWidget(edit2)
+
+        edit3 = QLineEdit()
+        edit3.setPlaceholderText("源地址")
+        layout.addWidget(edit3)
+
+        edit4 = QLineEdit()
+        edit4.setPlaceholderText("源端口")
+        layout.addWidget(edit4)
+
+        edit5 = QLineEdit()
+        edit5.setPlaceholderText("目的端口")
+        layout.addWidget(edit5)
+
+        edit6 = QLineEdit()
+        edit6.setPlaceholderText("密钥")
+        layout.addWidget(edit6)
+
+        edit7 = QLineEdit()
+        edit7.setPlaceholderText("目的服务")
+        layout.addWidget(edit7)
+
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        layout.addWidget(button_box)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            # 添加数据
+            self.add_table_row([edit1.text(), edit2.text(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
+            self.save_table_data("./data/linktable.ini")
+
+    def on_delete_button_clicked(self):
+        selected_rows = self.ui.linktable.selectionModel().selectedRows()
+        # 删除选中行
+        for row in selected_rows:
+            self.ui.linktable.removeRow(row.row())
+        
+        self.save_table_data("./data/linktable.ini")
+   
     ##
     ## 判断模块
     ##
@@ -419,6 +650,11 @@ class MainWindow(QMainWindow):
         except:
             return False
 
+    def checkfile(self):
+        if not os.path.exists("./data/server.ini"):
+            return False
+        # No should check LinkTable
+        # Check othersetting
 
     ##
     ## 窗口移动定义

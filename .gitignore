@@ -2,6 +2,7 @@
 __pycache__
 build
 dist
+*spec
 
 # 程序ico源
 logo.psd

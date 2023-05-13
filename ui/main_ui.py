@@ -17,7 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHeaderView, QLabel,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
-    QStackedWidget, QTableView, QTextEdit, QWidget)
+    QStackedWidget, QTableWidget, QTableWidgetItem, QTextEdit,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -155,9 +156,6 @@ class Ui_MainWindow(object):
         self.label_5.setObjectName(u"label_5")
         self.label_5.setGeometry(QRect(0, 0, 431, 31))
         self.label_5.setFont(font)
-        self.linktable = QTableView(self.page1)
-        self.linktable.setObjectName(u"linktable")
-        self.linktable.setGeometry(QRect(10, 100, 611, 371))
         self.link_create = QPushButton(self.page1)
         self.link_create.setObjectName(u"link_create")
         self.link_create.setGeometry(QRect(520, 60, 101, 41))
@@ -167,13 +165,10 @@ class Ui_MainWindow(object):
         self.link_modify = QPushButton(self.page1)
         self.link_modify.setObjectName(u"link_modify")
         self.link_modify.setGeometry(QRect(420, 60, 101, 41))
+        self.linktable = QTableWidget(self.page1)
+        self.linktable.setObjectName(u"linktable")
+        self.linktable.setGeometry(QRect(0, 100, 621, 371))
         self.stackedWidget.addWidget(self.page1)
-        self.line_3.raise_()
-        self.label_5.raise_()
-        self.link_create.raise_()
-        self.link_delete.raise_()
-        self.link_modify.raise_()
-        self.linktable.raise_()
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
         self.line_6 = QFrame(self.page_2)
@@ -256,7 +251,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

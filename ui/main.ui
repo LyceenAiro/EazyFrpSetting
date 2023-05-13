@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -439,16 +439,6 @@
        <string>配置链接</string>
       </property>
      </widget>
-     <widget class="QTableView" name="linktable">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>100</y>
-        <width>611</width>
-        <height>371</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QPushButton" name="link_create">
       <property name="geometry">
        <rect>
@@ -488,12 +478,16 @@
        <string>编辑</string>
       </property>
      </widget>
-     <zorder>line_3</zorder>
-     <zorder>label_5</zorder>
-     <zorder>link_create</zorder>
-     <zorder>link_delete</zorder>
-     <zorder>link_modify</zorder>
-     <zorder>linktable</zorder>
+     <widget class="QTableWidget" name="linktable">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>621</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="Line" name="line_6">
