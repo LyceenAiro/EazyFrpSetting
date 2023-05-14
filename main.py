@@ -148,7 +148,8 @@ class MainWindow(QMainWindow):
             pass
         
         if not os.path.exists("./data/linktable.ini"):
-            os.makedirs("./data/linktable.ini")
+            with open("./data/linktable.ini", "w", encoding="utf8") as f:
+                f.write("")
         self.load_table_data("./data/linktable.ini")
 
     ##
