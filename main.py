@@ -30,6 +30,7 @@ class MainWindow(QMainWindow):
 
         # UI初始化
         self.UIinit()
+        self.OtherUISetting()
 
         # 数据读取
         self.datainit()
@@ -67,6 +68,9 @@ class MainWindow(QMainWindow):
         self.ui.link_delete.clicked.connect(self.on_delete_button_clicked)
         self.ui.link_modify.clicked.connect(self.on_edit_button_clicked)
         self.ui.linktable.itemSelectionChanged.connect(self.on_table_item_selection_changed)
+
+        # other
+        self.ui.auto_linkname.stateChanged.connect(self.setcheckbox_linkname)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
@@ -134,10 +138,12 @@ class MainWindow(QMainWindow):
             os.makedirs("data")
         try:
             with open("./data/server.ini","r+",encoding="utf-8") as u:
-                server = u.readlines()
-            self.ui.show_IP.setText(server[1].split("=")[1].strip())
-            self.ui.show_Port.setText(server[2].split("=")[1].strip())
-            self.ui.show_token.setText(server[3].split("=")[1].strip())
+                pass
+            server = configparser.ConfigParser()
+            server.read("./data/server.ini","utf-8")
+            self.ui.show_IP.setText(server["common"]["server_addr"])
+            self.ui.show_Port.setText(server["common"]["server_port"])
+            self.ui.show_token.setText(server["common"]["token"])
         except:
             pass
         
@@ -276,6 +282,9 @@ class MainWindow(QMainWindow):
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
     
+    def OtherUISetting(self):
+        pass
+
     def setstarthigh(self):
         # 设置按钮高亮
         self.ui.main_start.setStyleSheet(f"""
@@ -319,6 +328,13 @@ class MainWindow(QMainWindow):
                     background-color: {self.highlight_color_main_stop.name()};
                 }}
             """)
+
+    def setcheckbox_linkname(self, state):
+        # 设置checkbox对象开关 | 变量 -> 信号
+        if state == Qt.Checked:
+            pass
+        else:
+            pass
 
     def setmain(self):
         # 将页面切换到 -> 开始
@@ -381,7 +397,7 @@ class MainWindow(QMainWindow):
     
     def clear_log(self):
         # 清除启动日志
-        self.ui.main_log.setPlainText('')
+        self.ui.main_log.setPlainText("")
 
     def server_save(self):
         # 服务器配置文件保存
@@ -391,31 +407,32 @@ class MainWindow(QMainWindow):
 
         check = True
         if self.ipcheck(ip) == False:
-            self.ui.server_IP.setStyleSheet('border: 2px solid red;')
+            self.ui.server_IP.setStyleSheet("border: 2px solid red;")
             check = False
         if self.portcheck(port, 1, 65565) == False:
-            self.ui.server_Port.setStyleSheet('border: 2px solid red;')
+            self.ui.server_Port.setStyleSheet("border: 2px solid red;")
             check = False
         if check == False:
             return
-        self.ui.server_IP.setStyleSheet('')
-        self.ui.server_Port.setStyleSheet('')
-        server = ["[common]\n",
-                  f"server_addr = {ip}\n",
-                  f"server_port = {port}\n",
-                  f"token = {token}\n"
-                  ]
+        self.ui.server_IP.setStyleSheet("")
+        self.ui.server_Port.setStyleSheet("")
+
+        link = configparser.ConfigParser()
+        link.add_section("common")
+        link["common"]["server_addr"] = ip
+        link["common"]["server_port"] = port
         if token == "":
-            server[3] = "#token = 无配置"
+            link["common"]["#token"] = "无配置"
             self.ui.show_token.setText("无配置")
         else:
+            link["common"]["token"] = token
             self.ui.show_token.setText(token)
-        with open("./data/server.ini","w+",encoding="utf-8") as u:
-            for i in server:
-                u.write(i)
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
-        
+
+        with open("./data/server.ini", "w", encoding="utf-8") as configfile:
+            link.write(configfile)
+
     def link_ini_save(self):
         # 表文件编译成ini
         link = configparser.ConfigParser()
@@ -431,7 +448,7 @@ class MainWindow(QMainWindow):
                     else:
                         link[b[0]][linksetup[tags]] = b[tags]
                     tags += 1
-        with open('./data/link.ini', 'w') as configfile:
+        with open("./data/link.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
     def frpcData_save(self):
@@ -441,7 +458,7 @@ class MainWindow(QMainWindow):
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
         
-        with open('./data/link.ini', 'r+', encoding='utf-8') as u:
+        with open("./data/link.ini", "r+", encoding="utf-8") as u:
             frpc += u.readlines()
 
         with open("./data/frpc.ini","w+",encoding="utf-8") as u:
@@ -450,7 +467,7 @@ class MainWindow(QMainWindow):
     
     def save_table_data(self, filename):
         # 保存表文件 | 变量 -> 文件地址
-        with open(filename, 'w', encoding='utf-8') as f:
+        with open(filename, "w", encoding="utf-8") as f:
             # 写入数据
             for i in range(self.ui.linktable.rowCount()):
                 row_data = []
@@ -459,24 +476,24 @@ class MainWindow(QMainWindow):
                     if item is not None:
                         row_data.append(item.text())
                     else:
-                        row_data.append('')
-                    row_data.append(',')
-                row_data.append('End')
-                f.write(''.join(row_data) + '\n')
+                        row_data.append("")
+                    row_data.append(",")
+                row_data.append("End")
+                f.write("".join(row_data) + "\n")
     
     def load_table_data(self, filename):
         # 读取表文件 | 变量 -> 文件地址
-        with open(filename, 'r', encoding='utf-8') as f:            
+        with open(filename, "r", encoding="utf-8") as f:            
             # 读取数据
             row = 0
             for line in f:
-                data = line.strip().split(',')
+                data = line.strip().split(",")
                 self.ui.linktable.insertRow(row)
                 for col, text in enumerate(data):
                     if text == "End":
                         break
                     elif text == "":
-                        item = QtWidgets.QTableWidgetItem('')
+                        item = QtWidgets.QTableWidgetItem("")
                     else:
                         item = QtWidgets.QTableWidgetItem(text)
                     self.ui.linktable.setItem(row, col, item)
@@ -485,7 +502,7 @@ class MainWindow(QMainWindow):
     def auto_creat_linkname(self, str_size):
         # 自动生成链接名 | 变量 -> 生成长度
         chars = string.ascii_uppercase + string.digits
-        return ''.join(random.choice(chars) for x in range(str_size))
+        return "".join(random.choice(chars) for x in range(str_size))
 
     ##
     ## 信号动作

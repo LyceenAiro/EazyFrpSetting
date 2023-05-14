@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
-    QStackedWidget, QTableWidget, QTableWidgetItem, QTextEdit,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHeaderView,
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QSpinBox, QStackedWidget, QTableWidget,
+    QTableWidgetItem, QTextEdit, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -180,6 +180,131 @@ class Ui_MainWindow(object):
         self.label_11.setObjectName(u"label_11")
         self.label_11.setGeometry(QRect(0, 0, 431, 31))
         self.label_11.setFont(font)
+        self.auto_address = QCheckBox(self.page_2)
+        self.auto_address.setObjectName(u"auto_address")
+        self.auto_address.setGeometry(QRect(570, 120, 52, 24))
+        self.auto_address.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
+        self.auto_linkname = QCheckBox(self.page_2)
+        self.auto_linkname.setObjectName(u"auto_linkname")
+        self.auto_linkname.setGeometry(QRect(570, 60, 52, 24))
+        self.auto_linkname.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
+        self.auto_heartbeat = QCheckBox(self.page_2)
+        self.auto_heartbeat.setObjectName(u"auto_heartbeat")
+        self.auto_heartbeat.setGeometry(QRect(570, 160, 52, 24))
+        self.auto_heartbeat.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
+        self.label_13 = QLabel(self.page_2)
+        self.label_13.setObjectName(u"label_13")
+        self.label_13.setGeometry(QRect(10, 55, 161, 31))
+        font2 = QFont()
+        font2.setPointSize(12)
+        font2.setBold(True)
+        self.label_13.setFont(font2)
+        self.label_14 = QLabel(self.page_2)
+        self.label_14.setObjectName(u"label_14")
+        self.label_14.setGeometry(QRect(10, 90, 111, 21))
+        font3 = QFont()
+        font3.setPointSize(10)
+        font3.setBold(True)
+        self.label_14.setFont(font3)
+        self.label_15 = QLabel(self.page_2)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setGeometry(QRect(10, 120, 161, 31))
+        self.label_15.setFont(font2)
+        self.label_16 = QLabel(self.page_2)
+        self.label_16.setObjectName(u"label_16")
+        self.label_16.setGeometry(QRect(10, 160, 161, 21))
+        self.label_16.setFont(font2)
+        self.label_17 = QLabel(self.page_2)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setGeometry(QRect(10, 190, 111, 21))
+        self.label_17.setFont(font3)
+        self.auto_linkname_box = QSpinBox(self.page_2)
+        self.auto_linkname_box.setObjectName(u"auto_linkname_box")
+        self.auto_linkname_box.setGeometry(QRect(571, 90, 51, 22))
+        self.auto_linkname_box_2 = QSpinBox(self.page_2)
+        self.auto_linkname_box_2.setObjectName(u"auto_linkname_box_2")
+        self.auto_linkname_box_2.setGeometry(QRect(570, 190, 51, 22))
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
@@ -203,28 +328,28 @@ class Ui_MainWindow(object):
         self.window_mini = QPushButton(self.widget_3)
         self.window_mini.setObjectName(u"window_mini")
         self.window_mini.setGeometry(QRect(120, 0, 50, 25))
-        font2 = QFont()
-        font2.setPointSize(9)
-        self.window_mini.setFont(font2)
+        font4 = QFont()
+        font4.setPointSize(9)
+        self.window_mini.setFont(font4)
         self.window_mini.raise_()
         self.window_close.raise_()
         self.page_main = QPushButton(self.centralwidget)
         self.page_main.setObjectName(u"page_main")
         self.page_main.setGeometry(QRect(0, 70, 131, 41))
-        font3 = QFont()
-        font3.setPointSize(10)
-        self.page_main.setFont(font3)
+        font5 = QFont()
+        font5.setPointSize(10)
+        self.page_main.setFont(font5)
         self.page_server = QPushButton(self.centralwidget)
         self.page_server.setObjectName(u"page_server")
         self.page_server.setGeometry(QRect(0, 110, 131, 41))
-        self.page_server.setFont(font3)
+        self.page_server.setFont(font5)
         self.version = QLabel(self.centralwidget)
         self.version.setObjectName(u"version")
         self.version.setGeometry(QRect(80, 40, 51, 16))
         self.page_other = QPushButton(self.centralwidget)
         self.page_other.setObjectName(u"page_other")
         self.page_other.setGeometry(QRect(0, 190, 131, 41))
-        self.page_other.setFont(font3)
+        self.page_other.setFont(font5)
         self.label_12 = QLabel(self.centralwidget)
         self.label_12.setObjectName(u"label_12")
         self.label_12.setGeometry(QRect(10, 10, 71, 51))
@@ -233,25 +358,25 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
         self.label_12.setSizePolicy(sizePolicy)
-        font4 = QFont()
-        font4.setPointSize(26)
-        font4.setBold(True)
-        self.label_12.setFont(font4)
+        font6 = QFont()
+        font6.setPointSize(26)
+        font6.setBold(True)
+        self.label_12.setFont(font6)
         self.label_12.setTextFormat(Qt.PlainText)
         self.label_12.setWordWrap(False)
         self.page_link = QPushButton(self.centralwidget)
         self.page_link.setObjectName(u"page_link")
         self.page_link.setGeometry(QRect(0, 150, 131, 41))
-        self.page_link.setFont(font3)
+        self.page_link.setFont(font5)
         self.page_tags = QPushButton(self.centralwidget)
         self.page_tags.setObjectName(u"page_tags")
         self.page_tags.setGeometry(QRect(0, 230, 131, 41))
-        self.page_tags.setFont(font3)
+        self.page_tags.setFont(font5)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -283,6 +408,14 @@ class Ui_MainWindow(object):
         self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
         self.link_modify.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u8f91", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e", None))
+        self.auto_address.setText("")
+        self.auto_linkname.setText("")
+        self.auto_heartbeat.setText("")
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"\u81ea\u52a8\u586b\u5199\u94fe\u63a5\u540d", None))
+        self.label_14.setText(QCoreApplication.translate("MainWindow", u"\u957f\u5ea6", None))
+        self.label_15.setText(QCoreApplication.translate("MainWindow", u"\u81ea\u52a8\u586b\u5199\u6e90\u5730\u5740", None))
+        self.label_16.setText(QCoreApplication.translate("MainWindow", u"\u5fc3\u8df3\u56de\u5e94", None))
+        self.label_17.setText(QCoreApplication.translate("MainWindow", u"\u5ef6\u65f6", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.window_close.setText("")
         self.window_mini.setText("")

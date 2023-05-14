@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -520,6 +520,250 @@
       </property>
       <property name="text">
        <string>其他配置</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="auto_address">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>120</y>
+        <width>52</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCheckBox {
+    background-color: #2c2c2c;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+QCheckBox::checked {
+    background-color: #4cd964;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+QCheckBox::indicator::checked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #ffffff;
+	position: relative;
+	left: 25px;
+}
+
+QCheckBox::indicator::unchecked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #2196F3;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="auto_linkname">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>60</y>
+        <width>52</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCheckBox {
+    background-color: #2c2c2c;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+QCheckBox::checked {
+    background-color: #4cd964;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+QCheckBox::indicator::checked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #ffffff;
+	position: relative;
+	left: 25px;
+}
+
+QCheckBox::indicator::unchecked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #2196F3;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="auto_heartbeat">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>160</y>
+        <width>52</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCheckBox {
+    background-color: #2c2c2c;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+QCheckBox::checked {
+    background-color: #4cd964;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+QCheckBox::indicator::checked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #ffffff;
+	position: relative;
+	left: 25px;
+}
+
+QCheckBox::indicator::unchecked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #2196F3;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>55</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>自动填写链接名</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>长度</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>自动填写源地址</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>160</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>心跳回应</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>延时</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="auto_linkname_box">
+      <property name="geometry">
+       <rect>
+        <x>571</x>
+        <y>90</y>
+        <width>51</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="auto_linkname_box_2">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>190</y>
+        <width>51</width>
+        <height>22</height>
+       </rect>
       </property>
      </widget>
     </widget>

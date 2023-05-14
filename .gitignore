@@ -5,7 +5,7 @@ dist
 *spec
 
 # 程序ico源
-logo.psd
+*.psd
 logo.png
 
 # 图标源
