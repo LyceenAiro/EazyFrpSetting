@@ -31,7 +31,6 @@ class MainWindow(QMainWindow):
 
         # UI初始化
         self.UIinit()
-        self.OtherUISetting()
 
         # 数据读取
         self.datainit()
@@ -284,6 +283,8 @@ class MainWindow(QMainWindow):
         self.ui.main_stop.setEnabled(False)
     
     def OtherUISetting(self):
+        # 这个函数还没有被任何地方调用
+        # 记得在datainit中同步数据
         pass
 
     def setstarthigh(self):

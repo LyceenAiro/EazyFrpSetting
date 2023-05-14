@@ -408,7 +408,7 @@ class Ui_MainWindow(object):
         self.link_create.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa", None))
         self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
         self.link_modify.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u8f91", None))
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e", None))
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e(\u672a\u5b8c\u6210)", None))
         self.auto_address.setText("")
         self.auto_linkname.setText("")
         self.auto_heartbeat.setText("")
