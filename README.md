@@ -7,6 +7,18 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - 需求文件:frpc.exe  
 - 将frpc.exe放入根目录中
 - 启动该软件
+### 文件目录生成和排版
+```
+.
+├─data          // 这个文件夹及其内容都是自动生成的
+│  ├─frpc.ini       // frpc启动文件
+│  ├─link.ini       // link编译文件
+│  ├─linktable.ini  // link表源文件
+│  ├─more.ini       // other配置文件
+│  └─server.ini     // server配置文件
+├─frpc.exe      // 你需要把frpc.exe放在这里
+└─main.exe      // 软件本体
+```
 ## 开发流程
 - [x] 最初开发库构建
 - [x] 图形化界面
