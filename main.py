@@ -1,14 +1,17 @@
+# python模块
 import os
 import qdarkstyle
-import subprocess
-import threading
 import configparser
+import string
+import random
 
-from PySide6.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSizePolicy
-from PySide6.QtCore import Qt, QThread
-from PySide6.QtGui import QIcon, QPixmap, QColor
+# pyside6模块
+from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon, QColor
 from PySide6 import QtWidgets
 
+# 项目模块
 from ui.main_ui import Ui_MainWindow
 from script.start import FrpClient
 from makefile.tags import tags
@@ -42,6 +45,8 @@ class MainWindow(QMainWindow):
     ## 对象绑定设置
     ##
     def band(self):
+        # 按钮绑定配置
+
         # left
         self.ui.page_main.clicked.connect(self.setmain)
         self.ui.page_server.clicked.connect(self.setserver)
@@ -68,7 +73,7 @@ class MainWindow(QMainWindow):
         self.ui.window_close.clicked.connect(self.closewindow)
     
     def bandFrp(self):
-        # FrpClient
+        # 绑定Frp客户端独立运行的subprocess信号
         self._frp_client = FrpClient()
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
@@ -80,6 +85,7 @@ class MainWindow(QMainWindow):
     ## UI变化反馈
     ##
     def unset_left_highlight_botton(self):
+        # 取消设置左侧高亮按钮
         self.left_highlight_botton.setStyleSheet(f"""
                 QPushButton {{
                     background-color: transparent;
@@ -91,6 +97,7 @@ class MainWindow(QMainWindow):
             """)
         
     def set_left_highlight_botton(self):
+        # 左侧高亮按钮
         self.left_highlight_botton.setStyleSheet(f"""
                 QPushButton {{
                     background-color: {self.botton_highlight_color2.name()};
@@ -105,6 +112,8 @@ class MainWindow(QMainWindow):
     ## 初始化
     ##
     def UIinit(self):
+        # 全部UI初始化整理
+        # 该项必须放在datainit()后面,否则会导致datainit()的数据被初始化
         self.FlagsUiSetting()
         self.LeftUISetting()
         self.left_highlight_botton = self.ui.page_main
@@ -120,6 +129,7 @@ class MainWindow(QMainWindow):
     ## 数据读取
     ##
     def datainit(self):
+        # 包含所有存储数据读取
         if not os.path.exists("data"):
             os.makedirs("data")
         try:
@@ -139,12 +149,14 @@ class MainWindow(QMainWindow):
     ## 自述配置
     ##
     def readme(self):
+        # 自述文件初始化
         self.ui.version.setText(self.tags.version)
 
     ## 
     ## 按钮设置
     ##
     def FlagsUiSetting(self):
+        # 自定义导航栏初始化
         highlight_color = QColor(130, 130, 180)
         botten = [self.ui.window_mini,
                   self.ui.window_close]
@@ -166,6 +178,7 @@ class MainWindow(QMainWindow):
         self.ui.window_mini.setIconSize(self.ui.window_close.size())
 
     def LeftUISetting(self):
+        # 左侧栏UI初始化
         self.botton_highlight_color = QColor(130, 130, 130)
         self.botton_highlight_color2 = QColor(100, 100, 180)
         self.botton_highlight_color3 = QColor(100, 100, 210)
@@ -185,6 +198,7 @@ class MainWindow(QMainWindow):
             """)
 
     def LinkUISetting(self):
+        # 配置链接页面UI初始化
         self.botton_highlight_link = QColor(200, 80, 80)
         self.botton_highlight_link2 = QColor(80, 200, 80)
         self.botton_highlight_link3 = QColor(100, 100, 180)
@@ -229,6 +243,7 @@ class MainWindow(QMainWindow):
         self.ui.link_modify.setEnabled(False)
         
     def MainUISetting(self):
+        # 开始页面UI初始化
         self.background_color_low = QColor(40, 40, 60)
         self.background_color_high = QColor(60, 60, 80)
         self.highlight_color_main_stop = QColor(130, 130, 180)
@@ -262,6 +277,7 @@ class MainWindow(QMainWindow):
         self.ui.main_stop.setEnabled(False)
     
     def setstarthigh(self):
+        # 设置按钮高亮
         self.ui.main_start.setStyleSheet(f"""
                 QPushButton {{
                     background-color: {self.background_color_high.name()};
@@ -283,6 +299,7 @@ class MainWindow(QMainWindow):
             """)
     
     def setstophigh(self):
+        # 停止按钮高亮
         self.ui.main_start.setStyleSheet(f"""
                 QPushButton {{
                     background-color: {self.background_color_low.name()};
@@ -304,36 +321,42 @@ class MainWindow(QMainWindow):
             """)
 
     def setmain(self):
+        # 将页面切换到 -> 开始
         self.ui.stackedWidget.setCurrentIndex(0)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_main
         self.set_left_highlight_botton()
 
     def setserver(self):
+        # 将页面切换到 -> 服务器
         self.ui.stackedWidget.setCurrentIndex(1)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_server
         self.set_left_highlight_botton()
 
     def setlink(self):
+        # 将页面切换到 -> 配置链接
         self.ui.stackedWidget.setCurrentIndex(2)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_link
         self.set_left_highlight_botton()
 
     def setother(self):
+        # 将页面切换到 -> 其他配置
         self.ui.stackedWidget.setCurrentIndex(3)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_other
         self.set_left_highlight_botton()
 
     def settags(self):
+        # 将页面切换到 -> 关于
         self.ui.stackedWidget.setCurrentIndex(4)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
     
     def closewindow(self):
+        # 关闭按钮定义
         self._frp_client.stop()
         self._frp_client.finished.disconnect()
         self._frp_client.stopped.disconnect()
@@ -345,6 +368,7 @@ class MainWindow(QMainWindow):
     ## 主要模块
     ##
     def main_start(self):
+        # 启动Frp客户端
         if self.checkfile() == False:
             self.ui.main_log.insertPlainText("necessary settings are still missing.\n")
             return
@@ -352,12 +376,15 @@ class MainWindow(QMainWindow):
         self._frp_client.start()
 
     def main_stop(self):
+        # 关闭Frp客户端
         self._frp_client.stop()
     
     def clear_log(self):
+        # 清除启动日志
         self.ui.main_log.setPlainText('')
 
     def server_save(self):
+        # 服务器配置文件保存
         ip = self.ui.server_IP.text()
         port = self.ui.server_Port.text()
         token = self.ui.server_token.text()
@@ -390,6 +417,7 @@ class MainWindow(QMainWindow):
         self.ui.show_Port.setText(port)
         
     def link_ini_save(self):
+        # 表文件编译成ini
         link = configparser.ConfigParser()
         linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name"]
         with open("./data/linktable.ini","r+",encoding="utf-8") as u:
@@ -407,6 +435,7 @@ class MainWindow(QMainWindow):
             link.write(configfile)
 
     def frpcData_save(self):
+        # 整理打包frp.ini
         self.link_ini_save()
 
         with open("./data/server.ini","r+",encoding="utf-8") as u:
@@ -420,6 +449,7 @@ class MainWindow(QMainWindow):
                 u.write(i)
     
     def save_table_data(self, filename):
+        # 保存表文件 | 变量 -> 文件地址
         with open(filename, 'w', encoding='utf-8') as f:
             # 写入数据
             for i in range(self.ui.linktable.rowCount()):
@@ -435,6 +465,7 @@ class MainWindow(QMainWindow):
                 f.write(''.join(row_data) + '\n')
     
     def load_table_data(self, filename):
+        # 读取表文件 | 变量 -> 文件地址
         with open(filename, 'r', encoding='utf-8') as f:            
             # 读取数据
             row = 0
@@ -451,19 +482,27 @@ class MainWindow(QMainWindow):
                     self.ui.linktable.setItem(row, col, item)
                 row += 1
 
+    def auto_creat_linkname(self, str_size):
+        # 自动生成链接名 | 变量 -> 生成长度
+        chars = string.ascii_uppercase + string.digits
+        return ''.join(random.choice(chars) for x in range(str_size))
+
     ##
     ## 信号动作
     ##
     def on_log_message(self, message):
+        # 当frp日志更新时发送到主窗口 | 变量 -> 信息
         self.ui.main_log.insertPlainText(message)
 
     def on_frp_started(self):
+        # 当收到Frp启动命令时向窗口的反馈
         self.ui.main_log.insertPlainText("frp client started.\n")
         self.ui.main_start.setEnabled(False)
         self.ui.main_stop.setEnabled(True)
         self.setstophigh()
 
     def on_frp_finished(self):
+        # 当收到frp停止的信号时向窗口反馈
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
@@ -471,14 +510,17 @@ class MainWindow(QMainWindow):
         self.bandFrp()
     
     def on_frp_finished_tell(self):
+        # 将停止通知与停止反馈分离防止发送两条信息
         self.ui.main_log.insertPlainText("frp client stopped.\n")
 
     def on_frp_stopped(self):
+        # 当frp手动停止时向窗口反馈
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
         self.setstarthigh()
     
     def add_table_row(self, data):
+        # 向表写入数据
         row_count = self.ui.linktable.rowCount()
         self.ui.linktable.insertRow(row_count)
         for i, item in enumerate(data):
@@ -486,6 +528,7 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(row_count, i, table_item)
     
     def on_table_item_selection_changed(self):
+        # 当表中数据发生修改时向窗口反馈
         selected_rows = self.ui.linktable.selectionModel().selectedRows()
         if len(selected_rows) > 0:
             self.ui.link_modify.setEnabled(True)
@@ -495,10 +538,11 @@ class MainWindow(QMainWindow):
             self.ui.link_delete.setEnabled(False)
 
     def on_edit_button_clicked(self):
+        # 当编辑按钮被触发时弹出窗口
+        # 本函数包含一个子窗口
         selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
         data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
 
-        # 创建编辑对话框
         dialog = QDialog(self)
         dialog.setWindowTitle("编辑链接")
 
@@ -560,7 +604,8 @@ class MainWindow(QMainWindow):
             self.save_table_data("./data/linktable.ini")
  
     def on_add_button_clicked(self):
-        # 创建添加对话框
+        # 当添加按钮被触发时弹出窗口
+        # 本函数包含一个子窗口
         dialog = QDialog(self)
         dialog.setWindowTitle("创建链接")
         dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -617,17 +662,17 @@ class MainWindow(QMainWindow):
             self.save_table_data("./data/linktable.ini")
 
     def on_delete_button_clicked(self):
+        # 当删除按钮触发时删除选中行
         selected_rows = self.ui.linktable.selectionModel().selectedRows()
-        # 删除选中行
         for row in selected_rows:
             self.ui.linktable.removeRow(row.row())
-        
         self.save_table_data("./data/linktable.ini")
    
     ##
     ## 判断模块
     ##
     def ipcheck(self, ip):
+        # 判断IP地址是否合法
         try:
             if len(ip.split("."))==4:
                 for i in ip.split(".") :
@@ -642,6 +687,7 @@ class MainWindow(QMainWindow):
             return False
         
     def portcheck(self, port, low, high):
+        # 判断端口是否合法 | 变量 -> 端口,最小端口,最大端口
         try:
             if high >= int(port) >= low :
                 return True
@@ -651,6 +697,7 @@ class MainWindow(QMainWindow):
             return False
 
     def checkfile(self):
+        # 检查配置文件是否满足需求
         if not os.path.exists("./data/server.ini"):
             return False
         # No should check LinkTable
@@ -677,7 +724,10 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication([])
+
+    # 配置主题
     app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api="pyside6"))
+
     window = MainWindow()
     window.show()
     app.exec()

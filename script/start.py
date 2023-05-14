@@ -1,9 +1,8 @@
 import subprocess
-import threading
-from PySide6.QtCore import QObject, QThread, Signal
-from PySide6.QtWidgets import QMainWindow, QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtCore import QThread, Signal
 
 class FrpClient(QThread):
+    # 这是一个专门用于启动Frp的subprocess
     stopped = Signal()
     started = Signal()
     finished = Signal()
