@@ -4,7 +4,7 @@ import qdarkstyle
 import configparser
 import string
 import random
-import ui.main_qrc
+import ui.main_rc
 
 # pyside6模块
 from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit

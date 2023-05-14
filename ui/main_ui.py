@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHeaderView,
     QLabel, QLineEdit, QMainWindow, QPushButton,
     QSizePolicy, QSpinBox, QStackedWidget, QTableWidget,
     QTableWidgetItem, QTextEdit, QWidget)
+from . import main_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -182,7 +183,7 @@ class Ui_MainWindow(object):
         self.label_11.setFont(font)
         self.auto_address = QCheckBox(self.page_2)
         self.auto_address.setObjectName(u"auto_address")
-        self.auto_address.setGeometry(QRect(570, 120, 52, 24))
+        self.auto_address.setGeometry(QRect(570, 130, 52, 24))
         self.auto_address.setStyleSheet(u"QCheckBox {\n"
 "    background-color: #2c2c2c;\n"
 "    border-radius: 3px;\n"
@@ -244,7 +245,7 @@ class Ui_MainWindow(object):
 "")
         self.auto_heartbeat = QCheckBox(self.page_2)
         self.auto_heartbeat.setObjectName(u"auto_heartbeat")
-        self.auto_heartbeat.setGeometry(QRect(570, 160, 52, 24))
+        self.auto_heartbeat.setGeometry(QRect(570, 180, 52, 24))
         self.auto_heartbeat.setStyleSheet(u"QCheckBox {\n"
 "    background-color: #2c2c2c;\n"
 "    border-radius: 3px;\n"
@@ -289,22 +290,22 @@ class Ui_MainWindow(object):
         self.label_14.setFont(font3)
         self.label_15 = QLabel(self.page_2)
         self.label_15.setObjectName(u"label_15")
-        self.label_15.setGeometry(QRect(10, 120, 161, 31))
+        self.label_15.setGeometry(QRect(10, 130, 161, 31))
         self.label_15.setFont(font2)
         self.label_16 = QLabel(self.page_2)
         self.label_16.setObjectName(u"label_16")
-        self.label_16.setGeometry(QRect(10, 160, 161, 21))
+        self.label_16.setGeometry(QRect(10, 180, 161, 21))
         self.label_16.setFont(font2)
         self.label_17 = QLabel(self.page_2)
         self.label_17.setObjectName(u"label_17")
-        self.label_17.setGeometry(QRect(10, 190, 111, 21))
+        self.label_17.setGeometry(QRect(10, 210, 111, 21))
         self.label_17.setFont(font3)
         self.auto_linkname_box = QSpinBox(self.page_2)
         self.auto_linkname_box.setObjectName(u"auto_linkname_box")
         self.auto_linkname_box.setGeometry(QRect(571, 90, 51, 22))
         self.auto_linkname_box_2 = QSpinBox(self.page_2)
         self.auto_linkname_box_2.setObjectName(u"auto_linkname_box_2")
-        self.auto_linkname_box_2.setGeometry(QRect(570, 190, 51, 22))
+        self.auto_linkname_box_2.setGeometry(QRect(570, 210, 51, 22))
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
