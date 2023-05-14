@@ -4,6 +4,7 @@ import qdarkstyle
 import configparser
 import string
 import random
+import ui.main_qrc
 
 # pyside6模块
 from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit
@@ -137,7 +138,7 @@ class MainWindow(QMainWindow):
         if not os.path.exists("data"):
             os.makedirs("data")
         try:
-            with open("./data/server.ini","r+",encoding="utf-8") as u:
+            with open("./data/server.ini","r+",encoding="utf-8"):
                 pass
             server = configparser.ConfigParser()
             server.read("./data/server.ini","utf-8")
@@ -176,10 +177,10 @@ class MainWindow(QMainWindow):
                     background-color: {highlight_color.name()};
                 }}
             """)
-        icon = QIcon("ui/icon/close.png")
+        icon = QIcon(":images/icon/close.png")
         self.ui.window_close.setIcon(icon)
         self.ui.window_close.setIconSize(self.ui.window_close.size())
-        icon = QIcon("ui/icon/mini.png")
+        icon = QIcon(":images/icon/mini.png")
         self.ui.window_mini.setIcon(icon)
         self.ui.window_mini.setIconSize(self.ui.window_close.size())
 
@@ -264,13 +265,13 @@ class MainWindow(QMainWindow):
                     background-color: {self.botton_highlight_link.name()};
                 }}
             """)
-        icon = QIcon("ui/icon/play.png")
+        icon = QIcon(":images/icon/play.png")
         self.ui.main_start.setIcon(icon)
         self.ui.main_start.setIconSize(self.ui.window_close.size())
-        icon = QIcon("ui/icon/stop.png")
+        icon = QIcon(":images/icon/stop.png")
         self.ui.main_stop.setIcon(icon)
         self.ui.main_stop.setIconSize(self.ui.window_close.size())
-        icon = QIcon("ui/icon/trash.png")
+        icon = QIcon(":images/icon/trash.png")
         self.ui.main_clear.setIcon(icon)
         self.ui.main_clear.setIconSize(self.ui.window_close.size())
         

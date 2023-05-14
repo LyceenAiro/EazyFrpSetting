@@ -27,7 +27,7 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 ## 开发者工具
 ### ui文件一键编译
 - 使用[ui_install.bat](./ui_install.bat)
-### ui文件自动编译
+### ui文件&qrc文件自动编译
 - 保持打开[auto_ui_install.bat](./auto_ui_install.bat)
 - 默认配置下5秒钟会自动更新一次编译
 ### 发布文件一键编译(测试)
