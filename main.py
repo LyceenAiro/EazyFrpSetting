@@ -556,6 +556,22 @@ class MainWindow(QMainWindow):
                         item = QtWidgets.QTableWidgetItem(text)
                     self.ui.linktable.setItem(row, col, item)
                 row += 1
+    
+    def save_other_data(self):
+        # 保存其他设置的配置文件
+        with open("./data/more.ini", "w", encoding="utf-8") as f:
+            pass
+            # 检测 CheckBox 的开关状态，并在控制台中打印状态
+            if self.checkbox.isChecked():
+                print("CheckBox is checked!")
+            else:
+                print("CheckBox is unchecked!")
+
+    def load_other_data(self):
+        # 读取其他设置的配置文件
+        with open("./data/more.ini", "r", encoding="utf-8") as f:
+            pass
+        # poject
 
     def auto_creat_linkname(self, str_size):
         # 自动生成链接名 | 变量 -> 生成长度
