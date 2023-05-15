@@ -519,7 +519,7 @@
        </font>
       </property>
       <property name="text">
-       <string>其他配置(未完成)</string>
+       <string>其他配置</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="auto_address">

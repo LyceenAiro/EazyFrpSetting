@@ -1,3 +1,3 @@
 class tags:
     def __init__(self):
-        self.version = "0.0.1"
+        self.version = "0.0.2"

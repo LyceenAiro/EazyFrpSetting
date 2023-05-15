@@ -7,7 +7,7 @@ import random
 import ui.main_rc
 
 # pyside6模块
-from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction
+from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QColor, QAction
 from PySide6 import QtWidgets
@@ -203,10 +203,10 @@ class MainWindow(QMainWindow):
         open_window_action.triggered.connect(self.showNormal)
         exit_action = QAction("关闭程序", self)
         exit_action.triggered.connect(app.quit)
-        push_a_action = QAction("启动Frp", self)
-        push_a_action.triggered.connect(self.pushA)
-        push_b_action = QAction("停止Frp", self)
-        push_b_action.triggered.connect(self.pushB)
+        self.push_a_action = QAction("启动Frp", self)
+        self.push_a_action.triggered.connect(self.main_start)
+        self.push_b_action = QAction("停止Frp", self)
+        self.push_b_action.triggered.connect(self.main_stop)
 
         line1 = QFrame(self)
         line1.setFrameShape(QFrame.HLine)
@@ -223,14 +223,15 @@ class MainWindow(QMainWindow):
 
         self.tray_menu.addAction(open_window_action)
         self.tray_menu.addAction(line_action1)
-        self.tray_menu.addAction(push_a_action)
-        self.tray_menu.addAction(push_b_action)
+        self.tray_menu.addAction(self.push_a_action)
+        self.tray_menu.addAction(self.push_b_action)
         self.tray_icon.setContextMenu(self.tray_menu)
         self.tray_menu.addAction(line_action2)
         self.tray_menu.addAction(exit_action)
 
         self.tray_icon.show()
         self.tray_icon.activated.connect(self.trayIconActivated)
+        self.push_b_action.setEnabled(False)
 
     def LeftUISetting(self):
         # 左侧栏UI初始化
@@ -287,7 +288,7 @@ class MainWindow(QMainWindow):
         self.ui.linktable.setStyleSheet("border-radius: 0px")
         self.ui.linktable.setColumnCount(7)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
-        self.ui.linktable.setColumnWidth(1, 60)
+        self.ui.linktable.setColumnWidth(1, 70)
         self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务"])
         self.ui.linktable.horizontalHeader().setStretchLastSection(True)
         self.ui.linktable.verticalHeader().setVisible(False)
@@ -426,14 +427,6 @@ class MainWindow(QMainWindow):
         # 如果用户双击了系统托盘图标，则显示窗口
         if reason == QSystemTrayIcon.DoubleClick:
             self.showNormal()
-
-    def pushA(self):
-        # 处理 push A 动作按钮的槽函数
-        pass
-
-    def pushB(self):
-        # 处理 push B 动作按钮的槽函数
-        pass
 
     ##
     ## 主要模块
@@ -600,7 +593,6 @@ class MainWindow(QMainWindow):
         else:
             link["common"]["auto_mini"] = "False"
             self.auto_mini = False
-            self.ui.auto_mini.setReadOnly(not self.auto_mini)
 
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
@@ -612,12 +604,12 @@ class MainWindow(QMainWindow):
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
 
-        self.auto_linkname = bool(link["common"]["auto_name"])
+        self.auto_linkname = link.getboolean("common", "auto_name")
         self.auto_linkname_box = link["common"]["auto_name_box"]
-        self.auto_address = bool(link["common"]["auto_address"])
-        self.auto_heartbeat = bool(link["common"]["auto_heartbeat"])
+        self.auto_address = link.getboolean("common", "auto_address")
+        self.auto_heartbeat = link.getboolean("common", "auto_heartbeat")
         self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
-        self.auto_mini = bool(link["common"]["auto_mini"])
+        self.auto_mini = link.getboolean("common", "auto_mini")
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
         self.ui.auto_heartbeat_box.setValue(int(self.auto_heartbeat_box))
@@ -645,10 +637,8 @@ class MainWindow(QMainWindow):
 
     def auto_creat_linkname(self):
         # 自动生成链接名
-        link = configparser.ConfigParser()
-        link.read("./data/more.ini","utf-8")
         chars = string.ascii_uppercase + string.digits
-        return "".join(random.choice(chars) for x in range(link["common"]["auto_name_num"]))
+        return "".join(random.choice(chars) for x in range(int(self.auto_linkname_box)))
 
     def shutdown(self):
         # 关闭程序
@@ -672,6 +662,8 @@ class MainWindow(QMainWindow):
         self.ui.main_log.insertPlainText("frp client started.\n")
         self.ui.main_start.setEnabled(False)
         self.ui.main_stop.setEnabled(True)
+        self.push_a_action.setEnabled(False)
+        self.push_b_action.setEnabled(True)
         self.setstophigh()
 
     def on_frp_finished(self):
@@ -679,6 +671,8 @@ class MainWindow(QMainWindow):
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
+        self.push_a_action.setEnabled(True)
+        self.push_b_action.setEnabled(False)
         self.setstarthigh()
         self.bandFrp()
     
@@ -690,6 +684,8 @@ class MainWindow(QMainWindow):
         # 当frp手动停止时向窗口反馈
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
+        self.push_a_action.setEnabled(True)
+        self.push_b_action.setEnabled(False)
         self.setstarthigh()
     
     def add_table_row(self, data):
@@ -715,22 +711,38 @@ class MainWindow(QMainWindow):
         # 本函数包含一个子窗口
         def check_in():
             # 纠错
-            edits = [edit1, edit2, edit3, edit4, edit5, edit6, edit7]
+            edits = [edit1, edit3, edit4, edit5]
             for edit in edits:
                 edit.setStyleSheet("border-radius: 0px;")
             check = True
-            if self.ipcheck(edit3.text()) == False:
-                edit3.setStyleSheet("border: 2px solid red;")
+            if edit1.text() == "":
+                if self.auto_linkname == True:
+                    edit1.setText(self.auto_creat_linkname())
+                else:
+                    edit1.setStyleSheet("border: 1px solid red;")
+            if edit3.text() == "":
+                if self.auto_address == True:
+                    edit3.setText("127.0.0.1")
+                else:
+                    edit3.setStyleSheet("border: 1px solid red;")
+                    check = False
+            elif self.ipcheck(edit3.text()) == False:
+                edit3.setStyleSheet("border: 1px solid red;")
                 check = False
             if self.portcheck(edit4.text(), 1024, 65565) == False:
-                edit4.setStyleSheet("border: 2px solid red;")
+                edit4.setStyleSheet("border: 1px solid red;")
                 check = False
             if self.portcheck(edit5.text(), 1024, 65565) == False:
-                edit5.setStyleSheet("border: 2px solid red;")
+                edit5.setStyleSheet("border: 1px solid red;")
                 check = False
+            if edit2.currentText() in ("tcp", "udp"):
+                edit6.setText("")
+                edit7.setText("")
+            elif edit2.currentText() in ("xtcp-host", "stcp-host"):
+                edit7.setText("")
             if check == False:
                 return
-            dialog.accept
+            dialog.accept()
         selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
         data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
 
@@ -753,8 +765,9 @@ class MainWindow(QMainWindow):
         edit1.setPlaceholderText("服务名称")
         layout.addWidget(edit1)
 
-        edit2 = QLineEdit(data[1])
-        edit2.setPlaceholderText("协议")
+        edit2 = QComboBox()
+        edit2.addItems(["tcp", "udp", "xtcp-host", "xtcp-client", "stcp-host", "stcp-client"])
+        edit2.setCurrentText(data[1])
         layout.addWidget(edit2)
 
         edit3 = QLineEdit(data[2])
@@ -787,7 +800,7 @@ class MainWindow(QMainWindow):
         if dialog.exec() == QDialog.Accepted:
             # 更新数据
             self.ui.linktable.setItem(selected_row, 0, QTableWidgetItem(edit1.text()))
-            self.ui.linktable.setItem(selected_row, 1, QTableWidgetItem(edit2.text()))
+            self.ui.linktable.setItem(selected_row, 1, QTableWidgetItem(edit2.currentText()))
             self.ui.linktable.setItem(selected_row, 2, QTableWidgetItem(edit3.text()))
             self.ui.linktable.setItem(selected_row, 3, QTableWidgetItem(edit4.text()))
             self.ui.linktable.setItem(selected_row, 4, QTableWidgetItem(edit5.text()))
@@ -800,22 +813,38 @@ class MainWindow(QMainWindow):
         # 本函数包含一个子窗口
         def check_in():
             # 纠错
-            edits = [edit1, edit2, edit3, edit4, edit5, edit6, edit7]
+            edits = [edit1, edit3, edit4, edit5]
             for edit in edits:
                 edit.setStyleSheet("border-radius: 0px;")
             check = True
-            if self.ipcheck(edit3.text()) == False:
-                edit3.setStyleSheet("border: 2px solid red;")
+            if edit1.text() == "":
+                if self.auto_linkname == True:
+                    edit1.setText(self.auto_creat_linkname())
+                else:
+                    edit1.setStyleSheet("border: 1px solid red;")
+            if edit3.text() == "":
+                if self.auto_address == True:
+                    edit3.setText("127.0.0.1")
+                else:
+                    edit3.setStyleSheet("border: 1px solid red;")
+                    check = False
+            elif self.ipcheck(edit3.text()) == False:
+                edit3.setStyleSheet("border: 1px solid red;")
                 check = False
             if self.portcheck(edit4.text(), 1024, 65565) == False:
-                edit4.setStyleSheet("border: 2px solid red;")
+                edit4.setStyleSheet("border: 1px solid red;")
                 check = False
             if self.portcheck(edit5.text(), 1024, 65565) == False:
-                edit5.setStyleSheet("border: 2px solid red;")
+                edit5.setStyleSheet("border: 1px solid red;")
                 check = False
+            if edit2.currentText() in ("tcp", "udp"):
+                edit6.setText("")
+                edit7.setText("")
+            elif edit2.currentText() in ("xtcp-host", "sctp-host"):
+                edit7.setText("")
             if check == False:
                 return
-            dialog.accept
+            dialog.accept()
 
         dialog = QDialog(self)
         dialog.setWindowTitle("创建链接")
@@ -836,8 +865,8 @@ class MainWindow(QMainWindow):
         edit1.setPlaceholderText("服务名称")
         layout.addWidget(edit1)
 
-        edit2 = QLineEdit()
-        edit2.setPlaceholderText("协议")
+        edit2 = QComboBox()
+        edit2.addItems(["tcp", "udp", "xtcp-host", "xtcp-client", "stcp-host", "stcp-client"])
         layout.addWidget(edit2)
 
         edit3 = QLineEdit()
@@ -869,7 +898,7 @@ class MainWindow(QMainWindow):
 
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
-            self.add_table_row([edit1.text(), edit2.text(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
+            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
             self.save_table_data()
 
     def on_delete_button_clicked(self):
