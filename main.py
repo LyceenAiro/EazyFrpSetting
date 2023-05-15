@@ -70,7 +70,12 @@ class MainWindow(QMainWindow):
         self.ui.linktable.itemSelectionChanged.connect(self.on_table_item_selection_changed)
 
         # other
-        self.ui.auto_linkname.stateChanged.connect(self.setcheckbox_linkname)
+        self.ui.auto_linkname.stateChanged.connect(self.save_other_data)
+        self.ui.auto_address.stateChanged.connect(self.save_other_data)
+        self.ui.auto_heartbeat.stateChanged.connect(self.save_other_data)
+        self.ui.auto_mini.stateChanged.connect(self.save_other_data)
+        self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
+        self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
@@ -126,6 +131,7 @@ class MainWindow(QMainWindow):
         self.set_left_highlight_botton()
         self.LinkUISetting()
         self.MainUISetting()
+        self.OtherUISetting()
         self.readme()
         self.ui.stackedWidget.setCurrentIndex(0)
         self.setTabOrder(self.ui.server_IP, self.ui.server_Port)
@@ -152,7 +158,8 @@ class MainWindow(QMainWindow):
         if not os.path.exists("./data/linktable.ini"):
             with open("./data/linktable.ini", "w", encoding="utf8") as f:
                 f.write("")
-        self.load_table_data("./data/linktable.ini")
+        self.load_table_data()
+        self.load_other_data()
 
     ##
     ## 自述配置
@@ -325,9 +332,8 @@ class MainWindow(QMainWindow):
         self.ui.main_stop.setEnabled(False)
     
     def OtherUISetting(self):
-        # 这个函数还没有被任何地方调用
-        # 记得在datainit中同步数据
-        pass
+        self.ui.auto_linkname_box.setMaximum(20)
+        self.ui.auto_heartbeat_box.setMaximum(5000)
 
     def setstarthigh(self):
         # 设置按钮高亮
@@ -373,13 +379,6 @@ class MainWindow(QMainWindow):
                 }}
             """)
 
-    def setcheckbox_linkname(self, state):
-        # 设置checkbox对象开关 | 变量 -> 信号
-        if state == Qt.Checked:
-            pass
-        else:
-            pass
-
     def setmain(self):
         # 将页面切换到 -> 开始
         self.ui.stackedWidget.setCurrentIndex(0)
@@ -417,11 +416,9 @@ class MainWindow(QMainWindow):
     
     def closewindow(self):
         # 关闭按钮定义
-        # 如果窗口当前可见，则最小化到系统托盘
-        if self.isVisible():
+        if self.auto_mini == True:
             self.hide()
             self.tray_icon.showMessage("EFS", "将在后台运行继续运行", QSystemTrayIcon.Information, 1000)
-        # 如果窗口已经被最小化到系统托盘，则直接关闭窗口
         else:
             self.shutdown()
 
@@ -516,6 +513,11 @@ class MainWindow(QMainWindow):
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
         
+        link = configparser.ConfigParser()
+        link.read("./data/more.ini","utf-8")
+        if bool(link["common"]["auto_heartbeat"]) == True:
+            frpc += "heartbeat_timeout = " + link["common"]["auto_heartbeat_box"] + "\n"
+        
         with open("./data/link.ini", "r+", encoding="utf-8") as u:
             frpc += u.readlines()
 
@@ -523,9 +525,9 @@ class MainWindow(QMainWindow):
             for i in frpc:
                 u.write(i)
     
-    def save_table_data(self, filename):
+    def save_table_data(self):
         # 保存表文件 | 变量 -> 文件地址
-        with open(filename, "w", encoding="utf-8") as f:
+        with open("./data/linktable.ini", "w", encoding="utf-8") as f:
             # 写入数据
             for i in range(self.ui.linktable.rowCount()):
                 row_data = []
@@ -539,9 +541,9 @@ class MainWindow(QMainWindow):
                 row_data.append("End")
                 f.write("".join(row_data) + "\n")
     
-    def load_table_data(self, filename):
+    def load_table_data(self):
         # 读取表文件 | 变量 -> 文件地址
-        with open(filename, "r", encoding="utf-8") as f:            
+        with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
             # 读取数据
             row = 0
             for line in f:
@@ -559,24 +561,94 @@ class MainWindow(QMainWindow):
     
     def save_other_data(self):
         # 保存其他设置的配置文件
-        with open("./data/more.ini", "w", encoding="utf-8") as f:
-            pass
-            # 检测 CheckBox 的开关状态，并在控制台中打印状态
-            if self.checkbox.isChecked():
-                print("CheckBox is checked!")
-            else:
-                print("CheckBox is unchecked!")
+        link = configparser.ConfigParser()
+        link.add_section("common")
+        # 自动填写链接名称
+        link["common"]["auto_name_box"] = str(self.ui.auto_linkname_box.value())
+        self.auto_linkname_box = self.ui.auto_linkname_box.value()
+        if self.ui.auto_linkname.isChecked():
+            link["common"]["auto_name"] = "True"
+            self.auto_linkname = True
+        else:
+            link["common"]["auto_name"] = "False"
+            self.auto_linkname = False
+        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)
+
+        # 自动填写源地址
+        if self.ui.auto_address.isChecked():
+            link["common"]["auto_address"] = "True"
+            self.auto_address = True
+        else:
+            link["common"]["auto_address"] = "False"
+            self.auto_address = False
+
+        # 心跳回应
+        link["common"]["auto_heartbeat_box"] = str(self.ui.auto_heartbeat_box.value())
+        self.auto_heartbeat_box= self.ui.auto_heartbeat_box.value()
+        if self.ui.auto_heartbeat.isChecked():
+            link["common"]["auto_heartbeat"] = "True"
+            self.auto_heartbeat = True
+        else:
+            link["common"]["auto_heartbeat"] = "False"
+            self.auto_heartbeat = False
+        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+
+        # 最小化托盘
+        if self.ui.auto_mini.isChecked():
+            link["common"]["auto_mini"] = "True"
+            self.auto_mini = True
+        else:
+            link["common"]["auto_mini"] = "False"
+            self.auto_mini = False
+            self.ui.auto_mini.setReadOnly(not self.auto_mini)
+
+        with open("./data/more.ini", "w", encoding="utf-8") as configfile:
+            link.write(configfile)
 
     def load_other_data(self):
         # 读取其他设置的配置文件
-        with open("./data/more.ini", "r", encoding="utf-8") as f:
-            pass
-        # poject
+        if not os.path.exists("./data/more.ini"):
+            self.default_other_data()
+        link = configparser.ConfigParser()
+        link.read("./data/more.ini","utf-8")
 
-    def auto_creat_linkname(self, str_size):
-        # 自动生成链接名 | 变量 -> 生成长度
+        self.auto_linkname = bool(link["common"]["auto_name"])
+        self.auto_linkname_box = link["common"]["auto_name_box"]
+        self.auto_address = bool(link["common"]["auto_address"])
+        self.auto_heartbeat = bool(link["common"]["auto_heartbeat"])
+        self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
+        self.auto_mini = bool(link["common"]["auto_mini"])
+
+        self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
+        self.ui.auto_heartbeat_box.setValue(int(self.auto_heartbeat_box))
+
+        self.ui.auto_linkname.setChecked(self.auto_linkname)
+        self.ui.auto_address.setChecked(self.auto_address)
+        self.ui.auto_heartbeat.setChecked(self.auto_heartbeat)
+        self.ui.auto_mini.setChecked(self.auto_mini)
+
+        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
+        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+    
+    def default_other_data(self):
+        # more.ini缺省值
+        link = configparser.ConfigParser()
+        link.add_section("common")
+        link["common"]["auto_name"] = "True"
+        link["common"]["auto_name_box"] = "8"
+        link["common"]["auto_address"] = "True"
+        link["common"]["auto_heartbeat"] = "True"
+        link["common"]["auto_heartbeat_box"] = "30"
+        link["common"]["auto_mini"] = "True"
+        with open("./data/more.ini", "w", encoding="utf-8") as configfile:
+            link.write(configfile)
+
+    def auto_creat_linkname(self):
+        # 自动生成链接名
+        link = configparser.ConfigParser()
+        link.read("./data/more.ini","utf-8")
         chars = string.ascii_uppercase + string.digits
-        return "".join(random.choice(chars) for x in range(str_size))
+        return "".join(random.choice(chars) for x in range(link["common"]["auto_name_num"]))
 
     def shutdown(self):
         # 关闭程序
@@ -641,11 +713,30 @@ class MainWindow(QMainWindow):
     def on_edit_button_clicked(self):
         # 当编辑按钮被触发时弹出窗口
         # 本函数包含一个子窗口
+        def check_in():
+            # 纠错
+            edits = [edit1, edit2, edit3, edit4, edit5, edit6, edit7]
+            for edit in edits:
+                edit.setStyleSheet("border-radius: 0px;")
+            check = True
+            if self.ipcheck(edit3.text()) == False:
+                edit3.setStyleSheet("border: 2px solid red;")
+                check = False
+            if self.portcheck(edit4.text(), 1024, 65565) == False:
+                edit4.setStyleSheet("border: 2px solid red;")
+                check = False
+            if self.portcheck(edit5.text(), 1024, 65565) == False:
+                edit5.setStyleSheet("border: 2px solid red;")
+                check = False
+            if check == False:
+                return
+            dialog.accept
         selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
         data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
 
         dialog = QDialog(self)
         dialog.setWindowTitle("编辑链接")
+        dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
         frame = QFrame(dialog)
         frame.setFrameShape(QFrame.Box)
@@ -687,7 +778,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(edit7)
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-        button_box.accepted.connect(dialog.accept)
+        button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
         layout.addWidget(button_box)
 
@@ -702,11 +793,30 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 4, QTableWidgetItem(edit5.text()))
             self.ui.linktable.setItem(selected_row, 5, QTableWidgetItem(edit6.text()))
             self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
-            self.save_table_data("./data/linktable.ini")
+            self.save_table_data()
  
     def on_add_button_clicked(self):
         # 当添加按钮被触发时弹出窗口
         # 本函数包含一个子窗口
+        def check_in():
+            # 纠错
+            edits = [edit1, edit2, edit3, edit4, edit5, edit6, edit7]
+            for edit in edits:
+                edit.setStyleSheet("border-radius: 0px;")
+            check = True
+            if self.ipcheck(edit3.text()) == False:
+                edit3.setStyleSheet("border: 2px solid red;")
+                check = False
+            if self.portcheck(edit4.text(), 1024, 65565) == False:
+                edit4.setStyleSheet("border: 2px solid red;")
+                check = False
+            if self.portcheck(edit5.text(), 1024, 65565) == False:
+                edit5.setStyleSheet("border: 2px solid red;")
+                check = False
+            if check == False:
+                return
+            dialog.accept
+
         dialog = QDialog(self)
         dialog.setWindowTitle("创建链接")
         dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -751,7 +861,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(edit7)
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-        button_box.accepted.connect(dialog.accept)
+        button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
         layout.addWidget(button_box)
 
@@ -760,14 +870,14 @@ class MainWindow(QMainWindow):
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
             self.add_table_row([edit1.text(), edit2.text(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
-            self.save_table_data("./data/linktable.ini")
+            self.save_table_data()
 
     def on_delete_button_clicked(self):
         # 当删除按钮触发时删除选中行
         selected_rows = self.ui.linktable.selectionModel().selectedRows()
         for row in selected_rows:
             self.ui.linktable.removeRow(row.row())
-        self.save_table_data("./data/linktable.ini")
+        self.save_table_data()
    
     ##
     ## 判断模块
@@ -801,8 +911,6 @@ class MainWindow(QMainWindow):
         # 检查配置文件是否满足需求
         if not os.path.exists("./data/server.ini"):
             return False
-        # No should check LinkTable
-        # Check othersetting
 
     ##
     ## 窗口移动定义
