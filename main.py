@@ -7,9 +7,9 @@ import random
 import ui.main_rc
 
 # pyside6模块
-from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit
+from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QColor
+from PySide6.QtGui import QIcon, QColor, QAction
 from PySide6 import QtWidgets
 
 # 项目模块
@@ -118,6 +118,8 @@ class MainWindow(QMainWindow):
     def UIinit(self):
         # 全部UI初始化整理
         # 该项必须放在datainit()后面,否则会导致datainit()的数据被初始化
+        self.setWindowIcon(QIcon(":images/icon/logo.ico"))
+        self.TrayMenuSetting()
         self.FlagsUiSetting()
         self.LeftUISetting()
         self.left_highlight_botton = self.ui.page_main
@@ -183,6 +185,45 @@ class MainWindow(QMainWindow):
         icon = QIcon(":images/icon/mini.png")
         self.ui.window_mini.setIcon(icon)
         self.ui.window_mini.setIconSize(self.ui.window_close.size())
+    
+    def TrayMenuSetting(self):
+        # 创建右键菜单并将其设置为系统托盘图标的菜单
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(self.windowIcon())
+        self.tray_menu = QMenu(self)
+
+        open_window_action = QAction("显示窗口", self)
+        open_window_action.triggered.connect(self.showNormal)
+        exit_action = QAction("关闭程序", self)
+        exit_action.triggered.connect(app.quit)
+        push_a_action = QAction("启动Frp", self)
+        push_a_action.triggered.connect(self.pushA)
+        push_b_action = QAction("停止Frp", self)
+        push_b_action.triggered.connect(self.pushB)
+
+        line1 = QFrame(self)
+        line1.setFrameShape(QFrame.HLine)
+        line1.setFrameShadow(QFrame.Sunken)
+        line1.setFixedWidth(100)
+        line_action1 = QWidgetAction(self)
+        line_action1.setDefaultWidget(line1)
+        line2 = QFrame(self)
+        line2.setFrameShape(QFrame.HLine)
+        line2.setFrameShadow(QFrame.Sunken)
+        line2.setFixedWidth(100)
+        line_action2 = QWidgetAction(self)
+        line_action2.setDefaultWidget(line2)
+
+        self.tray_menu.addAction(open_window_action)
+        self.tray_menu.addAction(line_action1)
+        self.tray_menu.addAction(push_a_action)
+        self.tray_menu.addAction(push_b_action)
+        self.tray_icon.setContextMenu(self.tray_menu)
+        self.tray_menu.addAction(line_action2)
+        self.tray_menu.addAction(exit_action)
+
+        self.tray_icon.show()
+        self.tray_icon.activated.connect(self.trayIconActivated)
 
     def LeftUISetting(self):
         # 左侧栏UI初始化
@@ -376,12 +417,26 @@ class MainWindow(QMainWindow):
     
     def closewindow(self):
         # 关闭按钮定义
-        self._frp_client.stop()
-        self._frp_client.finished.disconnect()
-        self._frp_client.stopped.disconnect()
-        self._frp_client.log_message.disconnect()
-        self._frp_client.deleteLater()
-        self.close()
+        # 如果窗口当前可见，则最小化到系统托盘
+        if self.isVisible():
+            self.hide()
+            self.tray_icon.showMessage("EFS", "将在后台运行继续运行", QSystemTrayIcon.Information, 1000)
+        # 如果窗口已经被最小化到系统托盘，则直接关闭窗口
+        else:
+            self.shutdown()
+
+    def trayIconActivated(self, reason):
+        # 如果用户双击了系统托盘图标，则显示窗口
+        if reason == QSystemTrayIcon.DoubleClick:
+            self.showNormal()
+
+    def pushA(self):
+        # 处理 push A 动作按钮的槽函数
+        pass
+
+    def pushB(self):
+        # 处理 push B 动作按钮的槽函数
+        pass
 
     ##
     ## 主要模块
@@ -506,6 +561,16 @@ class MainWindow(QMainWindow):
         # 自动生成链接名 | 变量 -> 生成长度
         chars = string.ascii_uppercase + string.digits
         return "".join(random.choice(chars) for x in range(str_size))
+
+    def shutdown(self):
+        # 关闭程序
+        self._frp_client.stop()
+        self._frp_client.finished.disconnect()
+        self._frp_client.stopped.disconnect()
+        self._frp_client.log_message.disconnect()
+        self._frp_client.deleteLater()
+        self.close()
+        app.quit()
 
     ##
     ## 信号动作

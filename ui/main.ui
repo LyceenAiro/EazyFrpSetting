@@ -662,7 +662,7 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -681,7 +681,7 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -700,7 +700,7 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -719,7 +719,7 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -738,7 +738,7 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -764,6 +764,32 @@ QCheckBox::indicator::unchecked {
         <width>51</width>
         <height>22</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="Line" name="line_7">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>611</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="Line" name="line_8">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>611</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </widget>
