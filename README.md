@@ -50,6 +50,13 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [x] 编译
 - [ ] 日志
 - [ ] _打包_(暂无应用场景)
+### 项目main需要的第三方库与文件
+```
+upx
+PySide6
+qdarkstyle
+requests
+```
 
 ## LICENSE
 [MIT License](./LICENSE)

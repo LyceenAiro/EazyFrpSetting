@@ -3,6 +3,7 @@ __pycache__
 build
 dist
 *spec
+upx*
 
 # 程序ico源
 *.psd
