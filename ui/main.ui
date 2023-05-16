@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -976,6 +976,219 @@ QCheckBox::indicator::unchecked {
        <string>关于</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="check_updata">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>190</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(110, 200, 110);
+}</string>
+      </property>
+      <property name="text">
+       <string>检查更新</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="tags_version">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>60</y>
+        <width>311</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>self.tags.version</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_20">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Version</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="tags_check_updata">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>190</y>
+        <width>251</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>检查更新</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_21">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>LICENSE</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="tags_license">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>140</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>self.tags.license</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="check_github">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>250</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(110, 200, 110);
+}</string>
+      </property>
+      <property name="text">
+       <string>源码</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="check_clear">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>310</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(110, 200, 110);
+}</string>
+      </property>
+      <property name="text">
+       <string>重置</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="tags_author">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>100</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>self.tags.author</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_22">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Author</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="widget_3" native="true">
@@ -1070,7 +1283,7 @@ QCheckBox::indicator::unchecked {
      </rect>
     </property>
     <property name="text">
-     <string>v0.0.0</string>
+     <string>0.0.0</string>
     </property>
    </widget>
    <widget class="QPushButton" name="page_other">
@@ -1094,9 +1307,9 @@ QCheckBox::indicator::unchecked {
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>8</x>
       <y>10</y>
-      <width>71</width>
+      <width>73</width>
       <height>51</height>
      </rect>
     </property>
@@ -1113,7 +1326,7 @@ QCheckBox::indicator::unchecked {
      </font>
     </property>
     <property name="text">
-     <string>FSE</string>
+     <string>EFS</string>
     </property>
     <property name="textFormat">
      <enum>Qt::PlainText</enum>

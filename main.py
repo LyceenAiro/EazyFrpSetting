@@ -1,5 +1,6 @@
 # python模块
 import os
+import shutil
 import qdarkstyle
 import configparser
 import string
@@ -84,6 +85,11 @@ class MainWindow(QMainWindow):
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
         self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
 
+        # tags
+        self.ui.check_updata.clicked.connect(self.check_updata_show)
+        self.ui.check_github.clicked.connect(self.open_github)
+        self.ui.check_clear.clicked.connect(self.data_clear)
+
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
         self.ui.window_close.clicked.connect(self.closewindow)
@@ -139,6 +145,7 @@ class MainWindow(QMainWindow):
         self.LinkUISetting()
         self.MainUISetting()
         self.OtherUISetting()
+        self.TagsUISetting()
         self.readme()
         self.ui.stackedWidget.setCurrentIndex(0)
         self.setTabOrder(self.ui.server_IP, self.ui.server_Port)
@@ -349,6 +356,12 @@ class MainWindow(QMainWindow):
         self.ui.auto_linkname_box.setMaximum(20)
         self.ui.auto_heartbeat_box.setMaximum(5000)
 
+    def TagsUISetting(self):
+        self.ui.tags_check_updata.hide()
+        self.ui.tags_version.setText(self.tags.versionaddit+" "+self.tags.version)
+        self.ui.tags_author.setText(self.tags.author)
+        self.ui.tags_license.setText(self.tags.licenes)
+
     def setstarthigh(self):
         # 设置按钮高亮
         self.ui.main_start.setStyleSheet(f"""
@@ -423,10 +436,20 @@ class MainWindow(QMainWindow):
 
     def settags(self):
         # 将页面切换到 -> 关于
+        self.ui.tags_check_updata.hide()
         self.ui.stackedWidget.setCurrentIndex(4)
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
+    
+    def check_updata_show(self):
+        # 显示查询的更新内容
+        self.ui.updata_tag.hide()
+        data,bool_data = self.check_for_updates_tags()
+        self.ui.tags_check_updata.setText(data)
+        self.ui.tags_check_updata.show()
+        if bool_data == True:
+            self.ui.updata_tag.show()
     
     def closewindow(self):
         # 关闭按钮定义
@@ -532,7 +555,7 @@ class MainWindow(QMainWindow):
                 u.write(i)
     
     def save_table_data(self):
-        # 保存表文件 | 变量 -> 文件地址
+        # 保存表文件
         with open("./data/linktable.ini", "w", encoding="utf-8") as f:
             # 写入数据
             for i in range(self.ui.linktable.rowCount()):
@@ -548,7 +571,7 @@ class MainWindow(QMainWindow):
                 f.write("".join(row_data) + "\n")
     
     def load_table_data(self):
-        # 读取表文件 | 变量 -> 文件地址
+        # 读取表文件
         with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
             # 读取数据
             row = 0
@@ -695,14 +718,43 @@ class MainWindow(QMainWindow):
         
     def check_for_updates_tags(self):
         # 尝试获取最新版本且附带数据
-        # 该函数用于other.检查更新的按钮
-        pass
+        # 尝试获取最新版本
+        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+        try:
+            # 发送 GET 请求获取最新版本号
+            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
+            response.raise_for_status()
+            # 解析响应 JSON 数据
+            data = response.json()
+            # 获取最新版本号
+            latest_version = data["tag_name"]
+            # 如果有新版本可用，则提示用户更新
+            if latest_version > self.tags.version:
+                return f"最新版本 {latest_version}", True
+            else:
+                return "当前已经是最新版本", False
+        except:
+            return "获取更新失败", False
         
     def open_latest_version(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/releases/latest")
 
     def open_frp_latest(self):
         webbrowser.open("https://github.com/fatedier/frp/releases/latest")
+    
+    def open_github(self):
+        webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting")
+    
+    def data_clear(self):
+        folder_path = 'data'
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            except:
+                pass
+        self.shutdown()
 
     def shutdown(self):
         # 关闭程序
