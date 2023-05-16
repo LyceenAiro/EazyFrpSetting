@@ -1,11 +1,11 @@
 # EazyFrpSetting
-dev分支现在为version-3版本的准备分支,未来将移动至master 
+`dev`分支现在为`version-3`版本的准备分支,未来将移动至`master` 
 ## 特性
-快速批量管理Frp隧道的[客户端](https://github.com/LyceenAiro/EazyFrpSetting)  
+快速使用图形化来管理Frp隧道的[客户端](https://github.com/LyceenAiro/EazyFrpSetting)  
 ## 使用
 需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
-- 需求文件:frpc.exe  
-- 将frpc.exe放入根目录中
+- 需求文件`frpc.exe`  
+- 将`frpc.exe`放入根目录中
 - 启动该软件
 ### 文件目录生成和排版
 ```
@@ -44,11 +44,11 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 
 ## 开发者工具
 ### ui文件一键编译
-使用[ui_install.bat](./ui_install.bat)
+- 使用[ui_install.bat](./ui_install.bat)
 - [ ] 日志
 ### ui文件&qrc文件自动编译
-保持打开[auto_ui_install.bat](./auto_ui_install.bat)
-默认配置下5秒钟会自动更新一次编译
+- 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
+- 默认配置下5秒钟会自动更新一次编译
 - [x] 日志 -> auto_ui_install.txt
 ### 发布文件一键编译(测试)
 - 使用[main_install.bat](./main_install.bat)
@@ -57,21 +57,21 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [ ] _打包_(暂无应用场景)
 ### 编译main需要的程序与第三方库
 安装[python3.8+](https://www.python.org/)  
-下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,配置main_install.bat以下参数
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数
 ```
 --upx-dir={upx文件夹名称}
 ```
-pip安装PySide6
+使用`pip`安装`PySide6`
 ```
 pip install pyside6
 ```
-pip安装qdarkstyle
+使用`pip`安装`qdarkstyle`
 ```
 pip install qdarkstyle
 ```
-pip安装requests
+使用`pip`安装`requests`
 ```
-import requests
+pip install requests
 ```
 ## LICENSE
 [MIT License](./LICENSE)
