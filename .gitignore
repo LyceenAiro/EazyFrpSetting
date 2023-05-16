@@ -1,0 +1,27 @@
+# 构建文件
+__pycache__
+*.pyc
+build
+dist
+*spec
+upx*
+
+# 程序ico源
+*.psd
+logo.png
+
+# 图标源
+# /ui/icon/*.png
+
+# frpc衍生文件
+frpc*
+
+# 编译相关数据库
+auto_ui_install.txt
+
+# 调试文件
+/data
+~*
+
+# 历史版本存放文件
+older

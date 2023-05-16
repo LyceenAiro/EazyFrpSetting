@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="images">
+    <file>icon/logo.png</file>
+    <file>icon/arrow-right.png</file>
+    <file>icon/close.png</file>
+    <file>icon/pause.png</file>
+    <file>icon/play.png</file>
+    <file>icon/stop.png</file>
+    <file>icon/trash.png</file>
+    <file>icon/mini.png</file>
+  </qresource>
+</RCC>
