@@ -22,19 +22,23 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 ## 开发流程
 - [x] 最初开发库构建
 - [x] 图形化界面
-- [ ] 完全重构代码(功能支持)
+- [x] 完全重构代码(功能支持)
 - [ ] 开发者工具
 - [ ] version-3发布
 - [x] 界面美化
-### 功能支持[计划]
+### 功能支持[最初]
 - [x] 修改服务器配置
 - [x] 添加链接
 - [x] 启动功能
 - [x] 输入纠错
 - [x] 隧道管理
 - [x] 其他功能
-- [ ] 自述页面
+- [x] 自述页面
 - [x] 托盘图标
+- [x] 更新检查
+- [x] 重置功能
+### 未来功能[计划]
+- [ ] 链接开关
 未来更多...
 
 ## 开发者工具
@@ -51,12 +55,11 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [ ] 日志
 - [ ] _打包_(暂无应用场景)
 ### 项目main需要的第三方库与文件
+(upx)[https://github.com/upx/upx]
 ```
-upx
-PySide6
-qdarkstyle
-requests
+import PySide6
+import qdarkstyle
+import requests
 ```
-
 ## LICENSE
 [MIT License](./LICENSE)
