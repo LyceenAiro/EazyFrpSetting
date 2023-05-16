@@ -23,9 +23,9 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [x] 最初开发库构建
 - [x] 图形化界面
 - [x] 完全重构代码(功能支持)
+- [x] 界面美化
 - [ ] 开发者工具
 - [ ] version-3发布
-- [x] 界面美化
 ### 功能支持[最初]
 - [x] 修改服务器配置
 - [x] 添加链接
@@ -39,6 +39,7 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [x] 重置功能
 ### 未来功能[计划]
 - [ ] 链接开关
+- [ ] 服务端  
 未来更多...
 
 ## 开发者工具
@@ -54,11 +55,22 @@ dev分支现在为version-3版本的准备分支,未来将移动至master
 - [x] 编译
 - [ ] 日志
 - [ ] _打包_(暂无应用场景)
-### 项目main需要的第三方库与文件
-(upx)[https://github.com/upx/upx]
+### 编译main需要的程序与第三方库
+安装[python3.8+](https://www.python.org/)  
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,配置main_install.bat以下参数
 ```
-import PySide6
-import qdarkstyle
+--upx-dir={upx文件夹名称}
+```
+pip安装PySide6
+```
+pip install pyside6
+```
+pip安装qdarkstyle
+```
+pip install qdarkstyle
+```
+pip安装requests
+```
 import requests
 ```
 ## LICENSE
