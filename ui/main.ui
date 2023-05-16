@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -867,6 +867,81 @@ QCheckBox::indicator::unchecked {
        <string/>
       </property>
      </widget>
+     <widget class="QCheckBox" name="auto_updata">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>310</y>
+        <width>52</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCheckBox {
+    background-color: #2c2c2c;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+QCheckBox::checked {
+    background-color: #4cd964;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+QCheckBox::indicator::checked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #ffffff;
+	position: relative;
+	left: 25px;
+}
+
+QCheckBox::indicator::unchecked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #2196F3;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>310</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>启动时检查更新</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line_10">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>300</y>
+        <width>601</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page2">
      <widget class="Line" name="line_2">
@@ -1081,6 +1156,63 @@ QCheckBox::indicator::unchecked {
     </property>
     <property name="text">
      <string>关于</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="updata_tag">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>290</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+            background-color: rgb(100, 180, 100);
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(110, 200, 110);
+}</string>
+    </property>
+    <property name="text">
+     <string>新版本可用</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nofrpc_tag">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>330</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+            background-color: rgb(200, 100, 100);
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(220, 110, 110);
+}</string>
+    </property>
+    <property name="text">
+     <string>未找到frpc</string>
     </property>
    </widget>
   </widget>

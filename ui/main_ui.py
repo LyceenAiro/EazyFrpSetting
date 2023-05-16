@@ -356,6 +356,46 @@ class Ui_MainWindow(object):
 "	background-color: #2196F3;\n"
 "}\n"
 "")
+        self.auto_updata = QCheckBox(self.page_2)
+        self.auto_updata.setObjectName(u"auto_updata")
+        self.auto_updata.setGeometry(QRect(560, 310, 52, 24))
+        self.auto_updata.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
+        self.label_19 = QLabel(self.page_2)
+        self.label_19.setObjectName(u"label_19")
+        self.label_19.setGeometry(QRect(10, 310, 161, 31))
+        self.label_19.setFont(font2)
+        self.line_10 = QFrame(self.page_2)
+        self.line_10.setObjectName(u"line_10")
+        self.line_10.setGeometry(QRect(10, 300, 601, 20))
+        self.line_10.setFrameShape(QFrame.HLine)
+        self.line_10.setFrameShadow(QFrame.Sunken)
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
@@ -423,11 +463,34 @@ class Ui_MainWindow(object):
         self.page_tags.setObjectName(u"page_tags")
         self.page_tags.setGeometry(QRect(0, 230, 131, 41))
         self.page_tags.setFont(font5)
+        self.updata_tag = QPushButton(self.centralwidget)
+        self.updata_tag.setObjectName(u"updata_tag")
+        self.updata_tag.setEnabled(True)
+        self.updata_tag.setGeometry(QRect(0, 290, 131, 41))
+        self.updata_tag.setFont(font5)
+        self.updata_tag.setStyleSheet(u"QPushButton {\n"
+"            background-color: rgb(100, 180, 100);\n"
+"            border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"            background-color: rgb(110, 200, 110);\n"
+"}")
+        self.nofrpc_tag = QPushButton(self.centralwidget)
+        self.nofrpc_tag.setObjectName(u"nofrpc_tag")
+        self.nofrpc_tag.setGeometry(QRect(0, 330, 131, 41))
+        self.nofrpc_tag.setFont(font5)
+        self.nofrpc_tag.setStyleSheet(u"QPushButton {\n"
+"            background-color: rgb(200, 100, 100);\n"
+"            border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"            background-color: rgb(220, 110, 110);\n"
+"}")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -469,6 +532,8 @@ class Ui_MainWindow(object):
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"\u5ef6\u65f6", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"\u6700\u5c0f\u5316\u6258\u76d8", None))
         self.auto_mini.setText("")
+        self.auto_updata.setText("")
+        self.label_19.setText(QCoreApplication.translate("MainWindow", u"\u542f\u52a8\u65f6\u68c0\u67e5\u66f4\u65b0", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.window_close.setText("")
         self.window_mini.setText("")
@@ -479,5 +544,7 @@ class Ui_MainWindow(object):
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"FSE", None))
         self.page_link.setText(QCoreApplication.translate("MainWindow", u"\u914d\u7f6e\u94fe\u63a5", None))
         self.page_tags.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
+        self.updata_tag.setText(QCoreApplication.translate("MainWindow", u"\u65b0\u7248\u672c\u53ef\u7528", None))
+        self.nofrpc_tag.setText(QCoreApplication.translate("MainWindow", u"\u672a\u627e\u5230frpc", None))
     # retranslateUi
 

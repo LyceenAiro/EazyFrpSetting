@@ -4,6 +4,10 @@ import qdarkstyle
 import configparser
 import string
 import random
+from datetime import datetime
+import webbrowser
+import requests
+from urllib3.exceptions import InsecureRequestWarning
 import ui.main_rc
 
 # pyside6模块
@@ -54,6 +58,8 @@ class MainWindow(QMainWindow):
         self.ui.page_link.clicked.connect(self.setlink)
         self.ui.page_other.clicked.connect(self.setother)
         self.ui.page_tags.clicked.connect(self.settags)
+        self.ui.updata_tag.clicked.connect(self.open_latest_version)
+        self.ui.nofrpc_tag.clicked.connect(self.open_frp_latest)
 
         # main
         self.ui.main_start.clicked.connect(self.main_start)
@@ -74,6 +80,7 @@ class MainWindow(QMainWindow):
         self.ui.auto_address.stateChanged.connect(self.save_other_data)
         self.ui.auto_heartbeat.stateChanged.connect(self.save_other_data)
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
+        self.ui.auto_updata.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
         self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
 
@@ -160,6 +167,10 @@ class MainWindow(QMainWindow):
                 f.write("")
         self.load_table_data()
         self.load_other_data()
+        if self.auto_updata == True and self.check_for_updates() == True:
+            self.ui.updata_tag.show()
+        if not os.path.exists("frpc.exe"):
+            self.ui.nofrpc_tag.show()
 
     ##
     ## 自述配置
@@ -252,6 +263,8 @@ class MainWindow(QMainWindow):
                     background-color: {self.botton_highlight_color.name()};
                 }}
             """)
+        self.ui.updata_tag.hide()
+        self.ui.nofrpc_tag.hide()
 
     def LinkUISetting(self):
         # 配置链接页面UI初始化
@@ -594,22 +607,41 @@ class MainWindow(QMainWindow):
             link["common"]["auto_mini"] = "False"
             self.auto_mini = False
 
+        # 检查更新
+        if self.ui.auto_updata.isChecked():
+            link["common"]["auto_updata"] = "True"
+            self.auto_updata = True
+        else:
+            link["common"]["auto_updata"] = "False"
+            self.auto_updata = False
+
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
     def load_other_data(self):
         # 读取其他设置的配置文件
+        def load_file():
+            # 加载配置
+            link = configparser.ConfigParser()
+            link.read("./data/more.ini","utf-8")
+            self.auto_linkname = link.getboolean("common", "auto_name")
+            self.auto_linkname_box = link["common"]["auto_name_box"]
+            self.auto_address = link.getboolean("common", "auto_address")
+            self.auto_heartbeat = link.getboolean("common", "auto_heartbeat")
+            self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
+            self.auto_mini = link.getboolean("common", "auto_mini")
+            self.auto_updata = link.getboolean("common", "auto_updata")
+
         if not os.path.exists("./data/more.ini"):
             self.default_other_data()
-        link = configparser.ConfigParser()
-        link.read("./data/more.ini","utf-8")
-
-        self.auto_linkname = link.getboolean("common", "auto_name")
-        self.auto_linkname_box = link["common"]["auto_name_box"]
-        self.auto_address = link.getboolean("common", "auto_address")
-        self.auto_heartbeat = link.getboolean("common", "auto_heartbeat")
-        self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
-        self.auto_mini = link.getboolean("common", "auto_mini")
+        try:
+            load_file()
+        except:
+            now = datetime.now()
+            time_str = now.strftime("%H%M%S")
+            os.rename("./data/more.ini", f"./data/more_{time_str}.ini")
+            self.default_other_data()
+            load_file()
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
         self.ui.auto_heartbeat_box.setValue(int(self.auto_heartbeat_box))
@@ -618,6 +650,7 @@ class MainWindow(QMainWindow):
         self.ui.auto_address.setChecked(self.auto_address)
         self.ui.auto_heartbeat.setChecked(self.auto_heartbeat)
         self.ui.auto_mini.setChecked(self.auto_mini)
+        self.ui.auto_updata.setChecked(self.auto_updata)
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
         self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
@@ -632,6 +665,7 @@ class MainWindow(QMainWindow):
         link["common"]["auto_heartbeat"] = "True"
         link["common"]["auto_heartbeat_box"] = "30"
         link["common"]["auto_mini"] = "True"
+        link["common"]["auto_updata"] = "True"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -639,6 +673,36 @@ class MainWindow(QMainWindow):
         # 自动生成链接名
         chars = string.ascii_uppercase + string.digits
         return "".join(random.choice(chars) for x in range(int(self.auto_linkname_box)))
+    
+    def check_for_updates(self):
+        # 尝试获取最新版本
+        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+        try:
+            # 发送 GET 请求获取最新版本号
+            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
+            response.raise_for_status()
+            # 解析响应 JSON 数据
+            data = response.json()
+            # 获取最新版本号
+            latest_version = data["tag_name"]
+            # 如果有新版本可用，则提示用户更新
+            if latest_version > self.tags.version:
+                return True
+            else:
+                return False
+        except:
+            return False
+        
+    def check_for_updates_tags(self):
+        # 尝试获取最新版本且附带数据
+        # 该函数用于other.检查更新的按钮
+        pass
+        
+    def open_latest_version(self):
+        webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/releases/latest")
+
+    def open_frp_latest(self):
+        webbrowser.open("https://github.com/fatedier/frp/releases/latest")
 
     def shutdown(self):
         # 关闭程序
@@ -659,6 +723,9 @@ class MainWindow(QMainWindow):
 
     def on_frp_started(self):
         # 当收到Frp启动命令时向窗口的反馈
+        if not os.path.exists("frpc.exe"):
+            self.ui.nofrpc_tag.show()
+            return
         self.ui.main_log.insertPlainText("frp client started.\n")
         self.ui.main_start.setEnabled(False)
         self.ui.main_stop.setEnabled(True)
