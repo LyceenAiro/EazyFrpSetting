@@ -1,4 +1,4 @@
-@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230512
+@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230516
 @echo off
 
 set "file1=.\ui\main.ui" > nul
@@ -39,6 +39,5 @@ if "%file3date%" gtr "%file4date%" (
   echo [%date:~0,4%-%date:~5,2%-%date:~8,2% %time:~0,2%:%time:~3,2%:%time:~6,2%]main_qr.py was update! >> auto_ui_install.txt
   echo [INFO][%time:~0,2%:%time:~3,2%:%time:~6,2%]main_qr.py was update!
 )
-@echo off
 goto loop
 

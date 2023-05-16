@@ -209,20 +209,26 @@
      <widget class="QWidget" name="widget" native="true">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>390</x>
         <y>60</y>
-        <width>321</width>
-        <height>131</height>
+        <width>231</width>
+        <height>191</height>
        </rect>
       </property>
       <widget class="QLabel" name="label_7">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>10</y>
+         <y>50</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器地址</string>
@@ -232,10 +238,16 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>40</y>
+         <y>80</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器端口</string>
@@ -245,10 +257,16 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
+         <y>110</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器密钥</string>
@@ -258,10 +276,16 @@
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>10</y>
-         <width>231</width>
-         <height>16</height>
+         <y>50</y>
+         <width>131</width>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(60, 60, 80);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>无配置</string>
@@ -271,10 +295,16 @@
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>40</y>
-         <width>231</width>
-         <height>16</height>
+         <y>80</y>
+         <width>131</width>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(60, 60, 80);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>无配置</string>
@@ -284,13 +314,65 @@
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>70</y>
-         <width>231</width>
-         <height>16</height>
+         <y>110</y>
+         <width>131</width>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(60, 60, 80);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>无配置</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="server_clear">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>140</y>
+         <width>201</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+            background-color: rgb(60, 60, 70);
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(200, 80, 80);
+}</string>
+       </property>
+       <property name="text">
+        <string>清除</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_24">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>201</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(100, 100, 180);
+            border-radius: 0px;
+}</string>
+       </property>
+       <property name="text">
+        <string>当前配置</string>
        </property>
       </widget>
      </widget>
@@ -299,18 +381,21 @@
        <rect>
         <x>20</x>
         <y>60</y>
-        <width>231</width>
-        <height>131</height>
+        <width>221</width>
+        <height>191</height>
        </rect>
       </property>
       <widget class="QLineEdit" name="server_Port">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>40</y>
+         <x>70</x>
+         <y>80</y>
          <width>131</width>
-         <height>20</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="placeholderText">
         <string>输入端口号</string>
@@ -319,11 +404,17 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>2</x>
-         <y>12</y>
+         <x>0</x>
+         <y>50</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器地址</string>
@@ -332,11 +423,17 @@
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>2</x>
-         <y>72</y>
+         <x>0</x>
+         <y>110</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器密钥</string>
@@ -345,11 +442,14 @@
       <widget class="QLineEdit" name="server_IP">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>10</y>
+         <x>70</x>
+         <y>50</y>
          <width>131</width>
-         <height>20</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -361,11 +461,17 @@
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>2</x>
-         <y>42</y>
+         <x>0</x>
+         <y>80</y>
          <width>71</width>
-         <height>16</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(50, 50, 60);
+            border-radius: 0px;
+}</string>
        </property>
        <property name="text">
         <string>服务器端口</string>
@@ -374,11 +480,14 @@
       <widget class="QLineEdit" name="server_token">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>70</y>
+         <x>70</x>
+         <y>110</y>
          <width>131</width>
-         <height>20</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="placeholderText">
         <string>token</string>
@@ -387,23 +496,70 @@
       <widget class="QPushButton" name="server_save">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>100</y>
+         <x>0</x>
+         <y>140</y>
          <width>201</width>
-         <height>24</height>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+            background-color: rgb(60, 60, 70);
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(80, 160, 80);
+}</string>
        </property>
        <property name="text">
         <string>保存</string>
        </property>
       </widget>
-      <zorder>server_Port</zorder>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>201</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+            background-color: rgb(100, 100, 180);
+            border-radius: 0px;
+}</string>
+       </property>
+       <property name="text">
+        <string>修改配置</string>
+       </property>
+      </widget>
       <zorder>label</zorder>
-      <zorder>label_3</zorder>
       <zorder>label_2</zorder>
+      <zorder>label_3</zorder>
       <zorder>server_token</zorder>
-      <zorder>server_save</zorder>
+      <zorder>server_Port</zorder>
       <zorder>server_IP</zorder>
+      <zorder>server_save</zorder>
+      <zorder>label_23</zorder>
+     </widget>
+     <widget class="QLabel" name="server_seticon">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>100</y>
+        <width>91</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="page1">
@@ -1038,7 +1194,7 @@ QPushButton:hover {
        </font>
       </property>
       <property name="text">
-       <string>Version</string>
+       <string>版本</string>
       </property>
      </widget>
      <widget class="QLabel" name="tags_check_updata">
@@ -1074,7 +1230,7 @@ QPushButton:hover {
        </font>
       </property>
       <property name="text">
-       <string>LICENSE</string>
+       <string>许可</string>
       </property>
      </widget>
      <widget class="QLabel" name="tags_license">
@@ -1102,7 +1258,7 @@ QPushButton:hover {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>210</y>
+        <y>220</y>
         <width>131</width>
         <height>41</height>
        </rect>
@@ -1117,7 +1273,7 @@ QPushButton:hover {
             border-radius: 0px;
 }
 QPushButton:hover {
-            background-color: rgb(110, 200, 110);
+            background-color: rgb(100, 100, 180);
 }</string>
       </property>
       <property name="text">
@@ -1131,7 +1287,7 @@ QPushButton:hover {
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>210</y>
+        <y>220</y>
         <width>131</width>
         <height>41</height>
        </rect>
@@ -1146,7 +1302,7 @@ QPushButton:hover {
             border-radius: 0px;
 }
 QPushButton:hover {
-            background-color: rgb(110, 200, 110);
+            background-color: rgb(200, 80, 80);
 }</string>
       </property>
       <property name="text">
@@ -1186,14 +1342,14 @@ QPushButton:hover {
        </font>
       </property>
       <property name="text">
-       <string>Author</string>
+       <string>作者</string>
       </property>
      </widget>
      <widget class="Line" name="line_11">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>180</y>
+        <y>190</y>
         <width>641</width>
         <height>16</height>
        </rect>
@@ -1452,6 +1608,33 @@ QPushButton:hover {
     </property>
     <property name="text">
      <string>未找到frpc</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="help_button">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>440</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+            background-color: transparent;
+            border-radius: 0px;
+}
+QPushButton:hover {
+            background-color: rgb(130, 130, 130);
+}</string>
+    </property>
+    <property name="text">
+     <string>帮助</string>
     </property>
    </widget>
   </widget>

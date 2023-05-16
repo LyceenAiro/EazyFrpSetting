@@ -1,7 +1,13 @@
 # EazyFrpSetting
-`dev`分支现在为`version-3`版本的准备分支,未来将移动至`master` 
-## 特性
-快速使用图形化来管理Frp隧道的[客户端](https://github.com/LyceenAiro/EazyFrpSetting)  
+- 快速使用图形化来管理Frp隧道的客户端  
+- 程序中快速关闭调试Frp
+- 将程序最小化至托盘运行
+- 支持多隧道图形化管理
+- 隧道自动生成部分信息
+## 界面
+- 使用`PySide6`编写
+- 部分美化`qdarkstyle`
+![Example Image](https://raw.githubusercontent.com/LyceenAiro/EazyFrpSetting/doc/v3_file/show_file/2.png)
 ## 使用
 需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
 - 需求文件`frpc.exe`  
@@ -17,44 +23,32 @@
 │  ├─more.ini       // other配置文件
 │  └─server.ini     // server配置文件
 ├─frpc.exe      // 你需要把frpc.exe放在这里
-└─main.exe      // 软件本体
+└─client.exe      // 软件本体
 ```
 ## 开发流程
 - [x] 最初开发库构建
 - [x] 图形化界面
 - [x] 完全重构代码(功能支持)
 - [x] 界面美化
-- [ ] 开发者工具
-- [ ] version-3发布
-### 功能支持[最初]
-- [x] 修改服务器配置
-- [x] 添加链接
-- [x] 启动功能
-- [x] 输入纠错
-- [x] 隧道管理
-- [x] 其他功能
-- [x] 自述页面
-- [x] 托盘图标
-- [x] 更新检查
-- [x] 重置功能
+- [x] 开发者工具
+- [x] version-3发布
 ### 未来功能[计划]
 - [ ] 链接开关
-- [ ] 服务端  
-未来更多...
-
+- [ ] 服务端
+- [ ] 开机启动
+- [ ] 链接功能
+- 未来更多...
 ## 开发者工具
-### ui文件一键编译
+### ui文件&qrc文件一键编译
 - 使用[ui_install.bat](./ui_install.bat)
-- [ ] 日志
 ### ui文件&qrc文件自动编译
 - 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
 - 默认配置下5秒钟会自动更新一次编译
-- [x] 日志 -> auto_ui_install.txt
+- [bug]某些情况下无法自动编译qrc文件
 ### 发布文件一键编译(测试)
 - 使用[main_install.bat](./main_install.bat)
 - [x] 编译
-- [ ] 日志
-- [ ] _打包_(暂无应用场景)
+- [ ] _打包_(暂无场景)
 ### 编译main需要的程序与第三方库
 安装[python3.8+](https://www.python.org/)  
 下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数

@@ -13,8 +13,7 @@ logo.png
 # /ui/icon/*.png
 
 # frpc衍生文件
-frpc.exe
-frpc.ini
+frpc*
 
 # 编译相关数据库
 auto_ui_install.txt

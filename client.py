@@ -14,7 +14,7 @@ import ui.main_rc
 # pyside6模块
 from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QColor, QAction
+from PySide6.QtGui import QIcon, QColor, QAction, QPixmap, QTransform
 from PySide6 import QtWidgets
 
 # 项目模块
@@ -61,6 +61,7 @@ class MainWindow(QMainWindow):
         self.ui.page_tags.clicked.connect(self.settags)
         self.ui.updata_tag.clicked.connect(self.open_latest_version)
         self.ui.nofrpc_tag.clicked.connect(self.open_frp_latest)
+        self.ui.help_button.clicked.connect(self.open_help)
 
         # main
         self.ui.main_start.clicked.connect(self.main_start)
@@ -69,6 +70,7 @@ class MainWindow(QMainWindow):
 
         # server
         self.ui.server_save.clicked.connect(self.server_save)
+        self.ui.server_clear.clicked.connect(self.clear_server_sertting)
 
         # link
         self.ui.link_create.clicked.connect(self.on_add_button_clicked)
@@ -136,7 +138,7 @@ class MainWindow(QMainWindow):
     def UIinit(self):
         # 全部UI初始化整理
         # 该项必须放在datainit()后面,否则会导致datainit()的数据被初始化
-        self.setWindowIcon(QIcon(":images/icon/logo.ico"))
+        self.setWindowIcon(QIcon(":images/icon/logo.png"))
         self.TrayMenuSetting()
         self.FlagsUiSetting()
         self.LeftUISetting()
@@ -144,6 +146,7 @@ class MainWindow(QMainWindow):
         self.set_left_highlight_botton()
         self.LinkUISetting()
         self.MainUISetting()
+        self.ServerUISetting()
         self.OtherUISetting()
         self.TagsUISetting()
         self.readme()
@@ -158,17 +161,16 @@ class MainWindow(QMainWindow):
         # 包含所有存储数据读取
         if not os.path.exists("data"):
             os.makedirs("data")
-        try:
-            with open("./data/server.ini","r+",encoding="utf-8"):
-                pass
+        if os.path.exists("./data/server.ini"):
             server = configparser.ConfigParser()
             server.read("./data/server.ini","utf-8")
             self.ui.show_IP.setText(server["common"]["server_addr"])
             self.ui.show_Port.setText(server["common"]["server_port"])
-            self.ui.show_token.setText(server["common"]["token"])
-        except:
-            pass
-        
+            try:
+                if not server["common"]["token"] == "无配置":
+                    self.ui.show_token.setText("已配置")
+            except:
+                self.ui.show_token.setText("无配置")
         if not os.path.exists("./data/linktable.ini"):
             with open("./data/linktable.ini", "w", encoding="utf8") as f:
                 f.write("")
@@ -272,6 +274,14 @@ class MainWindow(QMainWindow):
             """)
         self.ui.updata_tag.hide()
         self.ui.nofrpc_tag.hide()
+    
+    def ServerUISetting(self):
+        # 服务器页面UI初始化
+        pixmap = QPixmap(":images/icon/arrow-right.png")
+        self.ui.server_seticon.setPixmap(pixmap)
+        self.ui.server_seticon.setScaledContents(True)
+        self.ui.server_token.setEchoMode(QLineEdit.Password)
+        self.setserverbutton()
 
     def LinkUISetting(self):
         # 配置链接页面UI初始化
@@ -405,6 +415,51 @@ class MainWindow(QMainWindow):
                     background-color: {self.highlight_color_main_stop.name()};
                 }}
             """)
+    
+    def setserverbutton(self):
+        self.ui.server_IP.setStyleSheet('''
+            QLineEdit {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(60, 60, 80);
+                color: white;
+            }
+            QLineEdit:focus {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(80, 80, 90);
+                color: white;
+            }
+        ''')
+        self.ui.server_Port.setStyleSheet('''
+            QLineEdit {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(60, 60, 80);
+                color: white;
+            }
+            QLineEdit:focus {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(80, 80, 90);
+                color: white;
+            }
+        ''')
+        self.ui.server_token.setStyleSheet('''
+            QLineEdit {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(60, 60, 80);
+                color: white;
+            }
+            QLineEdit:focus {
+                border-radius: 0px;
+                border: none;
+                background-color: rgb(80, 80, 90);
+                color: white;
+            }
+        ''')
+
 
     def setmain(self):
         # 将页面切换到 -> 开始
@@ -510,10 +565,12 @@ class MainWindow(QMainWindow):
             self.ui.show_token.setText("无配置")
         else:
             link["common"]["token"] = token
-            self.ui.show_token.setText(token)
+            self.ui.show_token.setText("已配置")
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
 
+        self.ui.server_token.setText("")
+        self.setserverbutton()
         with open("./data/server.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -745,6 +802,9 @@ class MainWindow(QMainWindow):
     def open_github(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting")
     
+    def open_help(self):
+        webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/blob/doc/v3_file/help/help.md")
+    
     def data_clear(self):
         folder_path = 'data'
         for filename in os.listdir(folder_path):
@@ -755,6 +815,13 @@ class MainWindow(QMainWindow):
             except:
                 pass
         self.shutdown()
+
+    def clear_server_sertting(self):
+        self.ui.show_IP.setText("无配置")
+        self.ui.show_Port.setText("无配置")
+        self.ui.show_token.setText("无配置")
+        if os.path.exists("./data/server.ini"):
+            os.remove("./data/server.ini")
 
     def shutdown(self):
         # 关闭程序
@@ -881,7 +948,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(label)
         
         edit1 = QLineEdit(data[0])
-        edit1.setPlaceholderText("服务名称")
+        if self.auto_linkname == True:
+            edit1.setPlaceholderText("服务名称(留空自动生成)")
+        else:
+            edit1.setPlaceholderText("服务名称")
         layout.addWidget(edit1)
 
         edit2 = QComboBox()
@@ -890,7 +960,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(edit2)
 
         edit3 = QLineEdit(data[2])
-        edit3.setPlaceholderText("源地址")
+        if self.auto_address == True:
+            edit3.setPlaceholderText("源地址(留空自动生成)")
+        else:
+            edit3.setPlaceholderText("源地址")
         layout.addWidget(edit3)
 
         edit4 = QLineEdit(data[3])
@@ -981,7 +1054,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(label)
 
         edit1 = QLineEdit()
-        edit1.setPlaceholderText("服务名称")
+        if self.auto_linkname == True:
+            edit1.setPlaceholderText("服务名称(留空自动生成)")
+        else:
+            edit1.setPlaceholderText("服务名称")
         layout.addWidget(edit1)
 
         edit2 = QComboBox()
@@ -989,7 +1065,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(edit2)
 
         edit3 = QLineEdit()
-        edit3.setPlaceholderText("源地址")
+        if self.auto_address == True:
+            edit3.setPlaceholderText("源地址(留空自动生成)")
+        else:
+            edit3.setPlaceholderText("源地址")
         layout.addWidget(edit3)
 
         edit4 = QLineEdit()
