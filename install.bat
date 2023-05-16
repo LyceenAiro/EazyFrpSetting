@@ -1,1 +1,0 @@
-pyinstaller -F -i logo.ico start.py
