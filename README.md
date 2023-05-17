@@ -6,7 +6,7 @@
 - 隧道自动生成部分信息
 ## 界面
 - 使用`PySide6`编写
-- 部分美化`qdarkstyle`
+- 部分美化`qdarkstyle`  
 ![Example Image](https://raw.githubusercontent.com/LyceenAiro/EazyFrpSetting/doc/v3_file/show_file/2.png)
 ## 使用
 需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
