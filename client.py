@@ -7,8 +7,6 @@ import string
 import random
 from datetime import datetime
 import webbrowser
-import requests
-from urllib3.exceptions import InsecureRequestWarning
 import ui.main_rc
 
 # pyside6模块
@@ -19,7 +17,7 @@ from PySide6 import QtWidgets
 
 # 项目模块
 from ui.main_ui import Ui_MainWindow
-from script.start import FrpClient
+from script.start import FrpClient,CheckUpdata
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -33,25 +31,31 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.ui.setupUi(self)
+        
+        # 窗口移动项
+        self.mouse_press_position = None
 
         # UI初始化
         self.UIinit()
 
+        # 初始化线程应用
+        self.bandFrp()     
+        self.bandCheckupdata()
+
         # 数据读取
         self.datainit()
-
+ 
         # 绑定动作
         self.band()
-        self.bandFrp()        
 
-        # 窗口移动项
-        self.mouse_press_position = None
+
 
     ##
     ## 对象绑定设置
     ##
     def band(self):
         # 按钮绑定配置
+        # 请先读取数据后再初始化按钮动作
 
         # left
         self.ui.page_main.clicked.connect(self.setmain)
@@ -88,13 +92,20 @@ class MainWindow(QMainWindow):
         self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
 
         # tags
-        self.ui.check_updata.clicked.connect(self.check_updata_show)
+        self.ui.check_updata.clicked.connect(self.check_updata_start)
         self.ui.check_github.clicked.connect(self.open_github)
         self.ui.check_clear.clicked.connect(self.data_clear)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
         self.ui.window_close.clicked.connect(self.closewindow)
+    
+    def bandCheckupdata(self):
+        # 绑定Checkup线程的信号
+        self._check_updata = CheckUpdata()
+        self._check_updata.log_message.connect(self.updata_log_message)
+        self._check_updata.started.connect(self.updata_started)
+        self._check_updata.stopped.connect(self.updata_stopped)
     
     def bandFrp(self):
         # 绑定Frp客户端独立运行的subprocess信号
@@ -103,7 +114,6 @@ class MainWindow(QMainWindow):
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
         self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
-        self._frp_client.stopped.connect(self.on_frp_stopped)
 
     ##
     ## UI变化反馈
@@ -176,8 +186,8 @@ class MainWindow(QMainWindow):
                 f.write("")
         self.load_table_data()
         self.load_other_data()
-        if self.auto_updata == True and self.check_for_updates() == True:
-            self.ui.updata_tag.show()
+        if self.auto_updata == True:
+            self.check_updata_start()
         if not os.path.exists("frpc.exe"):
             self.ui.nofrpc_tag.show()
 
@@ -497,14 +507,12 @@ class MainWindow(QMainWindow):
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
     
-    def check_updata_show(self):
-        # 显示查询的更新内容
-        self.ui.updata_tag.hide()
-        data,bool_data = self.check_for_updates_tags()
-        self.ui.tags_check_updata.setText(data)
-        self.ui.tags_check_updata.show()
-        if bool_data == True:
-            self.ui.updata_tag.show()
+    def check_updata_start(self):
+        # 开始检查更新
+        if self._check_updata.isRunning() == True:
+            return
+        self._check_updata.start()
+        
     
     def closewindow(self):
         # 关闭按钮定义
@@ -524,6 +532,11 @@ class MainWindow(QMainWindow):
     ##
     def main_start(self):
         # 启动Frp客户端
+        self.ui.nofrpc_tag.hide()
+        if not os.path.exists("frpc.exe"):
+            self.ui.nofrpc_tag.show()
+            self.ui.main_log.insertPlainText("frpc.exe is missing.\n")
+            return
         if self.checkfile() == False:
             self.ui.main_log.insertPlainText("necessary settings are still missing.\n")
             return
@@ -753,45 +766,6 @@ class MainWindow(QMainWindow):
         # 自动生成链接名
         chars = string.ascii_uppercase + string.digits
         return "".join(random.choice(chars) for x in range(int(self.auto_linkname_box)))
-    
-    def check_for_updates(self):
-        # 尝试获取最新版本
-        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-        try:
-            # 发送 GET 请求获取最新版本号
-            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
-            response.raise_for_status()
-            # 解析响应 JSON 数据
-            data = response.json()
-            # 获取最新版本号
-            latest_version = data["tag_name"]
-            # 如果有新版本可用，则提示用户更新
-            if latest_version > self.tags.version:
-                return True
-            else:
-                return False
-        except:
-            return False
-        
-    def check_for_updates_tags(self):
-        # 尝试获取最新版本且附带数据
-        # 尝试获取最新版本
-        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-        try:
-            # 发送 GET 请求获取最新版本号
-            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
-            response.raise_for_status()
-            # 解析响应 JSON 数据
-            data = response.json()
-            # 获取最新版本号
-            latest_version = data["tag_name"]
-            # 如果有新版本可用，则提示用户更新
-            if latest_version > self.tags.version:
-                return f"最新版本 {latest_version}", True
-            else:
-                return "当前已经是最新版本", False
-        except:
-            return "获取更新失败", False
         
     def open_latest_version(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/releases/latest")
@@ -827,7 +801,6 @@ class MainWindow(QMainWindow):
         # 关闭程序
         self._frp_client.stop()
         self._frp_client.finished.disconnect()
-        self._frp_client.stopped.disconnect()
         self._frp_client.log_message.disconnect()
         self._frp_client.deleteLater()
         self.close()
@@ -865,14 +838,24 @@ class MainWindow(QMainWindow):
     def on_frp_finished_tell(self):
         # 将停止通知与停止反馈分离防止发送两条信息
         self.ui.main_log.insertPlainText("frp client stopped.\n")
+    
+    def updata_started(self):
+        # 当检查更新开启时执行
+        self.ui.check_updata.setEnabled(False)
+        self.ui.tags_check_updata.setText("正在检查更新...")
+        self.ui.tags_check_updata.show()
+    
+    def updata_log_message(self, message, check_bool):
+        # 收取更新消息
+        self.ui.tags_check_updata.setText(message)
+        if check_bool == True:
+            self.ui.updata_tag.show()
+        self.ui.tags_check_updata.show()
+        self._check_updata.stop()
 
-    def on_frp_stopped(self):
-        # 当frp手动停止时向窗口反馈
-        self.ui.main_start.setEnabled(True)
-        self.ui.main_stop.setEnabled(False)
-        self.push_a_action.setEnabled(True)
-        self.push_b_action.setEnabled(False)
-        self.setstarthigh()
+    def updata_stopped(self):
+        self.ui.check_updata.setEnabled(True)
+        self.bandCheckupdata()
     
     def add_table_row(self, data):
         # 向表写入数据
