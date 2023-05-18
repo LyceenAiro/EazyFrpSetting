@@ -1,22 +1,71 @@
 # EazyFrpSetting
-为一些不明白Frp运行原理的新人编写的一款快速入门的Frp客户端  
--GitHub:https://github.com/LyceenAiro/EazyFrpSetting
-  
-需要使用该软件配置Frp首先你需要Frp的软件本体  
--GitHub:https://github.com/fatedier/frp  
--需求文件:frpc.exe  
--本软件暂不支持server端快速搭建  
-## 编译最新版本
--因为开发不熟悉,可能会有很多bug在正式版中,可以关注commits信息查看修复进度并使用最新编译版本  
--确保你安装了python3.8+版本,将工作区部署至本地,双击'install.bat'编译  
--在dist文件夹中找到你编译出的最新启动器,替换你的旧启动器来使用  
--如果config文件夹声明改变,请重新覆盖config文件夹  
-## version-1分支版本  
--v1.0 ~ v1.3  
--特性:快速配置一条隧道并启用  
--维护[放弃]:重大问题修复  
-## master分支现在为version-2版本的开发分支
--v1.4 ~ v1.7  
--特性:多隧道管理  
--维护[次要]:问题修复  
--功能[放弃]:显示优化[ ]|域名支持[ ]|连续端口支持[ ]|主动退出[√]|日志[ ]|version-2  
+- 快速使用图形化来管理Frp隧道的客户端  
+- 程序中快速关闭调试Frp
+- 将程序最小化至托盘运行
+- 支持多隧道图形化管理
+- 隧道自动生成部分信息
+## 界面
+- 使用`PySide6`编写
+- 部分美化`qdarkstyle`  
+![Example Image](https://raw.githubusercontent.com/LyceenAiro/EazyFrpSetting/doc/v3_file/show_file/2.png)
+## 使用
+需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
+- 需求文件`frpc.exe`  
+- 将`frpc.exe`放入根目录中
+- 启动该软件
+### 文件目录生成和排版
+```
+.
+├─data          // 这个文件夹及其内容都是自动生成的
+│  ├─frpc.ini       // frpc启动文件
+│  ├─link.ini       // link编译文件
+│  ├─linktable.ini  // link表源文件
+│  ├─more.ini       // other配置文件
+│  └─server.ini     // server配置文件
+├─frpc.exe      // 你需要把frpc.exe放在这里
+└─client.exe      // 软件本体
+```
+## 开发流程
+- [x] 最初开发库构建
+- [x] 图形化界面
+- [x] 完全重构代码(功能支持)
+- [x] 界面美化
+- [x] 开发者工具
+- [x] version-3发布
+### 未来功能[计划]
+- [ ] 链接开关
+- [ ] 服务端
+- [ ] 开机启动
+- [ ] 链接功能
+- 未来更多...
+## 开发者工具
+### ui文件&qrc文件一键编译
+- 使用[ui_install.bat](./ui_install.bat)
+### ui文件&qrc文件自动编译
+- 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
+- 默认配置下5秒钟会自动更新一次编译
+- [bug]某些情况下无法自动编译qrc文件
+### 发布文件一键编译(测试)
+- 使用[main_install.bat](./main_install.bat)
+- [x] 编译
+- [ ] _打包_(暂无场景)
+### 编译main需要的程序与第三方库
+安装[python3.8+](https://www.python.org/)  
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数
+```
+--upx-dir={upx文件夹名称}
+```
+使用`pip`安装`PySide6`
+```
+pip install pyside6
+```
+使用`pip`安装`qdarkstyle`
+```
+pip install qdarkstyle
+```
+使用`pip`安装`requests`
+```
+pip install requests
+```
+## LICENSE
+[MIT License](./LICENSE)
