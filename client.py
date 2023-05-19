@@ -1,6 +1,5 @@
 # python模块
 import os
-import shutil
 import qdarkstyle
 import configparser
 import string
@@ -12,7 +11,7 @@ import ui.main_rc
 # pyside6模块
 from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QColor, QAction, QPixmap, QTransform
+from PySide6.QtGui import QIcon, QColor, QAction, QPixmap
 from PySide6 import QtWidgets
 
 # 项目模块
@@ -64,7 +63,7 @@ class MainWindow(QMainWindow):
         self.ui.page_other.clicked.connect(self.setother)
         self.ui.page_tags.clicked.connect(self.settags)
         self.ui.updata_tag.clicked.connect(self.open_latest_version)
-        self.ui.nofrpc_tag.clicked.connect(self.open_frp_latest)
+        self.ui.nofrpc_tag.clicked.connect(self.open_help_nofrpc)
         self.ui.help_button.clicked.connect(self.open_help)
 
         # main
@@ -770,8 +769,8 @@ class MainWindow(QMainWindow):
     def open_latest_version(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/releases/latest")
 
-    def open_frp_latest(self):
-        webbrowser.open("https://github.com/fatedier/frp/releases/latest")
+    def open_help_nofrpc(self):
+        webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/blob/doc/v3_file/help/nofrpc.md")
     
     def open_github(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting")
