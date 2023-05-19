@@ -23,6 +23,6 @@
 ![Example Image](images/winD1.png)
 - 移动到页面最下方找到`排除项`
 ![Example Image](images/winD2.png)
-- 添加排除项选择`文件夹类型`,再选择到你的软件目录
+- 添加排除项选择`文件夹类型`,再选择到你的软件目录  
 ![Example Image](images/winD3.png)
 - 将上面的步骤完成后再重新将`frpc.exe`放回
