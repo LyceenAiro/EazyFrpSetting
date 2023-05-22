@@ -558,10 +558,10 @@ class MainWindow(QMainWindow):
 
         check = True
         if self.ipcheck(ip) == False:
-            self.ui.server_IP.setStyleSheet("border: 2px solid red;")
+            self.ui.server_IP.setStyleSheet("border: 2px solid red; border-radius: 0px;")
             check = False
         if self.portcheck(port, 1, 65565) == False:
-            self.ui.server_Port.setStyleSheet("border: 2px solid red;")
+            self.ui.server_Port.setStyleSheet("border: 2px solid red; border-radius: 0px;")
             check = False
         if check == False:
             return
