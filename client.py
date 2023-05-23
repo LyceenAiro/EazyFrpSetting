@@ -989,7 +989,7 @@ class MainWindow(QMainWindow):
             # 纠错
             edits = [edit1, edit3, edit4, edit5]
             for edit in edits:
-                edit.setStyleSheet("border-radius: 0px;")
+                edit.setStyleSheet("")
             check = True
             if edit1.text() == "":
                 if self.auto_linkname == True:
