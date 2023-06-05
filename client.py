@@ -588,6 +588,8 @@ class MainWindow(QMainWindow):
 
     def link_ini_save(self):
         # linktable表文件编译
+        if os.path.getmtime("./data/link.ini") > os.path.getmtime("./data/linktable.ini"):
+            return
         link = configparser.ConfigParser()
         linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name"]
         with open("./data/linktable.ini","r+",encoding="utf-8") as u:
@@ -609,10 +611,14 @@ class MainWindow(QMainWindow):
     def frpcData_save(self):
         # 整理打包frp.ini
         self.link_ini_save()
-
+        if os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/more.ini"):
+            return
+        elif os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/server.ini"):
+            return
+        elif os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini"):
+            return
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
-        
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
         if bool(link["common"]["auto_heartbeat"]) == True:
