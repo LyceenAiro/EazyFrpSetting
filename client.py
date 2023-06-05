@@ -325,10 +325,10 @@ class MainWindow(QMainWindow):
                 }}
             """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
-        self.ui.linktable.setColumnCount(7)
+        self.ui.linktable.setColumnCount(9)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
         self.ui.linktable.setColumnWidth(1, 70)
-        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务"])
+        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域"])
         self.ui.linktable.horizontalHeader().setStretchLastSection(True)
         self.ui.linktable.verticalHeader().setVisible(False)
         self.ui.linktable.setSelectionBehavior(QTableWidget.SelectRows)
@@ -587,12 +587,14 @@ class MainWindow(QMainWindow):
             link.write(configfile)
 
     def link_ini_save(self):
-        # 表文件编译成ini
+        # linktable表文件编译
         link = configparser.ConfigParser()
         linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name"]
         with open("./data/linktable.ini","r+",encoding="utf-8") as u:
             for a in u.readlines():
                 b = a.split(",")
+                if not b[7] == "开启":
+                    continue
                 tags = 1
                 link.add_section(b[0])
                 while not tags >= 7:
@@ -648,6 +650,8 @@ class MainWindow(QMainWindow):
                 data = line.strip().split(",")
                 self.ui.linktable.insertRow(row)
                 for col, text in enumerate(data):
+                    if col == 8:
+                        status = item.text()
                     if text == "End":
                         break
                     elif text == "":
@@ -655,6 +659,13 @@ class MainWindow(QMainWindow):
                     else:
                         item = QtWidgets.QTableWidgetItem(text)
                     self.ui.linktable.setItem(row, col, item)
+                row_items = [self.ui.linktable.item(row, u) for u in range(9)]
+                if status == "开启":
+                    for item in row_items:
+                        item.setBackground(QColor(100, 150, 100))
+                else:
+                    for item in row_items:
+                        item.setBackground(QColor(0, 0, 0, 0))
                 row += 1
     
     def save_other_data(self):
@@ -912,7 +923,7 @@ class MainWindow(QMainWindow):
                 return
             dialog.accept()
         selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
-        data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
+        data = [self.ui.linktable.item(selected_row, i).text() for i in range(9)]
 
         dialog = QDialog(self)
         dialog.setWindowTitle("编辑链接")
@@ -922,7 +933,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 270)
+        frame.setFixedSize(200, 335)
 
         layout = QVBoxLayout()
 
@@ -964,6 +975,16 @@ class MainWindow(QMainWindow):
         edit7.setPlaceholderText("目的服务")
         layout.addWidget(edit7)
 
+        edit8 = QComboBox()
+        edit8.addItems(["开启", "关闭"])
+        edit8.setCurrentText(data[7])
+        layout.addWidget(edit8)
+
+        edit9 = QComboBox()
+        edit9.addItems(["MainServer"])
+        edit9.setCurrentText(data[8])
+        layout.addWidget(edit9)
+
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
@@ -980,7 +1001,18 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 4, QTableWidgetItem(edit5.text()))
             self.ui.linktable.setItem(selected_row, 5, QTableWidgetItem(edit6.text()))
             self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem(edit8.currentText()))
+            self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
             self.save_table_data()
+
+        status = edit8.currentText()
+        row_items = [self.ui.linktable.item(selected_row, i) for i in range(8)]
+        if status == "开启":
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
+        else:
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
  
     def on_add_button_clicked(self):
         # 当添加按钮被触发时弹出窗口
@@ -1028,7 +1060,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 270)
+        frame.setFixedSize(200, 335)
 
         layout = QVBoxLayout()
 
@@ -1069,6 +1101,14 @@ class MainWindow(QMainWindow):
         edit7.setPlaceholderText("目的服务")
         layout.addWidget(edit7)
 
+        edit8 = QComboBox()
+        edit8.addItems(["开启", "关闭"])
+        layout.addWidget(edit8)
+
+        edit9 = QComboBox()
+        edit9.addItems(["MainServer"])
+        layout.addWidget(edit9)
+
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
@@ -1078,8 +1118,17 @@ class MainWindow(QMainWindow):
 
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
-            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
+            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText()])
             self.save_table_data()
+        
+        status = edit8.currentText()
+        row_items = [self.ui.linktable.item(self.ui.linktable.rowCount() - 1, i) for i in range(9)]
+        if status == "开启":
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
+        else:
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
 
     def on_delete_button_clicked(self):
         # 当删除按钮触发时删除选中行
