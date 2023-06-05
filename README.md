@@ -52,20 +52,14 @@
 - [ ] _打包_(暂无场景)
 ### 编译main需要的程序与第三方库
 安装[python3.8+](https://www.python.org/)  
-下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数
-```
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数`可选`
+``` bat
 --upx-dir={upx文件夹名称}
 ```
-使用`pip`安装`PySide6`
-```
+使用`pip`安装`PySide6`、`qdarkstyle`、`requests`
+``` cmd
 pip install pyside6
-```
-使用`pip`安装`qdarkstyle`
-```
 pip install qdarkstyle
-```
-使用`pip`安装`requests`
-```
 pip install requests
 ```
 ## LICENSE
