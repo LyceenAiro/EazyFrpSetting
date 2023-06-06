@@ -1,25 +1,22 @@
 # python模块
 import os
-import shutil
 import qdarkstyle
 import configparser
 import string
 import random
 from datetime import datetime
 import webbrowser
-import requests
-from urllib3.exceptions import InsecureRequestWarning
 import ui.main_rc
 
 # pyside6模块
 from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QColor, QAction, QPixmap, QTransform
+from PySide6.QtGui import QIcon, QColor, QAction, QPixmap
 from PySide6 import QtWidgets
 
 # 项目模块
 from ui.main_ui import Ui_MainWindow
-from script.start import FrpClient
+from script.start import FrpClient,CheckUpdata
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -33,25 +30,31 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.ui.setupUi(self)
+        
+        # 窗口移动项
+        self.mouse_press_position = None
 
         # UI初始化
         self.UIinit()
 
+        # 初始化线程应用
+        self.bandFrp()     
+        self.bandCheckupdata()
+
         # 数据读取
         self.datainit()
-
+ 
         # 绑定动作
         self.band()
-        self.bandFrp()        
 
-        # 窗口移动项
-        self.mouse_press_position = None
+
 
     ##
     ## 对象绑定设置
     ##
     def band(self):
         # 按钮绑定配置
+        # 请先读取数据后再初始化按钮动作
 
         # left
         self.ui.page_main.clicked.connect(self.setmain)
@@ -60,7 +63,7 @@ class MainWindow(QMainWindow):
         self.ui.page_other.clicked.connect(self.setother)
         self.ui.page_tags.clicked.connect(self.settags)
         self.ui.updata_tag.clicked.connect(self.open_latest_version)
-        self.ui.nofrpc_tag.clicked.connect(self.open_frp_latest)
+        self.ui.nofrpc_tag.clicked.connect(self.open_help_nofrpc)
         self.ui.help_button.clicked.connect(self.open_help)
 
         # main
@@ -88,13 +91,20 @@ class MainWindow(QMainWindow):
         self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
 
         # tags
-        self.ui.check_updata.clicked.connect(self.check_updata_show)
+        self.ui.check_updata.clicked.connect(self.check_updata_start)
         self.ui.check_github.clicked.connect(self.open_github)
         self.ui.check_clear.clicked.connect(self.data_clear)
 
         # window
         self.ui.window_mini.clicked.connect(self.showMinimized)
         self.ui.window_close.clicked.connect(self.closewindow)
+    
+    def bandCheckupdata(self):
+        # 绑定Checkup线程的信号
+        self._check_updata = CheckUpdata()
+        self._check_updata.log_message.connect(self.updata_log_message)
+        self._check_updata.started.connect(self.updata_started)
+        self._check_updata.stopped.connect(self.updata_stopped)
     
     def bandFrp(self):
         # 绑定Frp客户端独立运行的subprocess信号
@@ -103,7 +113,6 @@ class MainWindow(QMainWindow):
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
         self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
-        self._frp_client.stopped.connect(self.on_frp_stopped)
 
     ##
     ## UI变化反馈
@@ -176,8 +185,8 @@ class MainWindow(QMainWindow):
                 f.write("")
         self.load_table_data()
         self.load_other_data()
-        if self.auto_updata == True and self.check_for_updates() == True:
-            self.ui.updata_tag.show()
+        if self.auto_updata == True:
+            self.check_updata_start()
         if not os.path.exists("frpc.exe"):
             self.ui.nofrpc_tag.show()
 
@@ -316,10 +325,10 @@ class MainWindow(QMainWindow):
                 }}
             """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
-        self.ui.linktable.setColumnCount(7)
+        self.ui.linktable.setColumnCount(9)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
         self.ui.linktable.setColumnWidth(1, 70)
-        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务"])
+        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域"])
         self.ui.linktable.horizontalHeader().setStretchLastSection(True)
         self.ui.linktable.verticalHeader().setVisible(False)
         self.ui.linktable.setSelectionBehavior(QTableWidget.SelectRows)
@@ -497,14 +506,12 @@ class MainWindow(QMainWindow):
         self.left_highlight_botton = self.ui.page_tags
         self.set_left_highlight_botton()
     
-    def check_updata_show(self):
-        # 显示查询的更新内容
-        self.ui.updata_tag.hide()
-        data,bool_data = self.check_for_updates_tags()
-        self.ui.tags_check_updata.setText(data)
-        self.ui.tags_check_updata.show()
-        if bool_data == True:
-            self.ui.updata_tag.show()
+    def check_updata_start(self):
+        # 开始检查更新
+        if self._check_updata.isRunning() == True:
+            return
+        self._check_updata.start()
+        
     
     def closewindow(self):
         # 关闭按钮定义
@@ -524,6 +531,11 @@ class MainWindow(QMainWindow):
     ##
     def main_start(self):
         # 启动Frp客户端
+        self.ui.nofrpc_tag.hide()
+        if not os.path.exists("frpc.exe"):
+            self.ui.nofrpc_tag.show()
+            self.ui.main_log.insertPlainText("frpc.exe is missing.\n")
+            return
         if self.checkfile() == False:
             self.ui.main_log.insertPlainText("necessary settings are still missing.\n")
             return
@@ -546,10 +558,10 @@ class MainWindow(QMainWindow):
 
         check = True
         if self.ipcheck(ip) == False:
-            self.ui.server_IP.setStyleSheet("border: 2px solid red;")
+            self.ui.server_IP.setStyleSheet("border: 2px solid red; border-radius: 0px;")
             check = False
         if self.portcheck(port, 1, 65565) == False:
-            self.ui.server_Port.setStyleSheet("border: 2px solid red;")
+            self.ui.server_Port.setStyleSheet("border: 2px solid red; border-radius: 0px;")
             check = False
         if check == False:
             return
@@ -575,12 +587,16 @@ class MainWindow(QMainWindow):
             link.write(configfile)
 
     def link_ini_save(self):
-        # 表文件编译成ini
+        # linktable表文件编译
+        if os.path.getmtime("./data/link.ini") > os.path.getmtime("./data/linktable.ini"):
+            return
         link = configparser.ConfigParser()
         linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name"]
         with open("./data/linktable.ini","r+",encoding="utf-8") as u:
             for a in u.readlines():
                 b = a.split(",")
+                if not b[7] == "开启":
+                    continue
                 tags = 1
                 link.add_section(b[0])
                 while not tags >= 7:
@@ -595,10 +611,14 @@ class MainWindow(QMainWindow):
     def frpcData_save(self):
         # 整理打包frp.ini
         self.link_ini_save()
-
+        if os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/more.ini"):
+            return
+        elif os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/server.ini"):
+            return
+        elif os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini"):
+            return
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
-        
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
         if bool(link["common"]["auto_heartbeat"]) == True:
@@ -636,6 +656,8 @@ class MainWindow(QMainWindow):
                 data = line.strip().split(",")
                 self.ui.linktable.insertRow(row)
                 for col, text in enumerate(data):
+                    if col == 8:
+                        status = item.text()
                     if text == "End":
                         break
                     elif text == "":
@@ -643,6 +665,13 @@ class MainWindow(QMainWindow):
                     else:
                         item = QtWidgets.QTableWidgetItem(text)
                     self.ui.linktable.setItem(row, col, item)
+                row_items = [self.ui.linktable.item(row, u) for u in range(9)]
+                if status == "开启":
+                    for item in row_items:
+                        item.setBackground(QColor(100, 150, 100))
+                else:
+                    for item in row_items:
+                        item.setBackground(QColor(0, 0, 0, 0))
                 row += 1
     
     def save_other_data(self):
@@ -753,51 +782,12 @@ class MainWindow(QMainWindow):
         # 自动生成链接名
         chars = string.ascii_uppercase + string.digits
         return "".join(random.choice(chars) for x in range(int(self.auto_linkname_box)))
-    
-    def check_for_updates(self):
-        # 尝试获取最新版本
-        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-        try:
-            # 发送 GET 请求获取最新版本号
-            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
-            response.raise_for_status()
-            # 解析响应 JSON 数据
-            data = response.json()
-            # 获取最新版本号
-            latest_version = data["tag_name"]
-            # 如果有新版本可用，则提示用户更新
-            if latest_version > self.tags.version:
-                return True
-            else:
-                return False
-        except:
-            return False
-        
-    def check_for_updates_tags(self):
-        # 尝试获取最新版本且附带数据
-        # 尝试获取最新版本
-        requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-        try:
-            # 发送 GET 请求获取最新版本号
-            response = requests.get("https://api.github.com/repos/LyceenAiro/EazyFrpSetting/releases/latest", verify=False)
-            response.raise_for_status()
-            # 解析响应 JSON 数据
-            data = response.json()
-            # 获取最新版本号
-            latest_version = data["tag_name"]
-            # 如果有新版本可用，则提示用户更新
-            if latest_version > self.tags.version:
-                return f"最新版本 {latest_version}", True
-            else:
-                return "当前已经是最新版本", False
-        except:
-            return "获取更新失败", False
         
     def open_latest_version(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/releases/latest")
 
-    def open_frp_latest(self):
-        webbrowser.open("https://github.com/fatedier/frp/releases/latest")
+    def open_help_nofrpc(self):
+        webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/blob/doc/v3_file/help/nofrpc.md")
     
     def open_github(self):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting")
@@ -827,7 +817,6 @@ class MainWindow(QMainWindow):
         # 关闭程序
         self._frp_client.stop()
         self._frp_client.finished.disconnect()
-        self._frp_client.stopped.disconnect()
         self._frp_client.log_message.disconnect()
         self._frp_client.deleteLater()
         self.close()
@@ -865,14 +854,24 @@ class MainWindow(QMainWindow):
     def on_frp_finished_tell(self):
         # 将停止通知与停止反馈分离防止发送两条信息
         self.ui.main_log.insertPlainText("frp client stopped.\n")
+    
+    def updata_started(self):
+        # 当检查更新开启时执行
+        self.ui.check_updata.setEnabled(False)
+        self.ui.tags_check_updata.setText("正在检查更新...")
+        self.ui.tags_check_updata.show()
+    
+    def updata_log_message(self, message, check_bool):
+        # 收取更新消息
+        self.ui.tags_check_updata.setText(message)
+        if check_bool == True:
+            self.ui.updata_tag.show()
+        self.ui.tags_check_updata.show()
+        self._check_updata.stop()
 
-    def on_frp_stopped(self):
-        # 当frp手动停止时向窗口反馈
-        self.ui.main_start.setEnabled(True)
-        self.ui.main_stop.setEnabled(False)
-        self.push_a_action.setEnabled(True)
-        self.push_b_action.setEnabled(False)
-        self.setstarthigh()
+    def updata_stopped(self):
+        self.ui.check_updata.setEnabled(True)
+        self.bandCheckupdata()
     
     def add_table_row(self, data):
         # 向表写入数据
@@ -930,7 +929,7 @@ class MainWindow(QMainWindow):
                 return
             dialog.accept()
         selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
-        data = [self.ui.linktable.item(selected_row, i).text() for i in range(7)]
+        data = [self.ui.linktable.item(selected_row, i).text() for i in range(9)]
 
         dialog = QDialog(self)
         dialog.setWindowTitle("编辑链接")
@@ -940,7 +939,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 270)
+        frame.setFixedSize(200, 335)
 
         layout = QVBoxLayout()
 
@@ -982,6 +981,16 @@ class MainWindow(QMainWindow):
         edit7.setPlaceholderText("目的服务")
         layout.addWidget(edit7)
 
+        edit8 = QComboBox()
+        edit8.addItems(["开启", "关闭"])
+        edit8.setCurrentText(data[7])
+        layout.addWidget(edit8)
+
+        edit9 = QComboBox()
+        edit9.addItems(["MainServer"])
+        edit9.setCurrentText(data[8])
+        layout.addWidget(edit9)
+
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
@@ -998,7 +1007,18 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 4, QTableWidgetItem(edit5.text()))
             self.ui.linktable.setItem(selected_row, 5, QTableWidgetItem(edit6.text()))
             self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem(edit8.currentText()))
+            self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
             self.save_table_data()
+
+        status = edit8.currentText()
+        row_items = [self.ui.linktable.item(selected_row, i) for i in range(8)]
+        if status == "开启":
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
+        else:
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
  
     def on_add_button_clicked(self):
         # 当添加按钮被触发时弹出窗口
@@ -1007,7 +1027,7 @@ class MainWindow(QMainWindow):
             # 纠错
             edits = [edit1, edit3, edit4, edit5]
             for edit in edits:
-                edit.setStyleSheet("border-radius: 0px;")
+                edit.setStyleSheet("")
             check = True
             if edit1.text() == "":
                 if self.auto_linkname == True:
@@ -1046,7 +1066,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 270)
+        frame.setFixedSize(200, 335)
 
         layout = QVBoxLayout()
 
@@ -1087,6 +1107,14 @@ class MainWindow(QMainWindow):
         edit7.setPlaceholderText("目的服务")
         layout.addWidget(edit7)
 
+        edit8 = QComboBox()
+        edit8.addItems(["开启", "关闭"])
+        layout.addWidget(edit8)
+
+        edit9 = QComboBox()
+        edit9.addItems(["MainServer"])
+        layout.addWidget(edit9)
+
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
@@ -1096,8 +1124,17 @@ class MainWindow(QMainWindow):
 
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
-            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text()])
+            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText()])
             self.save_table_data()
+        
+        status = edit8.currentText()
+        row_items = [self.ui.linktable.item(self.ui.linktable.rowCount() - 1, i) for i in range(9)]
+        if status == "开启":
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
+        else:
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
 
     def on_delete_button_clicked(self):
         # 当删除按钮触发时删除选中行
