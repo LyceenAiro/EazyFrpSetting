@@ -45,7 +45,6 @@
 ### ui文件&qrc文件自动编译
 - 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
 - 默认配置下5秒钟会自动更新一次编译
-- [bug]某些情况下无法自动编译qrc文件
 ### 发布文件一键编译(测试)
 - 使用[main_install.bat](./main_install.bat)
 - [x] 编译
