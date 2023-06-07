@@ -1,5 +1,6 @@
 # python模块
 import os
+import shutil
 import qdarkstyle
 import configparser
 import string
@@ -649,30 +650,48 @@ class MainWindow(QMainWindow):
     
     def load_table_data(self):
         # 读取表文件
-        with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
-            # 读取数据
-            row = 0
-            for line in f:
-                data = line.strip().split(",")
-                self.ui.linktable.insertRow(row)
-                for col, text in enumerate(data):
-                    if col == 8:
-                        status = item.text()
-                    if text == "End":
-                        break
-                    elif text == "":
-                        item = QtWidgets.QTableWidgetItem("")
+        def tableerror():
+            shutil.copyfile("./data/linktable.ini", "./data/linktable.bak")
+            os.remove("./data/linktable.ini")
+            dialog = QDialog(self)
+            dialog.setWindowTitle("发生错误")
+            dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+            layout = QVBoxLayout()
+            label = QLabel("读取链接数据时发生错误，请重启该软件")
+            layout.addWidget(label, alignment=Qt.AlignHCenter)
+            dialog.setLayout(layout)
+            button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
+            layout.addWidget(button_box, alignment=Qt.AlignHCenter)
+            button_box.accepted.connect(dialog.accept)
+            if dialog.exec() == QDialog.Accepted:
+                exit()
+        try:
+            with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
+                # 读取数据
+                row = 0
+                for line in f:
+                    data = line.strip().split(",")
+                    self.ui.linktable.insertRow(row)
+                    for col, text in enumerate(data):
+                        if col == 8:
+                            status = item.text()
+                        if text == "End":
+                            break
+                        elif text == "":
+                            item = QtWidgets.QTableWidgetItem("")
+                        else:
+                            item = QtWidgets.QTableWidgetItem(text)
+                        self.ui.linktable.setItem(row, col, item)
+                    row_items = [self.ui.linktable.item(row, u) for u in range(9)]
+                    if status == "开启":
+                        for item in row_items:
+                            item.setBackground(QColor(100, 150, 100))
                     else:
-                        item = QtWidgets.QTableWidgetItem(text)
-                    self.ui.linktable.setItem(row, col, item)
-                row_items = [self.ui.linktable.item(row, u) for u in range(9)]
-                if status == "开启":
-                    for item in row_items:
-                        item.setBackground(QColor(100, 150, 100))
-                else:
-                    for item in row_items:
-                        item.setBackground(QColor(0, 0, 0, 0))
-                row += 1
+                        for item in row_items:
+                            item.setBackground(QColor(0, 0, 0, 0))
+                    row += 1
+        except:
+            tableerror()
     
     def save_other_data(self):
         # 保存其他设置的配置文件
