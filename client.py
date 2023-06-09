@@ -10,7 +10,7 @@ import webbrowser
 import ui.main_rc
 
 # pyside6模块
-from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox
+from PySide6.QtWidgets import QMainWindow, QTableWidget, QFrame, QVBoxLayout, QApplication, QTableWidgetItem, QDialog, QLabel, QLineEdit, QSystemTrayIcon, QMenu, QWidgetAction, QComboBox, QHBoxLayout
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QColor, QAction, QPixmap
 from PySide6 import QtWidgets
@@ -954,11 +954,17 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("编辑链接")
         dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
+        # 使用水平布局
+        hlayout1 = QHBoxLayout()
+        hlayout2 = QHBoxLayout()
+        hlayout3 = QHBoxLayout()
+        hlayout4 = QHBoxLayout()
+
         frame = QFrame(dialog)
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 335)
+        frame.setFixedSize(250, 215)
 
         layout = QVBoxLayout()
 
@@ -970,31 +976,42 @@ class MainWindow(QMainWindow):
             edit1.setPlaceholderText("服务名称(留空自动生成)")
         else:
             edit1.setPlaceholderText("服务名称")
-        layout.addWidget(edit1)
+        edit1.setFixedWidth(145)
+        hlayout1.addWidget(edit1)
 
         edit2 = QComboBox()
         edit2.addItems(["tcp", "udp", "xtcp-host", "xtcp-client", "stcp-host", "stcp-client"])
         edit2.setCurrentText(data[1])
-        layout.addWidget(edit2)
+        edit2.setFixedWidth(80)
+        hlayout1.addWidget(edit2)
 
         edit3 = QLineEdit(data[2])
         if self.auto_address == True:
             edit3.setPlaceholderText("源地址(留空自动生成)")
         else:
             edit3.setPlaceholderText("源地址")
-        layout.addWidget(edit3)
+        hlayout2.addWidget(edit3)
 
         edit4 = QLineEdit(data[3])
         edit4.setPlaceholderText("源端口")
-        layout.addWidget(edit4)
+        edit4.setMaxLength(5)
+        edit4.setFixedWidth(80)
+        hlayout2.addWidget(edit4)
+
+        layout.addLayout(hlayout1)
+        layout.addLayout(hlayout2)
 
         edit5 = QLineEdit(data[4])
         edit5.setPlaceholderText("目的端口")
-        layout.addWidget(edit5)
+        edit5.setMaxLength(5)
+        edit5.setFixedWidth(80)
 
         edit6 = QLineEdit(data[5])
         edit6.setPlaceholderText("密钥")
-        layout.addWidget(edit6)
+        
+        hlayout3.addWidget(edit6)
+        hlayout3.addWidget(edit5)
+        layout.addLayout(hlayout3)
 
         edit7 = QLineEdit(data[6])
         edit7.setPlaceholderText("目的服务")
@@ -1003,17 +1020,20 @@ class MainWindow(QMainWindow):
         edit8 = QComboBox()
         edit8.addItems(["开启", "关闭"])
         edit8.setCurrentText(data[7])
-        layout.addWidget(edit8)
+        edit8.setFixedWidth(80)
 
         edit9 = QComboBox()
         edit9.addItems(["MainServer"])
         edit9.setCurrentText(data[8])
-        layout.addWidget(edit9)
+        
+        hlayout4.addWidget(edit9)
+        hlayout4.addWidget(edit8)
+        layout.addLayout(hlayout4)
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
-        layout.addWidget(button_box)
+        layout.addWidget(button_box, alignment=Qt.AlignHCenter)
 
         dialog.setLayout(layout)
 
@@ -1081,11 +1101,17 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("创建链接")
         dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
+        # 使用水平布局
+        hlayout1 = QHBoxLayout()
+        hlayout2 = QHBoxLayout()
+        hlayout3 = QHBoxLayout()
+        hlayout4 = QHBoxLayout()
+
         frame = QFrame(dialog)
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(200, 335)
+        frame.setFixedSize(250, 215)
 
         layout = QVBoxLayout()
 
@@ -1097,30 +1123,41 @@ class MainWindow(QMainWindow):
             edit1.setPlaceholderText("服务名称(留空自动生成)")
         else:
             edit1.setPlaceholderText("服务名称")
-        layout.addWidget(edit1)
+        edit1.setFixedWidth(145)  # 这里定义整个宽度
+        hlayout1.addWidget(edit1)
 
         edit2 = QComboBox()
         edit2.addItems(["tcp", "udp", "xtcp-host", "xtcp-client", "stcp-host", "stcp-client"])
-        layout.addWidget(edit2)
+        edit2.setFixedWidth(80)
+        hlayout1.addWidget(edit2)
 
         edit3 = QLineEdit()
         if self.auto_address == True:
             edit3.setPlaceholderText("源地址(留空自动生成)")
         else:
             edit3.setPlaceholderText("源地址")
-        layout.addWidget(edit3)
+        hlayout2.addWidget(edit3)
 
         edit4 = QLineEdit()
         edit4.setPlaceholderText("源端口")
-        layout.addWidget(edit4)
+        edit4.setMaxLength(5)
+        edit4.setFixedWidth(80)
+        hlayout2.addWidget(edit4)
+
+        layout.addLayout(hlayout1)
+        layout.addLayout(hlayout2)
 
         edit5 = QLineEdit()
         edit5.setPlaceholderText("目的端口")
-        layout.addWidget(edit5)
+        edit5.setMaxLength(5)
+        edit5.setFixedWidth(80)
 
         edit6 = QLineEdit()
         edit6.setPlaceholderText("密钥")
-        layout.addWidget(edit6)
+
+        hlayout3.addWidget(edit6)
+        hlayout3.addWidget(edit5)
+        layout.addLayout(hlayout3)
 
         edit7 = QLineEdit()
         edit7.setPlaceholderText("目的服务")
@@ -1128,16 +1165,19 @@ class MainWindow(QMainWindow):
 
         edit8 = QComboBox()
         edit8.addItems(["开启", "关闭"])
-        layout.addWidget(edit8)
+        edit8.setFixedWidth(80)
 
         edit9 = QComboBox()
         edit9.addItems(["MainServer"])
-        layout.addWidget(edit9)
+
+        hlayout4.addWidget(edit9)
+        hlayout4.addWidget(edit8)
+        layout.addLayout(hlayout4)
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         button_box.accepted.connect(check_in)
         button_box.rejected.connect(dialog.reject)
-        layout.addWidget(button_box)
+        layout.addWidget(button_box, alignment=Qt.AlignHCenter)
 
         dialog.setLayout(layout)
 
@@ -1145,6 +1185,8 @@ class MainWindow(QMainWindow):
             # 添加数据
             self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText()])
             self.save_table_data()
+        else:
+            return
         
         status = edit8.currentText()
         row_items = [self.ui.linktable.item(self.ui.linktable.rowCount() - 1, i) for i in range(9)]
