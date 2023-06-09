@@ -618,6 +618,8 @@ class MainWindow(QMainWindow):
             return
         elif os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini"):
             return
+        else:
+            self.ui.main_log.insertPlainText("frpc.ini is compile now...\n")
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
         link = configparser.ConfigParser()
