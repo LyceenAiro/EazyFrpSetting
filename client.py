@@ -820,15 +820,38 @@ class MainWindow(QMainWindow):
         webbrowser.open("https://github.com/LyceenAiro/EazyFrpSetting/blob/doc/v3_file/help/help.md")
     
     def data_clear(self):
-        folder_path = 'data'
-        for filename in os.listdir(folder_path):
-            file_path = os.path.join(folder_path, filename)
-            try:
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-            except:
-                pass
-        self.shutdown()
+        dialog = QDialog(self)
+        dialog.setWindowTitle("清除数据")
+        dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+
+        frame = QFrame(dialog)
+        frame.setFrameShape(QFrame.Box)
+        frame.setStyleSheet("border-radius: 0px")
+        frame.setLineWidth(2)
+        frame.setFixedSize(223, 68)
+
+        layout = QVBoxLayout()
+        label = QLabel("确定要关闭程序并清除所有数据吗？")
+        layout.addWidget(label)
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        layout.addWidget(button_box, alignment=Qt.AlignHCenter)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            folder_path = 'data'
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                except:
+                    pass
+            self.shutdown()
+        else:
+            return
 
     def clear_server_sertting(self):
         self.ui.show_IP.setText("无配置")
@@ -969,7 +992,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(250, 215)
+        frame.setFixedSize(253, 217)
 
         layout = QVBoxLayout()
 
@@ -1054,6 +1077,8 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem(edit8.currentText()))
             self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
             self.save_table_data()
+        else:
+            return
 
         status = edit8.currentText()
         row_items = [self.ui.linktable.item(selected_row, i) for i in range(8)]
@@ -1116,7 +1141,7 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Box)
         frame.setStyleSheet("border-radius: 0px")
         frame.setLineWidth(2)
-        frame.setFixedSize(250, 215)
+        frame.setFixedSize(253, 217)
 
         layout = QVBoxLayout()
 
@@ -1204,10 +1229,33 @@ class MainWindow(QMainWindow):
 
     def on_delete_button_clicked(self):
         # 当删除按钮触发时删除选中行
-        selected_rows = self.ui.linktable.selectionModel().selectedRows()
-        for row in selected_rows:
-            self.ui.linktable.removeRow(row.row())
-        self.save_table_data()
+        dialog = QDialog(self)
+        dialog.setWindowTitle("删除链接")
+        dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+
+        frame = QFrame(dialog)
+        frame.setFrameShape(QFrame.Box)
+        frame.setStyleSheet("border-radius: 0px")
+        frame.setLineWidth(2)
+        frame.setFixedSize(196, 68)
+
+        layout = QVBoxLayout()
+        label = QLabel("确定要删除选定的链接吗？")
+        layout.addWidget(label)
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        layout.addWidget(button_box, alignment=Qt.AlignHCenter)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            selected_rows = self.ui.linktable.selectionModel().selectedRows()
+            for row in selected_rows:
+                self.ui.linktable.removeRow(row.row())
+            self.save_table_data()
+        else:
+            return
    
     ##
     ## 判断模块
