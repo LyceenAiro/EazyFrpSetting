@@ -325,7 +325,7 @@ class MainWindow(QMainWindow):
                 }}
             """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
-        self.rows = 10
+        self.rows = 10  # 在这里设置列数量
         self.ui.linktable.setColumnCount(self.rows)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
         self.ui.linktable.setColumnWidth(1, 70)
