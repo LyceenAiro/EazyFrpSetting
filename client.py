@@ -607,8 +607,8 @@ class MainWindow(QMainWindow):
                         link[b[0]][linksetup[tags]] = b[tags]
                     tags += 1
                 # 第九项数据
-                if b[9] == "":
-                    link[b[0]]["#"+linksetup[tags]] = b[9]
+                if b[9] in ("默认传输", ""):
+                    link[b[0]]["#"+linksetup[tags]] = ""
                 else:
                     link[b[0]][linksetup[tags]] = b[9]
         with open("./data/link.ini", "w", encoding="utf-8") as configfile:
@@ -1092,6 +1092,9 @@ class MainWindow(QMainWindow):
             layout.addWidget(button_box, alignment=Qt.AlignHCenter)
             button_box.accepted.connect(dialog.accept)
             if dialog.exec() == QDialog.Accepted:
+                row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+                for item in row_items:
+                    item.setBackground(QColor(150, 150, 100))
                 return
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
