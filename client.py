@@ -1,6 +1,5 @@
 # python模块
 import os
-import shutil
 import qdarkstyle
 import configparser
 import string
@@ -651,20 +650,25 @@ class MainWindow(QMainWindow):
     def load_table_data(self):
         # 读取表文件
         def tableerror():
-            shutil.copyfile("./data/linktable.ini", "./data/linktable.bak")
-            os.remove("./data/linktable.ini")
+            now = datetime.now()
+            time_str = now.strftime("%H%M%S")
+            os.rename("./data/linktable.ini", f"./data/linktable_{time_str}.bak")
+            with open("./data/linktable.ini", "w", encoding="utf8") as f:
+                f.write("")
+            self.ui.linktable.clearContents()
+            self.ui.linktable.setRowCount(0)
             dialog = QDialog(self)
             dialog.setWindowTitle("发生错误")
             dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
             layout = QVBoxLayout()
-            label = QLabel("读取链接数据时发生错误，请重启该软件")
+            label = QLabel("读取链接数据时发生错误")
             layout.addWidget(label, alignment=Qt.AlignHCenter)
             dialog.setLayout(layout)
             button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
             layout.addWidget(button_box, alignment=Qt.AlignHCenter)
             button_box.accepted.connect(dialog.accept)
             if dialog.exec() == QDialog.Accepted:
-                exit()
+                return
         try:
             with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
                 # 读取数据
@@ -692,6 +696,7 @@ class MainWindow(QMainWindow):
                     row += 1
         except:
             tableerror()
+            return
     
     def save_other_data(self):
         # 保存其他设置的配置文件
@@ -767,7 +772,7 @@ class MainWindow(QMainWindow):
         except:
             now = datetime.now()
             time_str = now.strftime("%H%M%S")
-            os.rename("./data/more.ini", f"./data/more_{time_str}.ini")
+            os.rename("./data/more.ini", f"./data/more_{time_str}.bak")
             self.default_other_data()
             load_file()
 
