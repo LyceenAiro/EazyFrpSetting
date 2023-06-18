@@ -589,8 +589,9 @@ class MainWindow(QMainWindow):
 
     def link_ini_save(self):
         # linktable表文件编译
-        if os.path.getmtime("./data/link.ini") > os.path.getmtime("./data/linktable.ini"):
-            return
+        if os.path.exists("./data/link.ini"):
+            if os.path.getmtime("./data/link.ini") > os.path.getmtime("./data/linktable.ini"):
+                return
         link = configparser.ConfigParser()
         linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name","protocol"]
         with open("./data/linktable.ini","r+",encoding="utf-8") as u:
@@ -617,11 +618,12 @@ class MainWindow(QMainWindow):
     def frpcData_save(self):
         # 整理打包frp.ini
         self.link_ini_save()
-        datadiff = [os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/more.ini"),
-                    os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/server.ini"),
-                    os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini")]
-        if all(datadiff):
-            return
+        if os.path.exists("./data/frpc.ini"):
+            datadiff = [os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/more.ini"),
+                        os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/server.ini"),
+                        os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini")]
+            if all(datadiff):
+                return
         self.ui.main_log.insertPlainText("frpc.ini is compile now...\n")
         with open("./data/server.ini","r+",encoding="utf-8") as u:
             frpc = u.readlines()
