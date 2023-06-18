@@ -1,9 +1,9 @@
-@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230516
+@rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230606
 @echo off
 
 set "file1=.\ui\main.ui" > nul
 set "file2=.\ui\main_ui.py" > nul
-set "file3=.\ui\main.rc" > nul
+set "file3=.\ui\main.qrc" > nul
 set "file4=.\ui\main_rc.py" > nul
 
 echo [%date:~0,4%-%date:~5,2%-%date:~8,2% %time:~0,2%:%time:~3,2%:%time:~6,2%]auto_ui_install start now! >> auto_ui_install.txt
