@@ -32,7 +32,9 @@ class FrpClient(QThread):
             self.started.emit()
 
     def run(self):
-        self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.ini'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.ini'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
         for line in self._process.stdout:
             self.log_message.emit(line.decode('utf-8').strip())
             self.log_message.emit("\n")

@@ -48,20 +48,21 @@
 - 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
 - 默认配置下5秒钟会自动更新一次编译
 ### 发布文件一键编译(测试)
-- 使用[main_install.bat](./main_install.bat)
+- 使用`python`运行[main_install.py](./main_install.py)
 - [x] 编译
-- [ ] _打包_(暂无场景)
+- [x] 打包
 ### 编译main需要的程序与第三方库
 安装[python3.8+](https://www.python.org/)  
-下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数`可选`
-``` bat
---upx-dir={upx文件夹名称}
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.py`以下参数`可选`
+``` python
+upx = "upx文件夹名称"
 ```
-使用`pip`安装`PySide6`、`qdarkstyle`、`requests`
+使用`pip`安装`PySide6`、`qdarkstyle`、`requests`和`pyinstall`
 ``` cmd
 pip install pyside6
 pip install qdarkstyle
 pip install requests
+pip install pyinstall
 ```
 ## LICENSE
 [MIT License](./LICENSE)
