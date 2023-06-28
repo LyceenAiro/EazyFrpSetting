@@ -74,6 +74,9 @@ class CheckUpdata(QThread):
     def run(self):
         # 尝试获取最新版本且附带数据
         # 尝试获取最新版本
+        if not tags().versionaddit in ("Release", "alpha", "beta"):
+            self.log_message.emit("特殊版本无法检查更新",False)
+            return
         requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
         try:
             # 发送 GET 请求获取最新版本号
