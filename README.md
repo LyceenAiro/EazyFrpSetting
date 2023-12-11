@@ -18,11 +18,11 @@
 ```
 .
 ├─data          // 这个文件夹及其内容都是自动生成的
-│  ├─frpc.ini       // frpc启动文件
-│  ├─link.ini       // link编译文件
-│  ├─linktable.ini  // link表源文件
+│  ├─frpc.toml       // frpc启动文件
+│  ├─link.toml       // link编译文件
+│  ├─linktable.toml  // link表源文件
 │  ├─more.ini       // other配置文件
-│  └─server.ini     // server配置文件
+│  └─server.toml     // server配置文件
 ├─frpc.exe      // 你需要把frpc.exe放在这里
 └─client.exe      // 软件本体
 ```
