@@ -13,6 +13,7 @@
 - 需求文件`frpc.exe`  
 - 将`frpc.exe`放入根目录中
 - 启动该软件
+- 2.1.0版本以后只支持使用toml作为配置的frpc版本
 ### 文件目录生成和排版
 ```
 .
@@ -35,10 +36,10 @@
 ### 未来功能[计划]
 - [x] 链接开关 v2.0.2
 - [x] 链接功能
-- [ ] 多服务器指定
-- [ ] 服务端
-- [ ] 隧道信息同步
-- [ ] 配置云端化
+- [ ] 多服务器指定(暂缓)
+- [ ] 服务端(暂缓)
+- [ ] 隧道信息同步(暂缓)
+- [ ] 配置云端化(暂缓)
 - [ ] 开机启动(暂缓)
 - 未来更多...
 ## 开发者工具
@@ -57,12 +58,9 @@
 ``` python
 upx = "upx文件夹名称"
 ```
-使用`pip`安装`PySide6`、`qdarkstyle`、`requests`和`pyinstall`
+使用`pip`安装`编译环境`
 ``` cmd
-pip install pyside6
-pip install qdarkstyle
-pip install requests
-pip install pyinstall
+pip install -r requirements.txt
 ```
 ## LICENSE
 [MIT License](./LICENSE)

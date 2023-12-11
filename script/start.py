@@ -34,7 +34,7 @@ class FrpClient(QThread):
     def run(self):
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.ini'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
+        self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.toml'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
         for line in self._process.stdout:
             self.log_message.emit(line.decode('utf-8').strip())
             self.log_message.emit("\n")

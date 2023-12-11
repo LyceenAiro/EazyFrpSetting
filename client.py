@@ -4,6 +4,7 @@ import qdarkstyle
 import configparser
 import string
 import random
+import toml
 from datetime import datetime
 import webbrowser
 import ui.main_rc
@@ -38,7 +39,7 @@ class MainWindow(QMainWindow):
         self.UIinit()
 
         # 初始化线程应用
-        self.bandFrp()     
+        self.bandFrp()
         self.bandCheckupdata()
 
         # 数据读取
@@ -170,18 +171,18 @@ class MainWindow(QMainWindow):
         # 包含所有存储数据读取
         if not os.path.exists("data"):
             os.makedirs("data")
-        if os.path.exists("./data/server.ini"):
-            server = configparser.ConfigParser()
-            server.read("./data/server.ini","utf-8")
-            self.ui.show_IP.setText(server["common"]["server_addr"])
-            self.ui.show_Port.setText(server["common"]["server_port"])
+        if os.path.exists("./data/server.toml"):
+            with open("./data/server.toml", "r", encoding="utf8") as file:
+                server = toml.loads(file.read())
+            self.ui.show_IP.setText(server["serverAddr"])
+            self.ui.show_Port.setText(str(server["serverPort"]))
             try:
-                if not server["common"]["token"] == "无配置":
+                if not server["token"] == "无配置":
                     self.ui.show_token.setText("已配置")
             except:
                 self.ui.show_token.setText("无配置")
-        if not os.path.exists("./data/linktable.ini"):
-            with open("./data/linktable.ini", "w", encoding="utf8") as f:
+        if not os.path.exists("./data/linktable.toml"):
+            with open("./data/linktable.toml", "w", encoding="utf8") as f:
                 f.write("")
         self.load_table_data()
         self.load_other_data()
@@ -558,9 +559,6 @@ class MainWindow(QMainWindow):
         token = self.ui.server_token.text()
 
         check = True
-        if self.ipcheck(ip) == False:
-            self.ui.server_IP.setStyleSheet("border: 2px solid red; border-radius: 0px;")
-            check = False
         if self.portcheck(port, 1, 65565) == False:
             self.ui.server_Port.setStyleSheet("border: 2px solid red; border-radius: 0px;")
             check = False
@@ -569,79 +567,82 @@ class MainWindow(QMainWindow):
         self.ui.server_IP.setStyleSheet("")
         self.ui.server_Port.setStyleSheet("")
 
-        link = configparser.ConfigParser()
-        link.add_section("common")
-        link["common"]["server_addr"] = ip
-        link["common"]["server_port"] = port
+        link = {}
+        link["serverAddr"] = ip
+        link["serverPort"] = int(port)
         if token == "":
-            link["common"]["#token"] = "无配置"
             self.ui.show_token.setText("无配置")
         else:
-            link["common"]["token"] = token
+            link["token"] = token
             self.ui.show_token.setText("已配置")
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
 
         self.ui.server_token.setText("")
         self.setserverbutton()
-        with open("./data/server.ini", "w", encoding="utf-8") as configfile:
-            link.write(configfile)
+        with open("./data/server.toml", "w", encoding="utf-8") as file:
+            file.write(toml.dumps(link))
 
     def link_ini_save(self):
         # linktable表文件编译
-        if os.path.exists("./data/link.ini"):
-            if os.path.getmtime("./data/link.ini") > os.path.getmtime("./data/linktable.ini"):
+        if os.path.exists("./data/link.toml"):
+            if os.path.getmtime("./data/link.toml") > os.path.getmtime("./data/linktable.toml"):
                 return
-        link = configparser.ConfigParser()
-        linksetup = ["","type","local_ip","local_port","remote_port","sk","server_name","protocol"]
-        with open("./data/linktable.ini","r+",encoding="utf-8") as u:
+        link = {"proxies" : []}
+        linksetup = ["name","type","localIp","localPort","remotePort","secretKey","serverName","keepTunnelOpen"]
+        with open("./data/linktable.toml","r+",encoding="utf-8") as u:
             for a in u.readlines():
                 b = a.split(",")
                 if not b[7] == "开启":
                     continue
-                tags = 1
-                link.add_section(b[0])
+                tags = 0
+                in_proxy = {}
                 while not tags >= 7:
                     if b[tags] == "":
-                        link[b[0]]["#"+linksetup[tags]] = b[tags]
+                        pass
+                    elif "Port" in linksetup[tags]:
+                        in_proxy[linksetup[tags]] = int(b[tags])
+                    elif "keepTunnelOpen" in linksetup[tags]:
+                        in_proxy[linksetup[tags]] = bool(b[tags])
                     else:
-                        link[b[0]][linksetup[tags]] = b[tags]
+                        in_proxy[linksetup[tags]] = b[tags]
                     tags += 1
                 # 第九项数据
                 if b[9] in ("默认传输", ""):
-                    link[b[0]]["#"+linksetup[tags]] = ""
+                    pass
                 else:
-                    link[b[0]][linksetup[tags]] = b[9]
-        with open("./data/link.ini", "w", encoding="utf-8") as configfile:
-            link.write(configfile)
+                    in_proxy[linksetup[tags]] = b[9]
+                link["proxies"].append(in_proxy)
+        with open("./data/link.toml", "w", encoding="utf-8") as file:
+            file.write(toml.dumps(link))
 
     def frpcData_save(self):
-        # 整理打包frp.ini
+        # 整理打包frp.toml
         self.link_ini_save()
-        if os.path.exists("./data/frpc.ini"):
-            datadiff = [os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/more.ini"),
-                        os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/server.ini"),
-                        os.path.getmtime("./data/frpc.ini") > os.path.getmtime("./data/link.ini")]
+        if os.path.exists("./data/frpc.toml"):
+            datadiff = [os.path.getmtime("./data/frpc.toml") > os.path.getmtime("./data/more.ini"),
+                        os.path.getmtime("./data/frpc.toml") > os.path.getmtime("./data/server.toml"),
+                        os.path.getmtime("./data/frpc.toml") > os.path.getmtime("./data/link.toml")]
             if all(datadiff):
                 return
-        self.ui.main_log.insertPlainText("frpc.ini is compile now...\n")
-        with open("./data/server.ini","r+",encoding="utf-8") as u:
+        self.ui.main_log.insertPlainText("frpc.toml is compile now...\n")
+        with open("./data/server.toml","r+",encoding="utf-8") as u:
             frpc = u.readlines()
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
         if bool(link["common"]["auto_heartbeat"]) == True:
-            frpc += "heartbeat_timeout = " + link["common"]["auto_heartbeat_box"] + "\n"
+            frpc += "heartbeatTimeout = " + link["common"]["auto_heartbeat_box"] + "\n"
         
-        with open("./data/link.ini", "r+", encoding="utf-8") as u:
+        with open("./data/link.toml", "r+", encoding="utf-8") as u:
             frpc += u.readlines()
 
-        with open("./data/frpc.ini","w+",encoding="utf-8") as u:
+        with open("./data/frpc.toml","w+",encoding="utf-8") as u:
             for i in frpc:
                 u.write(i)
     
     def save_table_data(self):
         # 保存表文件
-        with open("./data/linktable.ini", "w", encoding="utf-8") as f:
+        with open("./data/linktable.toml", "w", encoding="utf-8") as f:
             # 写入数据
             for i in range(self.ui.linktable.rowCount()):
                 row_data = []
@@ -660,8 +661,8 @@ class MainWindow(QMainWindow):
         def tableerror():
             now = datetime.now()
             time_str = now.strftime("%H%M%S")
-            os.rename("./data/linktable.ini", f"./data/linktable_{time_str}.bak")
-            with open("./data/linktable.ini", "w", encoding="utf8") as f:
+            os.rename("./data/linktable.toml", f"./data/linktable_{time_str}.bak")
+            with open("./data/linktable.toml", "w", encoding="utf8") as f:
                 f.write("")
             self.ui.linktable.clearContents()
             self.ui.linktable.setRowCount(0)
@@ -678,7 +679,7 @@ class MainWindow(QMainWindow):
             if dialog.exec() == QDialog.Accepted:
                 return
         try:
-            with open("./data/linktable.ini", "r", encoding="utf-8") as f:            
+            with open("./data/linktable.toml", "r", encoding="utf-8") as f:            
                 # 读取数据
                 row = 0
                 for line in f:
@@ -865,8 +866,8 @@ class MainWindow(QMainWindow):
         self.ui.show_IP.setText("无配置")
         self.ui.show_Port.setText("无配置")
         self.ui.show_token.setText("无配置")
-        if os.path.exists("./data/server.ini"):
-            os.remove("./data/server.ini")
+        if os.path.exists("./data/server.toml"):
+            os.remove("./data/server.toml")
 
     def shutdown(self):
         # 关闭程序
@@ -969,10 +970,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 1024, 65565) == False:
+            if self.portcheck(edit4.text(), 80, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 1024, 65565) == False:
+            if self.portcheck(edit5.text(), 80, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1154,10 +1155,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 1024, 65565) == False:
+            if self.portcheck(edit4.text(), 80, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 1024, 65565) == False:
+            if self.portcheck(edit5.text(), 80, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1337,7 +1338,7 @@ class MainWindow(QMainWindow):
 
     def checkfile(self):
         # 检查配置文件是否满足需求
-        if not os.path.exists("./data/server.ini"):
+        if not os.path.exists("./data/server.toml"):
             return False
 
     ##
