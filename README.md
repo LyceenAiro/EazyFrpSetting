@@ -13,15 +13,16 @@
 - 需求文件`frpc.exe`  
 - 将`frpc.exe`放入根目录中
 - 启动该软件
+- 2.1.0版本以后只支持使用toml作为配置的frpc版本
 ### 文件目录生成和排版
 ```
 .
 ├─data          // 这个文件夹及其内容都是自动生成的
-│  ├─frpc.ini       // frpc启动文件
-│  ├─link.ini       // link编译文件
-│  ├─linktable.ini  // link表源文件
+│  ├─frpc.toml       // frpc启动文件
+│  ├─link.toml       // link编译文件
+│  ├─linktable.toml  // link表源文件
 │  ├─more.ini       // other配置文件
-│  └─server.ini     // server配置文件
+│  └─server.toml     // server配置文件
 ├─frpc.exe      // 你需要把frpc.exe放在这里
 └─client.exe      // 软件本体
 ```
@@ -35,10 +36,10 @@
 ### 未来功能[计划]
 - [x] 链接开关 v2.0.2
 - [x] 链接功能
-- [ ] 多服务器指定
-- [ ] 服务端
-- [ ] 隧道信息同步
-- [ ] 配置云端化
+- [ ] 多服务器指定(暂缓)
+- [ ] 服务端(暂缓)
+- [ ] 隧道信息同步(暂缓)
+- [ ] 配置云端化(暂缓)
 - [ ] 开机启动(暂缓)
 - 未来更多...
 ## 开发者工具
@@ -48,20 +49,18 @@
 - 保持打开[auto_ui_install.bat](./auto_ui_install.bat)  
 - 默认配置下5秒钟会自动更新一次编译
 ### 发布文件一键编译(测试)
-- 使用[main_install.bat](./main_install.bat)
+- 使用`python`运行[main_install.py](./main_install.py)
 - [x] 编译
-- [ ] _打包_(暂无场景)
+- [x] 打包
 ### 编译main需要的程序与第三方库
 安装[python3.8+](https://www.python.org/)  
-下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.bat`以下参数`可选`
-``` bat
---upx-dir={upx文件夹名称}
+下载[upx](https://github.com/upx/upx),将其文件夹解压到库根目录,修改`main_install.py`以下参数`可选`
+``` python
+upx = "upx文件夹名称"
 ```
-使用`pip`安装`PySide6`、`qdarkstyle`、`requests`
+使用`pip`安装`编译环境`
 ``` cmd
-pip install pyside6
-pip install qdarkstyle
-pip install requests
+pip install -r requirements.txt
 ```
 ## LICENSE
 [MIT License](./LICENSE)
