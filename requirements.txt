@@ -2,4 +2,5 @@ pyside6==6.5.0
 qdarkstyle==3.1
 requests==2.30.0
 toml==0.10.2
+ping3==4.0.4
 pyinstaller

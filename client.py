@@ -17,7 +17,7 @@ from PySide6 import QtWidgets
 
 # 项目模块
 from ui.main_ui import Ui_MainWindow
-from script.start import FrpClient,CheckUpdata
+from script.start import FrpClient ,CheckUpdata, CheckServer
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -41,6 +41,7 @@ class MainWindow(QMainWindow):
         # 初始化线程应用
         self.bandFrp()
         self.bandCheckupdata()
+        self.bandPing()
 
         # 数据读取
         self.datainit()
@@ -75,6 +76,7 @@ class MainWindow(QMainWindow):
         # server
         self.ui.server_save.clicked.connect(self.server_save)
         self.ui.server_clear.clicked.connect(self.clear_server_sertting)
+        self.ui.server_check.clicked.connect(self.check_service)
 
         # link
         self.ui.link_create.clicked.connect(self.on_add_button_clicked)
@@ -114,6 +116,11 @@ class MainWindow(QMainWindow):
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
         self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
+
+    def bandPing(self):
+        # 绑定CheckServer线程的信号
+        self._CheckServer = CheckServer()
+        self._CheckServer.ping_message.connect(self.updata_server_ping)
 
     ##
     ## UI变化反馈
@@ -485,6 +492,10 @@ class MainWindow(QMainWindow):
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_server
         self.set_left_highlight_botton()
+        if self.ui.show_IP.text() == "无配置":
+            self.updata_server_ping([2, "- ms"])
+        else:
+            self.check_service()
 
     def setlink(self):
         # 将页面切换到 -> 配置链接
@@ -970,10 +981,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 80, 65565) == False:
+            if self.portcheck(edit4.text(), 1, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 80, 65565) == False:
+            if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1155,10 +1166,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 80, 65565) == False:
+            if self.portcheck(edit4.text(), 1, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 80, 65565) == False:
+            if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1307,6 +1318,48 @@ class MainWindow(QMainWindow):
             self.save_table_data()
         else:
             return
+        
+    def check_service(self):
+        # 检查与服务器的连接状态如何
+        get_ip = self.ui.show_IP.text()
+        if get_ip == "无配置":
+            return
+        self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        self.ui.server_ping.setText("... ms")
+        self._CheckServer.start(address=get_ip)
+
+    def updata_server_ping(self, message):
+        # 反馈服务器连接状态结果
+        self.ui.server_ping.setText(message[1])
+        if message[0] == 2:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        elif message[0] == 0:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        self._CheckServer.stop()
+            
+
    
     ##
     ## 判断模块

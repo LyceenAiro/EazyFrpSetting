@@ -4,6 +4,8 @@ from PySide6.QtCore import QThread, Signal
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 
+import ping3
+
 import sys
 sys.path.append(".")
 from makefile.tags import tags
@@ -100,3 +102,37 @@ class CheckUpdata(QThread):
             self._thread.quit()
             self._thread.wait()
             self.stopped.emit()
+
+class CheckServer(QThread):
+    # 这是一个专门检查服务器连通性的线程
+    ping_message = Signal(list)
+
+    def __init__(self):
+        super().__init__()
+        self._running = False
+        self.tags = tags()
+    
+    def start(self, address):
+        if not self._running:
+            self._running = True
+            super().start()
+            self.address = address
+
+    def run(self):
+        try:
+            result = ping3.ping(self.address , unit="ms", timeout=10)
+        except:
+            self._running = False
+            return
+        if not result:
+            online = 0
+            result = "Fail"
+        else:
+            online = 1
+            result = f"{str(int(result))} ms"
+        return_list = [online, result]
+        self.ping_message.emit(return_list)
+
+    def stop(self):
+        if self._running:
+            self._running = False
