@@ -886,6 +886,8 @@ class MainWindow(QMainWindow):
         self._frp_client.finished.disconnect()
         self._frp_client.log_message.disconnect()
         self._frp_client.deleteLater()
+        self._check_updata.stop()
+        self._CheckServer.stop()
         self.close()
         app.quit()
 
