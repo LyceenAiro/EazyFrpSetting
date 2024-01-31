@@ -593,6 +593,7 @@ class MainWindow(QMainWindow):
         self.setserverbutton()
         with open("./data/server.toml", "w", encoding="utf-8") as file:
             file.write(toml.dumps(link))
+        self.check_service()
 
     def link_ini_save(self):
         # linktable表文件编译
@@ -877,6 +878,7 @@ class MainWindow(QMainWindow):
         self.ui.show_IP.setText("无配置")
         self.ui.show_Port.setText("无配置")
         self.ui.show_token.setText("无配置")
+        self.updata_server_ping([2, "- ms"])
         if os.path.exists("./data/server.toml"):
             os.remove("./data/server.toml")
 
