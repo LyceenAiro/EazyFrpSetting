@@ -4,11 +4,14 @@
 - 将程序最小化至托盘运行
 - 支持多隧道图形化管理
 - 隧道自动生成部分信息
+- 检测带宽状态自动预警
+- 检测Frp服务器状态
 ## 界面
 - 使用`PySide6`编写
 - 部分美化`qdarkstyle`  
 ![Example Image](https://raw.githubusercontent.com/LyceenAiro/EazyFrpSetting/doc/v3_file/show_file/2.png)
 ## 使用
+该软件基于frp_0.52.3_windows_xx版本开发
 需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
 - 需求文件`frpc.exe`  
 - 将`frpc.exe`放入根目录中
