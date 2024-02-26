@@ -17,7 +17,6 @@ class FrpClient(QThread):
     # 这是一个专门用于启动Frp的subprocess
     started = Signal()
     finished = Signal()
-    tell_finished = Signal()
     bandwidth_usage = Signal(list)
     log_message = Signal(str)
 

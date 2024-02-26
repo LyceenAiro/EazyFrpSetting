@@ -116,7 +116,6 @@ class MainWindow(QMainWindow):
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
-        self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
         self._frp_client.bandwidth_usage.connect(self.on_frp_bandwidth)
 
     def bandPing(self):
@@ -927,12 +926,9 @@ class MainWindow(QMainWindow):
         self.ui.net_downdata.setText("↓ 0 mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
+        self.ui.main_log.insertPlainText("frp client stopped.\n")
         self.setstarthigh()
         self.bandFrp()
-    
-    def on_frp_finished_tell(self):
-        # 将停止通知与停止反馈分离防止发送两条信息
-        self.ui.main_log.insertPlainText("frp client stopped.\n")
 
     def on_frp_bandwidth(self, usage):
         # 更新带宽信息
