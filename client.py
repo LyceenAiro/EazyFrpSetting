@@ -87,11 +87,12 @@ class MainWindow(QMainWindow):
         # other
         self.ui.auto_linkname.stateChanged.connect(self.save_other_data)
         self.ui.auto_address.stateChanged.connect(self.save_other_data)
-        self.ui.auto_heartbeat.stateChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth.stateChanged.connect(self.save_other_data)
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
         self.ui.auto_updata.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
-        self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth_up.valueChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -116,6 +117,7 @@ class MainWindow(QMainWindow):
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
         self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
+        self._frp_client.bandwidth_usage.connect(self.on_frp_bandwidth)
 
     def bandPing(self):
         # 绑定CheckServer线程的信号
@@ -382,7 +384,8 @@ class MainWindow(QMainWindow):
     
     def OtherUISetting(self):
         self.ui.auto_linkname_box.setMaximum(20)
-        self.ui.auto_heartbeat_box.setMaximum(5000)
+        self.ui.auto_bandwidth_up.setMaximum(1000000)
+        self.ui.auto_bandwidth_down.setMaximum(1000000)
 
     def TagsUISetting(self):
         self.ui.tags_check_updata.hide()
@@ -642,9 +645,6 @@ class MainWindow(QMainWindow):
             frpc = u.readlines()
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
-        if bool(link["common"]["auto_heartbeat"]) == True:
-            frpc += "heartbeatTimeout = " + link["common"]["auto_heartbeat_box"] + "\n"
-        
         with open("./data/link.toml", "r+", encoding="utf-8") as u:
             frpc += u.readlines()
 
@@ -743,15 +743,17 @@ class MainWindow(QMainWindow):
             self.auto_address = False
 
         # 心跳回应
-        link["common"]["auto_heartbeat_box"] = str(self.ui.auto_heartbeat_box.value())
-        self.auto_heartbeat_box= self.ui.auto_heartbeat_box.value()
-        if self.ui.auto_heartbeat.isChecked():
-            link["common"]["auto_heartbeat"] = "True"
-            self.auto_heartbeat = True
+        link["common"]["auto_bandwidth_up"] = str(self.ui.auto_bandwidth_up.value())
+        link["common"]["auto_bandwidth_down"] = str(self.ui.auto_bandwidth_down.value())
+        self.auto_bandwidth_up = self.ui.auto_bandwidth_up.value()
+        self.auto_bandwidth_down = self.ui.auto_bandwidth_down.value()
+        if self.ui.auto_bandwidth.isChecked():
+            link["common"]["auto_bandwidth"] = "True"
+            self.auto_bandwidth = True
         else:
-            link["common"]["auto_heartbeat"] = "False"
-            self.auto_heartbeat = False
-        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+            link["common"]["auto_bandwidth"] = "False"
+            self.auto_bandwidth = False
+        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
 
         # 最小化托盘
         if self.ui.auto_mini.isChecked():
@@ -781,8 +783,9 @@ class MainWindow(QMainWindow):
             self.auto_linkname = link.getboolean("common", "auto_name")
             self.auto_linkname_box = link["common"]["auto_name_box"]
             self.auto_address = link.getboolean("common", "auto_address")
-            self.auto_heartbeat = link.getboolean("common", "auto_heartbeat")
-            self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
+            self.auto_bandwidth = link.getboolean("common", "auto_bandwidth")
+            self.auto_bandwidth_up = link["common"]["auto_bandwidth_up"]
+            self.auto_bandwidth_down = link["common"]["auto_bandwidth_down"]
             self.auto_mini = link.getboolean("common", "auto_mini")
             self.auto_updata = link.getboolean("common", "auto_updata")
 
@@ -798,16 +801,18 @@ class MainWindow(QMainWindow):
             load_file()
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
-        self.ui.auto_heartbeat_box.setValue(int(self.auto_heartbeat_box))
+        self.ui.auto_bandwidth_up.setValue(int(self.auto_bandwidth_up))
+        self.ui.auto_bandwidth_down.setValue(int(self.auto_bandwidth_down))
 
         self.ui.auto_linkname.setChecked(self.auto_linkname)
         self.ui.auto_address.setChecked(self.auto_address)
-        self.ui.auto_heartbeat.setChecked(self.auto_heartbeat)
+        self.ui.auto_bandwidth.setChecked(self.auto_bandwidth)
         self.ui.auto_mini.setChecked(self.auto_mini)
         self.ui.auto_updata.setChecked(self.auto_updata)
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
-        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
+        self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
     
     def default_other_data(self):
         # more.ini缺省值
@@ -816,8 +821,9 @@ class MainWindow(QMainWindow):
         link["common"]["auto_name"] = "True"
         link["common"]["auto_name_box"] = "8"
         link["common"]["auto_address"] = "True"
-        link["common"]["auto_heartbeat"] = "True"
-        link["common"]["auto_heartbeat_box"] = "30"
+        link["common"]["auto_bandwidth"] = "True"
+        link["common"]["auto_bandwidth_up"] = "10"
+        link["common"]["auto_bandwidth_down"] = "10"
         link["common"]["auto_mini"] = "True"
         link["common"]["auto_updata"] = "True"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
@@ -917,6 +923,8 @@ class MainWindow(QMainWindow):
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
+        self.ui.net_updata.setText("↑ 0 mbps")
+        self.ui.net_downdata.setText("↓ 0 mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
         self.setstarthigh()
@@ -925,7 +933,12 @@ class MainWindow(QMainWindow):
     def on_frp_finished_tell(self):
         # 将停止通知与停止反馈分离防止发送两条信息
         self.ui.main_log.insertPlainText("frp client stopped.\n")
-    
+
+    def on_frp_bandwidth(self, usage):
+        # 更新带宽信息
+        self.ui.net_updata.setText(f"↑ {usage[0]} mbps")
+        self.ui.net_updata.setText(f"↑ {usage[1]} mbps")
+
     def updata_started(self):
         # 当检查更新开启时执行
         self.ui.check_updata.setEnabled(False)

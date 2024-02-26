@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -846,7 +846,7 @@ QCheckBox::indicator::unchecked {
        <string/>
       </property>
      </widget>
-     <widget class="QCheckBox" name="auto_heartbeat">
+     <widget class="QCheckBox" name="auto_bandwidth">
       <property name="geometry">
        <rect>
         <x>560</x>
@@ -962,7 +962,7 @@ QCheckBox::indicator::unchecked {
        </font>
       </property>
       <property name="text">
-       <string>心跳回应</string>
+       <string>带宽预警</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_17">
@@ -981,7 +981,7 @@ QCheckBox::indicator::unchecked {
        </font>
       </property>
       <property name="text">
-       <string>延时</string>
+       <string>阈值(Mbps)</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="auto_linkname_box">
@@ -993,15 +993,24 @@ QCheckBox::indicator::unchecked {
         <height>22</height>
        </rect>
       </property>
+      <property name="maximum">
+       <number>20</number>
+      </property>
      </widget>
-     <widget class="QSpinBox" name="auto_heartbeat_box">
+     <widget class="QSpinBox" name="auto_bandwidth_up">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>450</x>
         <y>215</y>
-        <width>51</width>
+        <width>71</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="maximum">
+       <number>1000000</number>
+      </property>
+      <property name="value">
+       <number>10</number>
       </property>
      </widget>
      <widget class="Line" name="line_7">
@@ -1178,6 +1187,22 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="auto_bandwidth_down">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>215</y>
+        <width>71</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>1000000</number>
+      </property>
+      <property name="value">
+       <number>10</number>
       </property>
      </widget>
     </widget>
@@ -1458,16 +1483,16 @@ QPushButton:hover {
    <widget class="QWidget" name="widget_3" native="true">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>460</x>
       <y>0</y>
-      <width>221</width>
+      <width>341</width>
       <height>31</height>
      </rect>
     </property>
     <widget class="QPushButton" name="window_close">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>290</x>
        <y>0</y>
        <width>50</width>
        <height>25</height>
@@ -1483,7 +1508,7 @@ QPushButton:hover {
     <widget class="QPushButton" name="window_mini">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>240</x>
        <y>0</y>
        <width>50</width>
        <height>25</height>
@@ -1498,8 +1523,36 @@ QPushButton:hover {
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="net_updata">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>0</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>↑ 0 mbps</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="net_downdata">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>0</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>↓ 0 mbps</string>
+     </property>
+    </widget>
     <zorder>window_mini</zorder>
     <zorder>window_close</zorder>
+    <zorder>net_updata</zorder>
+    <zorder>net_downdata</zorder>
    </widget>
    <widget class="QPushButton" name="page_main">
     <property name="geometry">

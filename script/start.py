@@ -5,6 +5,8 @@ import requests
 from urllib3.exceptions import InsecureRequestWarning
 
 import ping3
+import psutil
+from time import sleep
 
 import sys
 sys.path.append(".")
@@ -16,6 +18,7 @@ class FrpClient(QThread):
     started = Signal()
     finished = Signal()
     tell_finished = Signal()
+    bandwidth_usage = Signal(list)
     log_message = Signal(str)
 
     def __init__(self):
@@ -37,11 +40,23 @@ class FrpClient(QThread):
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.toml'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
-        for line in self._process.stdout:
-            self.log_message.emit(line.decode('utf-8').strip())
-            self.log_message.emit("\n")
-        self.finished.emit()
-        self.tell_finished.emit()
+        frpc_pid = self._process.pid
+        while self._running:
+            for line in self._process.stdout:
+                self.log_message.emit(line.decode('utf-8').strip())
+                self.log_message.emit("\n")
+            # 获取frpc进程的网络流量信息
+            for proc in psutil.process_iter(['pid', 'name']):
+                if proc.info['pid'] == frpc_pid and proc.info['name'] == 'frpc.exe':
+                    frpc_proc = psutil.Process(frpc_pid)
+                    frpc_net_io = frpc_proc.io_counters()
+                    upload_speed = frpc_net_io.bytes_sent
+                    download_speed = frpc_net_io.bytes_recv
+                    total_bandwidth = [upload_speed, download_speed]
+                    self.bandwidth_usage.emit(total_bandwidth)
+                    print("get true")
+                    break
+            sleep(0.5)
 
     def stop(self):
         if self._running:
