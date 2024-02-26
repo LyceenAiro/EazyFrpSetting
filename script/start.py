@@ -7,6 +7,7 @@ from urllib3.exceptions import InsecureRequestWarning
 import ping3
 import psutil
 from time import sleep
+from collections import deque
 
 import sys
 sys.path.append(".")
@@ -17,8 +18,8 @@ class FrpClient(QThread):
     # 这是一个专门用于启动Frp的subprocess
     started = Signal()
     finished = Signal()
-    bandwidth_usage = Signal(list)
     log_message = Signal(str)
+    bandwidth_pid = Signal(int)
 
     def __init__(self):
         super().__init__()
@@ -39,23 +40,11 @@ class FrpClient(QThread):
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.toml'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
-        frpc_pid = self._process.pid
-        while self._running:
-            for line in self._process.stdout:
-                self.log_message.emit(line.decode('utf-8').strip())
-                self.log_message.emit("\n")
-            # 获取frpc进程的网络流量信息
-            for proc in psutil.process_iter(['pid', 'name']):
-                if proc.info['pid'] == frpc_pid and proc.info['name'] == 'frpc.exe':
-                    frpc_proc = psutil.Process(frpc_pid)
-                    frpc_net_io = frpc_proc.io_counters()
-                    upload_speed = frpc_net_io.bytes_sent
-                    download_speed = frpc_net_io.bytes_recv
-                    total_bandwidth = [upload_speed, download_speed]
-                    self.bandwidth_usage.emit(total_bandwidth)
-                    print("get true")
-                    break
-            sleep(0.5)
+        self.bandwidth_pid.emit(self._process.pid)
+        for line in self._process.stdout:
+            self.log_message.emit(line.decode('utf-8').strip())
+            self.log_message.emit("\n")
+        self.finished.emit()
 
     def stop(self):
         if self._running:
@@ -63,7 +52,6 @@ class FrpClient(QThread):
             self._process.terminate()
             self._thread.quit()
             self._thread.wait()
-            self.finished.emit()
 
 class CheckUpdata(QThread):
     # 这是一个专门检查更新的线程
@@ -73,7 +61,6 @@ class CheckUpdata(QThread):
 
     def __init__(self):
         super().__init__()
-        self._process = None
         self._thread = None
         self._running = False
         self.tags = tags()
@@ -146,6 +133,58 @@ class CheckServer(QThread):
             result = f"{str(int(result))} ms"
         return_list = [online, result]
         self.ping_message.emit(return_list)
+
+    def stop(self):
+        if self._running:
+            self._running = False
+
+class Checkbandwidth(QThread):
+    # 专门用于检测流量信息的线程
+    bandwidth_usage = Signal(list)
+
+    def __init__(self):
+        super().__init__()
+        self.frpc_pid = None
+        self._running = False
+        
+    def start(self, pid):
+        if not self._running:
+            self._running = True
+            self.frpc_pid = pid
+            super().start()
+
+    def run(self):
+        previous_upload_bytes = 0
+        previous_download_bytes = 0
+        upload_speeds = deque(maxlen=5)
+        download_speeds = deque(maxlen=5)
+        while self._running:
+            try:
+                frpc_proc = psutil.Process(self.frpc_pid)
+            except psutil.NoSuchProcess:
+                break
+            frpc_net_io = frpc_proc.io_counters()
+            current_upload_bytes = frpc_net_io.read_bytes
+            current_download_bytes = frpc_net_io.write_bytes
+
+            upload_mbps = (current_upload_bytes - previous_upload_bytes) / 1024 / 1024
+            download_mbps = (current_download_bytes - previous_download_bytes) / 1024 / 1024
+
+            previous_upload_bytes = current_upload_bytes
+            previous_download_bytes = current_download_bytes
+
+            upload_speeds.append(upload_mbps)
+            download_speeds.append(download_mbps)
+
+            if len(upload_speeds) == 5:
+                average_upload_mbps = sum(upload_speeds) / 5
+                average_download_mbps = sum(download_speeds) / 5
+            else:
+                average_upload_mbps = sum(upload_speeds) / len(upload_speeds)
+                average_download_mbps = sum(download_speeds) / len(upload_speeds)
+            self.bandwidth_usage.emit([round(average_upload_mbps, 1), round(average_download_mbps, 1)])
+            sleep(1)
+        self.stop()
 
     def stop(self):
         if self._running:

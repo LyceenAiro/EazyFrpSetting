@@ -17,7 +17,7 @@ from PySide6 import QtWidgets
 
 # 项目模块
 from ui.main_ui import Ui_MainWindow
-from script.start import FrpClient ,CheckUpdata, CheckServer
+from script.start import FrpClient ,CheckUpdata, CheckServer, Checkbandwidth
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -35,6 +35,9 @@ class MainWindow(QMainWindow):
         # 窗口移动项
         self.mouse_press_position = None
 
+        # 预警时钟
+        self.warning_clock = 0
+
         # UI初始化
         self.UIinit()
 
@@ -42,6 +45,7 @@ class MainWindow(QMainWindow):
         self.bandFrp()
         self.bandCheckupdata()
         self.bandPing()
+        self.bandwidth()
 
         # 数据读取
         self.datainit()
@@ -116,7 +120,12 @@ class MainWindow(QMainWindow):
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
-        self._frp_client.bandwidth_usage.connect(self.on_frp_bandwidth)
+        self._frp_client.bandwidth_pid.connect(self.on_frp_pid)
+
+    def bandwidth(self):
+        # 绑定更新流量信息的线程信号
+        self._bandwidth = Checkbandwidth()
+        self._bandwidth.bandwidth_usage.connect(self.on_frp_bandwidth)
 
     def bandPing(self):
         # 绑定CheckServer线程的信号
@@ -916,14 +925,20 @@ class MainWindow(QMainWindow):
         self.push_a_action.setEnabled(False)
         self.push_b_action.setEnabled(True)
         self.setstophigh()
+    
+    def on_frp_pid(self, pid):
+        if pid == "" or pid < 0:
+            return
+        self._bandwidth.start(pid)
 
     def on_frp_finished(self):
         # 当收到frp停止的信号时向窗口反馈
+        self._bandwidth.stop()
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
-        self.ui.net_updata.setText("↑ 0 mbps")
-        self.ui.net_downdata.setText("↓ 0 mbps")
+        self.ui.net_updata.setText("↑ - mbps")
+        self.ui.net_downdata.setText("↓ - mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
         self.ui.main_log.insertPlainText("frp client stopped.\n")
@@ -933,7 +948,22 @@ class MainWindow(QMainWindow):
     def on_frp_bandwidth(self, usage):
         # 更新带宽信息
         self.ui.net_updata.setText(f"↑ {usage[0]} mbps")
-        self.ui.net_updata.setText(f"↑ {usage[1]} mbps")
+        self.ui.net_downdata.setText(f"↓ {usage[1]} mbps")
+        if self.warning_clock > 0 :
+            self.warning_clock -= 1
+        elif self.auto_bandwidth == True:
+            warning = False
+            wn_str = ""
+            if usage[0] >= int(self.auto_bandwidth_up):
+                warning = True
+                wn_str += f"上传带宽超过警告阈值\n↑ {usage[0]} mbps\n"
+            if usage[1] >= int(self.auto_bandwidth_down):
+                warning = True
+                wn_str += f"下载带宽超过警告阈值\n↓ {usage[1]} mbps\n"
+            if warning:
+                self.tray_icon.showMessage("带宽预警", wn_str, QSystemTrayIcon.Information, 1000)
+                self.warning_clock = 60
+
 
     def updata_started(self):
         # 当检查更新开启时执行
