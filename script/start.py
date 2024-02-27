@@ -105,21 +105,20 @@ class CheckUpdata(QThread):
             self.stopped.emit()
 
 class CheckServer(QThread):
-    # 这是一个专门检查服务器连通性的线程
     ping_message = Signal(list)
+    get_frp = Signal(bool)
+    get_token = Signal(bool)
+    finished = Signal()
 
     def __init__(self):
         super().__init__()
+        self._process = None
+        self._prorun = False
         self._running = False
-        self.tags = tags()
-    
-    def start(self, address):
-        if not self._running:
-            self._running = True
-            super().start()
-            self.address = address
+        self.address = ""
 
     def run(self):
+        self._running = True
         try:
             result = ping3.ping(self.address , unit="ms", timeout=10)
         except:
@@ -134,9 +133,33 @@ class CheckServer(QThread):
         return_list = [online, result]
         self.ping_message.emit(return_list)
 
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        self._process = subprocess.Popen(['frpc', '-c', 'data/server.toml'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
+        self._prorun = True
+        for line in self._process.stdout:
+            line = line.decode('utf-8')
+            if "login to the server failed: dial tcp" in line:
+                self.get_frp.emit(False)
+                self.get_token.emit(False)
+                break
+            elif "token in login doesn't match token from configuration" in line:
+                self.get_frp.emit(True)
+                self.get_token.emit(False)
+                break
+            elif "login to server success, get run id" in line:
+                self.get_frp.emit(True)
+                self.get_token.emit(True)
+                break
+        self.finished.emit()
+
     def stop(self):
         if self._running:
             self._running = False
+            if self._prorun:
+                self._process.terminate()
+                self._prorun = False
+
 
 class Checkbandwidth(QThread):
     # 专门用于检测流量信息的线程

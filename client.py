@@ -131,6 +131,9 @@ class MainWindow(QMainWindow):
         # 绑定CheckServer线程的信号
         self._CheckServer = CheckServer()
         self._CheckServer.ping_message.connect(self.updata_server_ping)
+        self._CheckServer.get_frp.connect(self.updata_frp_service)
+        self._CheckServer.get_token.connect(self.updata_token_service)
+        self._CheckServer.finished.connect(self.CheckServerShutdown)
 
     ##
     ## UI变化反馈
@@ -194,7 +197,7 @@ class MainWindow(QMainWindow):
             self.ui.show_IP.setText(server["serverAddr"])
             self.ui.show_Port.setText(str(server["serverPort"]))
             try:
-                if not server["token"] == "无配置":
+                if not server["auth"]["token"] == "无配置":
                     self.ui.show_token.setText("已配置")
             except:
                 self.ui.show_token.setText("无配置")
@@ -595,7 +598,7 @@ class MainWindow(QMainWindow):
         if token == "":
             self.ui.show_token.setText("无配置")
         else:
-            link["token"] = token
+            link["auth"] = {"token": token}
             self.ui.show_token.setText("已配置")
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
@@ -904,6 +907,11 @@ class MainWindow(QMainWindow):
         self._frp_client.deleteLater()
         self._check_updata.stop()
         self._CheckServer.stop()
+        self._CheckServer.finished.disconnect()
+        self._CheckServer.get_frp.disconnect()
+        self._CheckServer.get_token.disconnect()
+        self._CheckServer.ping_message.disconnect()
+        self._CheckServer.deleteLater()
         self.close()
         app.quit()
 
@@ -1373,14 +1381,70 @@ class MainWindow(QMainWindow):
             border-radius: 0px;
             }
             ''')
+        self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
         self.ui.server_ping.setText("... ms")
-        self._CheckServer.start(address=get_ip)
+        self._CheckServer.address = get_ip
+        self._CheckServer.start()
+    
+    def updata_frp_service(self, isrun):
+        if isrun:
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
 
+    def updata_token_service(self, isrun):
+        if isrun:
+            self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
     def updata_server_ping(self, message):
         # 反馈服务器连接状态结果
         self.ui.server_ping.setText(message[1])
         if message[0] == 2:
             self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+            self.ui.token_service.setStyleSheet('''
             QLabel {
             background-color: rgb(200, 200, 200);
             border-radius: 0px;
@@ -1400,6 +1464,8 @@ class MainWindow(QMainWindow):
             border-radius: 0px;
             }
             ''')
+        
+    def CheckServerShutdown(self):
         self._CheckServer.stop()
             
 

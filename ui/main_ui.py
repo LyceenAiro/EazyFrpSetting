@@ -245,7 +245,7 @@ class Ui_MainWindow(object):
         self.server_ping.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.server_check = QPushButton(self.page0)
         self.server_check.setObjectName(u"server_check")
-        self.server_check.setGeometry(QRect(130, 295, 61, 31))
+        self.server_check.setGeometry(QRect(540, 295, 61, 31))
         self.server_check.setStyleSheet(u"QPushButton {\n"
 "            background-color: rgb(60, 60, 70);\n"
 "            border-radius: 0px;\n"
@@ -253,6 +253,28 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "            background-color: rgb(80, 160, 80);\n"
 "}")
+        self.frp_service = QLabel(self.page0)
+        self.frp_service.setObjectName(u"frp_service")
+        self.frp_service.setGeometry(QRect(120, 305, 14, 14))
+        self.frp_service.setStyleSheet(u"QLabel {\n"
+"            background-color: rgb(255, 0, 0);\n"
+"            border-radius: 0px;\n"
+"}")
+        self.server_ping_2 = QLabel(self.page0)
+        self.server_ping_2.setObjectName(u"server_ping_2")
+        self.server_ping_2.setGeometry(QRect(150, 300, 71, 20))
+        self.server_ping_2.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.token_service = QLabel(self.page0)
+        self.token_service.setObjectName(u"token_service")
+        self.token_service.setGeometry(QRect(240, 305, 14, 14))
+        self.token_service.setStyleSheet(u"QLabel {\n"
+"            background-color: rgb(255, 0, 0);\n"
+"            border-radius: 0px;\n"
+"}")
+        self.login_ping_3 = QLabel(self.page0)
+        self.login_ping_3.setObjectName(u"login_ping_3")
+        self.login_ping_3.setGeometry(QRect(270, 300, 71, 20))
+        self.login_ping_3.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.stackedWidget.addWidget(self.page0)
         self.page1 = QWidget()
         self.page1.setObjectName(u"page1")
@@ -708,7 +730,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -743,6 +765,10 @@ class Ui_MainWindow(object):
         self.server_service.setText("")
         self.server_ping.setText(QCoreApplication.translate("MainWindow", u"- ms", None))
         self.server_check.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5", None))
+        self.frp_service.setText("")
+        self.server_ping_2.setText(QCoreApplication.translate("MainWindow", u"FrpService", None))
+        self.token_service.setText("")
+        self.login_ping_3.setText(QCoreApplication.translate("MainWindow", u"Token", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u914d\u7f6e\u94fe\u63a5", None))
         self.link_create.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa", None))
         self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
@@ -773,8 +799,8 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"\u4f5c\u8005", None))
         self.window_close.setText("")
         self.window_mini.setText("")
-        self.net_updata.setText(QCoreApplication.translate("MainWindow", u"\u2191 0 mbps", None))
-        self.net_downdata.setText(QCoreApplication.translate("MainWindow", u"\u2193 0 mbps", None))
+        self.net_updata.setText(QCoreApplication.translate("MainWindow", u"\u2191 - mbps", None))
+        self.net_downdata.setText(QCoreApplication.translate("MainWindow", u"\u2193 - mbps", None))
         self.page_main.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.page_server.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668", None))
         self.version.setText(QCoreApplication.translate("MainWindow", u"0.0.0", None))
