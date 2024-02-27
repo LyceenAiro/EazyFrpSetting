@@ -17,7 +17,7 @@ from PySide6 import QtWidgets
 
 # 项目模块
 from ui.main_ui import Ui_MainWindow
-from script.start import FrpClient,CheckUpdata
+from script.start import FrpClient ,CheckUpdata, CheckServer, Checkbandwidth
 from makefile.tags import tags
 
 class MainWindow(QMainWindow):
@@ -35,12 +35,17 @@ class MainWindow(QMainWindow):
         # 窗口移动项
         self.mouse_press_position = None
 
+        # 预警时钟
+        self.warning_clock = 0
+
         # UI初始化
         self.UIinit()
 
         # 初始化线程应用
         self.bandFrp()
         self.bandCheckupdata()
+        self.bandPing()
+        self.bandwidth()
 
         # 数据读取
         self.datainit()
@@ -75,6 +80,7 @@ class MainWindow(QMainWindow):
         # server
         self.ui.server_save.clicked.connect(self.server_save)
         self.ui.server_clear.clicked.connect(self.clear_server_sertting)
+        self.ui.server_check.clicked.connect(self.check_service)
 
         # link
         self.ui.link_create.clicked.connect(self.on_add_button_clicked)
@@ -85,11 +91,12 @@ class MainWindow(QMainWindow):
         # other
         self.ui.auto_linkname.stateChanged.connect(self.save_other_data)
         self.ui.auto_address.stateChanged.connect(self.save_other_data)
-        self.ui.auto_heartbeat.stateChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth.stateChanged.connect(self.save_other_data)
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
         self.ui.auto_updata.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
-        self.ui.auto_heartbeat_box.valueChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth_up.valueChanged.connect(self.save_other_data)
+        self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -113,7 +120,20 @@ class MainWindow(QMainWindow):
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
-        self._frp_client.tell_finished.connect(self.on_frp_finished_tell)
+        self._frp_client.bandwidth_pid.connect(self.on_frp_pid)
+
+    def bandwidth(self):
+        # 绑定更新流量信息的线程信号
+        self._bandwidth = Checkbandwidth()
+        self._bandwidth.bandwidth_usage.connect(self.on_frp_bandwidth)
+
+    def bandPing(self):
+        # 绑定CheckServer线程的信号
+        self._CheckServer = CheckServer()
+        self._CheckServer.ping_message.connect(self.updata_server_ping)
+        self._CheckServer.get_frp.connect(self.updata_frp_service)
+        self._CheckServer.get_token.connect(self.updata_token_service)
+        self._CheckServer.finished.connect(self.CheckServerShutdown)
 
     ##
     ## UI变化反馈
@@ -177,7 +197,7 @@ class MainWindow(QMainWindow):
             self.ui.show_IP.setText(server["serverAddr"])
             self.ui.show_Port.setText(str(server["serverPort"]))
             try:
-                if not server["token"] == "无配置":
+                if not server["auth"]["token"] == "无配置":
                     self.ui.show_token.setText("已配置")
             except:
                 self.ui.show_token.setText("无配置")
@@ -375,7 +395,8 @@ class MainWindow(QMainWindow):
     
     def OtherUISetting(self):
         self.ui.auto_linkname_box.setMaximum(20)
-        self.ui.auto_heartbeat_box.setMaximum(5000)
+        self.ui.auto_bandwidth_up.setMaximum(1000000)
+        self.ui.auto_bandwidth_down.setMaximum(1000000)
 
     def TagsUISetting(self):
         self.ui.tags_check_updata.hide()
@@ -485,6 +506,10 @@ class MainWindow(QMainWindow):
         self.unset_left_highlight_botton()
         self.left_highlight_botton = self.ui.page_server
         self.set_left_highlight_botton()
+        if self.ui.show_IP.text() == "无配置":
+            self.updata_server_ping([2, "- ms"])
+        else:
+            self.check_service()
 
     def setlink(self):
         # 将页面切换到 -> 配置链接
@@ -573,7 +598,7 @@ class MainWindow(QMainWindow):
         if token == "":
             self.ui.show_token.setText("无配置")
         else:
-            link["token"] = token
+            link["auth"] = {"token": token}
             self.ui.show_token.setText("已配置")
         self.ui.show_IP.setText(ip)
         self.ui.show_Port.setText(port)
@@ -582,6 +607,7 @@ class MainWindow(QMainWindow):
         self.setserverbutton()
         with open("./data/server.toml", "w", encoding="utf-8") as file:
             file.write(toml.dumps(link))
+        self.check_service()
 
     def link_ini_save(self):
         # linktable表文件编译
@@ -630,9 +656,6 @@ class MainWindow(QMainWindow):
             frpc = u.readlines()
         link = configparser.ConfigParser()
         link.read("./data/more.ini","utf-8")
-        if bool(link["common"]["auto_heartbeat"]) == True:
-            frpc += "heartbeatTimeout = " + link["common"]["auto_heartbeat_box"] + "\n"
-        
         with open("./data/link.toml", "r+", encoding="utf-8") as u:
             frpc += u.readlines()
 
@@ -731,15 +754,17 @@ class MainWindow(QMainWindow):
             self.auto_address = False
 
         # 心跳回应
-        link["common"]["auto_heartbeat_box"] = str(self.ui.auto_heartbeat_box.value())
-        self.auto_heartbeat_box= self.ui.auto_heartbeat_box.value()
-        if self.ui.auto_heartbeat.isChecked():
-            link["common"]["auto_heartbeat"] = "True"
-            self.auto_heartbeat = True
+        link["common"]["auto_bandwidth_up"] = str(self.ui.auto_bandwidth_up.value())
+        link["common"]["auto_bandwidth_down"] = str(self.ui.auto_bandwidth_down.value())
+        self.auto_bandwidth_up = self.ui.auto_bandwidth_up.value()
+        self.auto_bandwidth_down = self.ui.auto_bandwidth_down.value()
+        if self.ui.auto_bandwidth.isChecked():
+            link["common"]["auto_bandwidth"] = "True"
+            self.auto_bandwidth = True
         else:
-            link["common"]["auto_heartbeat"] = "False"
-            self.auto_heartbeat = False
-        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+            link["common"]["auto_bandwidth"] = "False"
+            self.auto_bandwidth = False
+        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
 
         # 最小化托盘
         if self.ui.auto_mini.isChecked():
@@ -769,8 +794,9 @@ class MainWindow(QMainWindow):
             self.auto_linkname = link.getboolean("common", "auto_name")
             self.auto_linkname_box = link["common"]["auto_name_box"]
             self.auto_address = link.getboolean("common", "auto_address")
-            self.auto_heartbeat = link.getboolean("common", "auto_heartbeat")
-            self.auto_heartbeat_box = link["common"]["auto_heartbeat_box"]
+            self.auto_bandwidth = link.getboolean("common", "auto_bandwidth")
+            self.auto_bandwidth_up = link["common"]["auto_bandwidth_up"]
+            self.auto_bandwidth_down = link["common"]["auto_bandwidth_down"]
             self.auto_mini = link.getboolean("common", "auto_mini")
             self.auto_updata = link.getboolean("common", "auto_updata")
 
@@ -786,16 +812,18 @@ class MainWindow(QMainWindow):
             load_file()
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
-        self.ui.auto_heartbeat_box.setValue(int(self.auto_heartbeat_box))
+        self.ui.auto_bandwidth_up.setValue(int(self.auto_bandwidth_up))
+        self.ui.auto_bandwidth_down.setValue(int(self.auto_bandwidth_down))
 
         self.ui.auto_linkname.setChecked(self.auto_linkname)
         self.ui.auto_address.setChecked(self.auto_address)
-        self.ui.auto_heartbeat.setChecked(self.auto_heartbeat)
+        self.ui.auto_bandwidth.setChecked(self.auto_bandwidth)
         self.ui.auto_mini.setChecked(self.auto_mini)
         self.ui.auto_updata.setChecked(self.auto_updata)
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
-        self.ui.auto_heartbeat_box.setReadOnly(not self.auto_heartbeat)
+        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
+        self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
     
     def default_other_data(self):
         # more.ini缺省值
@@ -804,8 +832,9 @@ class MainWindow(QMainWindow):
         link["common"]["auto_name"] = "True"
         link["common"]["auto_name_box"] = "8"
         link["common"]["auto_address"] = "True"
-        link["common"]["auto_heartbeat"] = "True"
-        link["common"]["auto_heartbeat_box"] = "30"
+        link["common"]["auto_bandwidth"] = "True"
+        link["common"]["auto_bandwidth_up"] = "10"
+        link["common"]["auto_bandwidth_down"] = "10"
         link["common"]["auto_mini"] = "True"
         link["common"]["auto_updata"] = "True"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
@@ -866,6 +895,7 @@ class MainWindow(QMainWindow):
         self.ui.show_IP.setText("无配置")
         self.ui.show_Port.setText("无配置")
         self.ui.show_token.setText("无配置")
+        self.updata_server_ping([2, "- ms"])
         if os.path.exists("./data/server.toml"):
             os.remove("./data/server.toml")
 
@@ -875,6 +905,13 @@ class MainWindow(QMainWindow):
         self._frp_client.finished.disconnect()
         self._frp_client.log_message.disconnect()
         self._frp_client.deleteLater()
+        self._check_updata.stop()
+        self._CheckServer.stop()
+        self._CheckServer.finished.disconnect()
+        self._CheckServer.get_frp.disconnect()
+        self._CheckServer.get_token.disconnect()
+        self._CheckServer.ping_message.disconnect()
+        self._CheckServer.deleteLater()
         self.close()
         app.quit()
 
@@ -896,21 +933,46 @@ class MainWindow(QMainWindow):
         self.push_a_action.setEnabled(False)
         self.push_b_action.setEnabled(True)
         self.setstophigh()
+    
+    def on_frp_pid(self, pid):
+        if pid == "" or pid < 0:
+            return
+        self._bandwidth.start(pid)
 
     def on_frp_finished(self):
         # 当收到frp停止的信号时向窗口反馈
+        self._bandwidth.stop()
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
+        self.ui.net_updata.setText("↑ - mbps")
+        self.ui.net_downdata.setText("↓ - mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
+        self.ui.main_log.insertPlainText("frp client stopped.\n")
         self.setstarthigh()
         self.bandFrp()
-    
-    def on_frp_finished_tell(self):
-        # 将停止通知与停止反馈分离防止发送两条信息
-        self.ui.main_log.insertPlainText("frp client stopped.\n")
-    
+
+    def on_frp_bandwidth(self, usage):
+        # 更新带宽信息
+        self.ui.net_updata.setText(f"↑ {usage[0]} mbps")
+        self.ui.net_downdata.setText(f"↓ {usage[1]} mbps")
+        if self.warning_clock > 0 :
+            self.warning_clock -= 1
+        elif self.auto_bandwidth == True:
+            warning = False
+            wn_str = ""
+            if usage[0] >= int(self.auto_bandwidth_up):
+                warning = True
+                wn_str += f"上传带宽超过警告阈值\n↑ {usage[0]} mbps\n"
+            if usage[1] >= int(self.auto_bandwidth_down):
+                warning = True
+                wn_str += f"下载带宽超过警告阈值\n↓ {usage[1]} mbps\n"
+            if warning:
+                self.tray_icon.showMessage("带宽预警", wn_str, QSystemTrayIcon.Information, 1000)
+                self.warning_clock = 60
+
+
     def updata_started(self):
         # 当检查更新开启时执行
         self.ui.check_updata.setEnabled(False)
@@ -970,10 +1032,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 80, 65565) == False:
+            if self.portcheck(edit4.text(), 1, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 80, 65565) == False:
+            if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1155,10 +1217,10 @@ class MainWindow(QMainWindow):
             elif self.ipcheck(edit3.text()) == False:
                 edit3.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit4.text(), 80, 65565) == False:
+            if self.portcheck(edit4.text(), 1, 65565) == False:
                 edit4.setStyleSheet("border: 1px solid red;")
                 check = False
-            if self.portcheck(edit5.text(), 80, 65565) == False:
+            if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
@@ -1307,6 +1369,106 @@ class MainWindow(QMainWindow):
             self.save_table_data()
         else:
             return
+        
+    def check_service(self):
+        # 检查与服务器的连接状态如何
+        get_ip = self.ui.show_IP.text()
+        if get_ip == "无配置":
+            return
+        self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        self.ui.server_ping.setText("... ms")
+        self._CheckServer.address = get_ip
+        self._CheckServer.start()
+    
+    def updata_frp_service(self, isrun):
+        if isrun:
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
+
+    def updata_token_service(self, isrun):
+        if isrun:
+            self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
+    def updata_server_ping(self, message):
+        # 反馈服务器连接状态结果
+        self.ui.server_ping.setText(message[1])
+        if message[0] == 2:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+            self.ui.frp_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+            self.ui.token_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 200, 200);
+            border-radius: 0px;
+            }
+            ''')
+        elif message[0] == 0:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(200, 0, 0);
+            border-radius: 0px;
+            }
+            ''')
+        else:
+            self.ui.server_service.setStyleSheet('''
+            QLabel {
+            background-color: rgb(80, 160, 80);
+            border-radius: 0px;
+            }
+            ''')
+        
+    def CheckServerShutdown(self):
+        self._CheckServer.stop()
+            
+
    
     ##
     ## 判断模块

@@ -1,9 +1,9 @@
-# version 230624
+# version 240130
 import os
 from makefile.tags import tags
 
 # upx地址
-upx = "upx-4.0.2-win64"
+upx = "upx-4.2.2-win64"
 
 # 编译
 os.system(f"pyinstaller -F -i ./ui/icon/logo.ico --noconsole --upx-dir={upx} --collect-all charset_normalizer  client.py")
