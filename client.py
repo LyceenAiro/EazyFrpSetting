@@ -700,6 +700,7 @@ class MainWindow(QMainWindow):
             layout.addWidget(button_box, alignment=Qt.AlignHCenter)
             button_box.accepted.connect(dialog.accept)
             if dialog.exec() == QDialog.Accepted:
+                dialog.deleteLater()
                 return
         try:
             with open("./data/linktable.toml", "r", encoding="utf-8") as f:            
@@ -889,6 +890,7 @@ class MainWindow(QMainWindow):
                     pass
             self.shutdown()
         else:
+            dialog.deleteLater()
             return
 
     def clear_server_sertting(self):
@@ -1182,7 +1184,9 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
             self.ui.linktable.setItem(selected_row, 9, QTableWidgetItem(edit10.currentText()))
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
 
         status = edit8.currentText()
@@ -1328,7 +1332,9 @@ class MainWindow(QMainWindow):
             # 添加数据
             self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText(), edit10.currentText()])
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
         
         status = edit8.currentText()
@@ -1367,7 +1373,9 @@ class MainWindow(QMainWindow):
             for row in selected_rows:
                 self.ui.linktable.removeRow(row.row())
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
         
     def check_service(self):
