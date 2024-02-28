@@ -167,7 +167,7 @@ class MainWindow(QMainWindow):
     ##
     def UIinit(self):
         # 全部UI初始化整理
-        # 该项必须放在datainit()后面,否则会导致datainit()的数据被初始化
+        # 该项必须放在datainit()前面,否则会导致datainit()的数据被初始化
         self.setWindowIcon(QIcon(":images/icon/logo.png"))
         self.TrayMenuSetting()
         self.FlagsUiSetting()
