@@ -61,17 +61,13 @@ class CheckUpdata(QThread):
 
     def __init__(self):
         super().__init__()
-        self._thread = None
         self._running = False
         self.tags = tags()
     
     def start(self):
         if not self._running:
             self._running = True
-            self._thread = QThread()
-            self.moveToThread(self._thread)
-            self._thread.started.connect(self.run)
-            self._thread.start()
+            super().start()  # 直接调用父类的 start 方法
             self.started.emit()
 
     def run(self):
@@ -100,8 +96,8 @@ class CheckUpdata(QThread):
     def stop(self):
         if self._running:
             self._running = False
-            self._thread.quit()
-            self._thread.wait()
+            self.quit()  # 调用 quit 方法来请求线程退出
+            self.wait()
             self.stopped.emit()
 
 class CheckServer(QThread):
