@@ -67,7 +67,7 @@ class CheckUpdata(QThread):
     def start(self):
         if not self._running:
             self._running = True
-            super().start()  # 直接调用父类的 start 方法
+            super().start()
             self.started.emit()
 
     def run(self):

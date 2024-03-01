@@ -1141,6 +1141,7 @@ class MainWindow(QMainWindow):
             layout.addLayout(hlayout5)
 
         except:
+            dialog.deleteLater()
             dialog = QDialog(self)
             dialog.setWindowTitle("无法编辑")
             dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -1162,6 +1163,7 @@ class MainWindow(QMainWindow):
                 row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
                 for item in row_items:
                     item.setBackground(QColor(150, 150, 100))
+                dialog.deleteLater()
                 return
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
