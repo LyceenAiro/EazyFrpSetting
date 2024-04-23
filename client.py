@@ -223,19 +223,6 @@ class MainWindow(QMainWindow):
     ##
     def FlagsUiSetting(self):
         # 自定义导航栏初始化
-        highlight_color = QColor(130, 130, 180)
-        botten = [self.ui.window_mini,
-                  self.ui.window_close]
-        for i in botten:
-            i.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {highlight_color.name()};
-                }}
-            """)
         icon = QIcon(":images/icon/close.png")
         self.ui.window_close.setIcon(icon)
         self.ui.window_close.setIconSize(self.ui.window_close.size())
@@ -318,33 +305,6 @@ class MainWindow(QMainWindow):
         self.botton_highlight_link = QColor(200, 80, 80)
         self.botton_highlight_link2 = QColor(80, 200, 80)
         self.botton_highlight_link3 = QColor(100, 100, 180)
-        self.ui.link_delete.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link.name()};
-                }}
-            """)
-        self.ui.link_create.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link2.name()};
-                }}
-            """)
-        self.ui.link_modify.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link3.name()};
-                }}
-            """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
         self.rows = 10  # 在这里设置列数量
         self.ui.linktable.setColumnCount(self.rows)
@@ -366,15 +326,6 @@ class MainWindow(QMainWindow):
         self.highlight_color_main_stop = QColor(130, 130, 180)
         self.highlight_color_main_start = QColor(80, 160, 80)
         self.setstarthigh()
-        self.ui.main_clear.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {self.background_color_high.name()};
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link.name()};
-                }}
-            """)
         icon = QIcon(":images/icon/play.png")
         self.ui.main_start.setIcon(icon)
         self.ui.main_start.setIconSize(self.ui.window_close.size())
@@ -385,11 +336,21 @@ class MainWindow(QMainWindow):
         self.ui.main_clear.setIcon(icon)
         self.ui.main_clear.setIconSize(self.ui.window_close.size())
         
-        self.ui.main_log.setStyleSheet(f"""
-                border-radius: 0px;
-                border-color: {self.background_color_high.name()};
-            """)
+        self.ui.net_updata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.ui.main_log.setReadOnly(True)
+        self.ui.net_updata.setReadOnly(True)
+        self.ui.net_updata_2.setReadOnly(True)
+        self.ui.net_updata_str.setReadOnly(True)
+        self.ui.net_downdata.setReadOnly(True)
+        self.ui.net_downdata_2.setReadOnly(True)
+        self.ui.net_downdata_str.setReadOnly(True)
+
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
     
