@@ -87,6 +87,8 @@ class MainWindow(QMainWindow):
         self.ui.link_create.clicked.connect(self.on_add_button_clicked)
         self.ui.link_delete.clicked.connect(self.on_delete_button_clicked)
         self.ui.link_modify.clicked.connect(self.on_edit_button_clicked)
+        self.ui.link_close.clicked.connect(self.on_close_button_clicked)
+        self.ui.link_open.clicked.connect(self.on_open_button_clicked)
         self.ui.linktable.itemSelectionChanged.connect(self.on_table_item_selection_changed)
 
         # other
@@ -275,20 +277,6 @@ class MainWindow(QMainWindow):
         self.botton_highlight_color = QColor(130, 130, 130)
         self.botton_highlight_color2 = QColor(100, 100, 180)
         self.botton_highlight_color3 = QColor(100, 100, 210)
-        botten = [self.ui.page_server,
-                  self.ui.page_link,
-                  self.ui.page_other,
-                  self.ui.page_tags]
-        for i in botten:
-            i.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_color.name()};
-                }}
-            """)
         self.ui.updata_tag.hide()
         self.ui.nofrpc_tag.hide()
     
@@ -318,6 +306,9 @@ class MainWindow(QMainWindow):
 
         self.ui.link_delete.setEnabled(False)
         self.ui.link_modify.setEnabled(False)
+
+        self.ui.link_close.hide()
+        self.ui.link_open.hide()
         
     def MainUISetting(self):
         # 开始页面UI初始化
@@ -958,11 +949,42 @@ class MainWindow(QMainWindow):
         # 当表中数据发生修改时向窗口反馈
         selected_rows = self.ui.linktable.selectionModel().selectedRows()
         if len(selected_rows) > 0:
+            selected_row = selected_rows[0].row()
+            data = self.ui.linktable.item(selected_row, 7).text()
+            if data == "开启":
+                self.ui.link_open.hide()
+                self.ui.link_close.show()
+            else:
+                self.ui.link_open.show()
+                self.ui.link_close.hide()
             self.ui.link_modify.setEnabled(True)
             self.ui.link_delete.setEnabled(True)
+            
         else:
             self.ui.link_modify.setEnabled(False)
             self.ui.link_delete.setEnabled(False)
+            self.ui.link_close.hide()
+            self.ui.link_open.hide()
+
+    def on_close_button_clicked(self):
+        selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
+        self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("关闭"))
+        self.save_table_data()
+        row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+        for item in row_items:
+            item.setBackground(QColor(0, 0, 0, 0))
+        self.ui.link_close.hide()
+        self.ui.link_open.show()
+
+    def on_open_button_clicked(self):
+        selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
+        self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("开启"))
+        self.save_table_data()
+        row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+        for item in row_items:
+            item.setBackground(QColor(100, 150, 100))
+        self.ui.link_close.show()
+        self.ui.link_open.hide()
 
     def on_edit_button_clicked(self):
         # 当编辑按钮被触发时弹出窗口

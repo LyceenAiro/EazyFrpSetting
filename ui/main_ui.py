@@ -432,6 +432,26 @@ class Ui_MainWindow(object):
         self.linktable = QTableWidget(self.page1)
         self.linktable.setObjectName(u"linktable")
         self.linktable.setGeometry(QRect(0, 100, 621, 371))
+        self.link_close = QPushButton(self.page1)
+        self.link_close.setObjectName(u"link_close")
+        self.link_close.setGeometry(QRect(220, 60, 101, 41))
+        self.link_close.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"                QPushButton:hover {\n"
+"                    background-color: rgb(200, 80, 80);\n"
+"                }")
+        self.link_open = QPushButton(self.page1)
+        self.link_open.setObjectName(u"link_open")
+        self.link_open.setGeometry(QRect(220, 60, 101, 41))
+        self.link_open.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(80, 200, 80);\n"
+"}")
         self.stackedWidget.addWidget(self.page1)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
@@ -793,10 +813,24 @@ class Ui_MainWindow(object):
         self.page_main.setObjectName(u"page_main")
         self.page_main.setGeometry(QRect(0, 70, 131, 41))
         self.page_main.setFont(font6)
+        self.page_main.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.page_server = QPushButton(self.centralwidget)
         self.page_server.setObjectName(u"page_server")
         self.page_server.setGeometry(QRect(0, 110, 131, 41))
         self.page_server.setFont(font6)
+        self.page_server.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.version = QLabel(self.centralwidget)
         self.version.setObjectName(u"version")
         self.version.setGeometry(QRect(80, 40, 51, 16))
@@ -804,6 +838,13 @@ class Ui_MainWindow(object):
         self.page_other.setObjectName(u"page_other")
         self.page_other.setGeometry(QRect(0, 190, 131, 41))
         self.page_other.setFont(font6)
+        self.page_other.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"}")
         self.label_12 = QLabel(self.centralwidget)
         self.label_12.setObjectName(u"label_12")
         self.label_12.setGeometry(QRect(8, 10, 73, 51))
@@ -822,10 +863,24 @@ class Ui_MainWindow(object):
         self.page_link.setObjectName(u"page_link")
         self.page_link.setGeometry(QRect(0, 150, 131, 41))
         self.page_link.setFont(font6)
+        self.page_link.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.page_tags = QPushButton(self.centralwidget)
         self.page_tags.setObjectName(u"page_tags")
         self.page_tags.setGeometry(QRect(0, 230, 131, 41))
         self.page_tags.setFont(font6)
+        self.page_tags.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.updata_tag = QPushButton(self.centralwidget)
         self.updata_tag.setObjectName(u"updata_tag")
         self.updata_tag.setEnabled(True)
@@ -864,7 +919,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -963,6 +1018,8 @@ class Ui_MainWindow(object):
         self.link_create.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa", None))
         self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
         self.link_modify.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u8f91", None))
+        self.link_close.setText(QCoreApplication.translate("MainWindow", u"\u5173\u95ed\u94fe\u63a5", None))
+        self.link_open.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u542f\u94fe\u63a5", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e", None))
         self.auto_address.setText("")
         self.auto_linkname.setText("")

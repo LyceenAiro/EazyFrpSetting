@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -1129,6 +1129,50 @@ QPushButton:hover {
        </rect>
       </property>
      </widget>
+     <widget class="QPushButton" name="link_close">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>60</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+                }
+                QPushButton:hover {
+                    background-color: rgb(200, 80, 80);
+                }</string>
+      </property>
+      <property name="text">
+       <string>关闭链接</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="link_open">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>60</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+}
+QPushButton:hover {
+                    background-color: rgb(80, 200, 80);
+}</string>
+      </property>
+      <property name="text">
+       <string>开启链接</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="Line" name="line_6">
@@ -1945,6 +1989,15 @@ QPushButton:hover {
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+                }
+QPushButton:hover {
+                    background-color: rgb(130, 130, 130);
+                }</string>
+    </property>
     <property name="text">
      <string>开始</string>
     </property>
@@ -1962,6 +2015,15 @@ QPushButton:hover {
      <font>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+                }
+QPushButton:hover {
+                    background-color: rgb(130, 130, 130);
+                }</string>
     </property>
     <property name="text">
      <string>服务器</string>
@@ -1993,6 +2055,15 @@ QPushButton:hover {
      <font>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+}
+QPushButton:hover {
+                    background-color: rgb(130, 130, 130);
+}</string>
     </property>
     <property name="text">
      <string>其他配置</string>
@@ -2043,6 +2114,15 @@ QPushButton:hover {
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+                }
+QPushButton:hover {
+                    background-color: rgb(130, 130, 130);
+                }</string>
+    </property>
     <property name="text">
      <string>配置链接</string>
     </property>
@@ -2060,6 +2140,15 @@ QPushButton:hover {
      <font>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                    background-color: transparent;
+                    border-radius: 0px;
+                }
+QPushButton:hover {
+                    background-color: rgb(130, 130, 130);
+                }</string>
     </property>
     <property name="text">
      <string>关于</string>
