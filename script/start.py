@@ -6,7 +6,8 @@ from urllib3.exceptions import InsecureRequestWarning
 
 import ping3
 import psutil
-from time import sleep
+import toml
+from time import sleep, time
 from collections import deque
 
 import sys
@@ -173,36 +174,73 @@ class Checkbandwidth(QThread):
             super().start()
 
     def run(self):
-        previous_upload_bytes = 0
+        # 初始化模块
         previous_download_bytes = 0
-        upload_speeds = deque(maxlen=5)
+        accumulation_download_bytes = 0
         download_speeds = deque(maxlen=5)
+        try:
+            with open(f"data/server.toml", "r", encoding="utf-8") as file:
+                address = toml.loads(file.read())["serverAddr"]
+        except:
+            return
         while self._running:
+            # 记录tick起始时间
+            start_time = time()
+
+            # 获取tick内流量信息
             try:
                 frpc_proc = psutil.Process(self.frpc_pid)
             except psutil.NoSuchProcess:
                 break
             frpc_net_io = frpc_proc.io_counters()
-            current_upload_bytes = frpc_net_io.read_bytes
-            current_download_bytes = frpc_net_io.write_bytes
+            current_upload_bytes = frpc_net_io.read_bytes + frpc_net_io.write_bytes
+            current_download_bytes = frpc_net_io.other_bytes
 
-            upload_mbps = (current_upload_bytes - previous_upload_bytes) / 1024 / 1024
-            download_mbps = (current_download_bytes - previous_download_bytes) / 1024 / 1024
+            tick_download_bytes = current_download_bytes - previous_download_bytes
 
-            previous_upload_bytes = current_upload_bytes
+            # 获取tick内延迟信息
+            server_ping = ping3.ping(address , unit="ms", timeout=0.5)
+            
+            # 计算流量总bytes值并整理
+            accumulation_download_bytes += tick_download_bytes
+
+            if current_upload_bytes >= 1073741824:
+                accumulation_upload_str = f"{current_upload_bytes / 1024 / 1024 / 1024:.2f} GB"
+            elif current_upload_bytes >= 1048576:
+                accumulation_upload_str = f"{current_upload_bytes / 1024 / 1024:.2f} MB"
+            elif current_upload_bytes >= 1024:
+                accumulation_upload_str = f"{current_upload_bytes / 1024:.2f} KB"
+            else:
+                accumulation_upload_str = f"{current_upload_bytes} Byte"
+
+            if accumulation_download_bytes >= 1073741824:
+                accumulation_download_str = f"{accumulation_download_bytes / 1024 / 1024 / 1024:.2f} GB"
+            elif accumulation_download_bytes >= 1048576:
+                accumulation_download_str = f"{accumulation_download_bytes / 1024 / 1024:.2f} MB"
+            elif accumulation_download_bytes >= 1024:
+                accumulation_download_str = f"{accumulation_download_bytes / 1024:.2f} KB"
+            else:
+                accumulation_download_str = f"{accumulation_download_bytes} Byte"
+            
+            # 计算流量平均值
+            download_mbps = tick_download_bytes * 8 / 1000000
             previous_download_bytes = current_download_bytes
-
-            upload_speeds.append(upload_mbps)
             download_speeds.append(download_mbps)
 
-            if len(upload_speeds) == 5:
-                average_upload_mbps = sum(upload_speeds) / 5
+            if len(download_speeds) == 5:
                 average_download_mbps = sum(download_speeds) / 5
             else:
-                average_upload_mbps = sum(upload_speeds) / len(upload_speeds)
-                average_download_mbps = sum(download_speeds) / len(upload_speeds)
-            self.bandwidth_usage.emit([round(average_upload_mbps, 1), round(average_download_mbps, 1)])
-            sleep(1)
+                average_download_mbps = sum(download_speeds) / len(download_speeds)
+            
+            # 反馈tick数据
+            self.bandwidth_usage.emit([server_ping, round(average_download_mbps, 1), accumulation_upload_str, accumulation_download_str])
+            
+            # 根据运行时长来更新tick速度
+            use_time = time() - start_time
+            if use_time < 1:
+                sleep(1 - use_time)
+            else:
+                continue
         self.stop()
 
     def stop(self):

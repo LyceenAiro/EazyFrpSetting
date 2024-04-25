@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         
         # 窗口移动项
         self.mouse_press_position = None
+        self.main_log_scrollbar = self.ui.main_log.verticalScrollBar()
 
         # 预警时钟
         self.warning_clock = 0
@@ -95,7 +96,6 @@ class MainWindow(QMainWindow):
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
         self.ui.auto_updata.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
-        self.ui.auto_bandwidth_up.valueChanged.connect(self.save_other_data)
         self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
 
         # tags
@@ -339,6 +339,7 @@ class MainWindow(QMainWindow):
         self.ui.net_updata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.net_updata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.net_updata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_str_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.net_downdata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.net_downdata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.net_downdata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -347,6 +348,7 @@ class MainWindow(QMainWindow):
         self.ui.net_updata.setReadOnly(True)
         self.ui.net_updata_2.setReadOnly(True)
         self.ui.net_updata_str.setReadOnly(True)
+        self.ui.net_updata_str_2.setReadOnly(True)
         self.ui.net_downdata.setReadOnly(True)
         self.ui.net_downdata_2.setReadOnly(True)
         self.ui.net_downdata_str.setReadOnly(True)
@@ -356,7 +358,6 @@ class MainWindow(QMainWindow):
     
     def OtherUISetting(self):
         self.ui.auto_linkname_box.setMaximum(20)
-        self.ui.auto_bandwidth_up.setMaximum(1000000)
         self.ui.auto_bandwidth_down.setMaximum(1000000)
 
     def TagsUISetting(self):
@@ -716,9 +717,7 @@ class MainWindow(QMainWindow):
             self.auto_address = False
 
         # 心跳回应
-        link["common"]["auto_bandwidth_up"] = str(self.ui.auto_bandwidth_up.value())
         link["common"]["auto_bandwidth_down"] = str(self.ui.auto_bandwidth_down.value())
-        self.auto_bandwidth_up = self.ui.auto_bandwidth_up.value()
         self.auto_bandwidth_down = self.ui.auto_bandwidth_down.value()
         if self.ui.auto_bandwidth.isChecked():
             link["common"]["auto_bandwidth"] = "True"
@@ -726,7 +725,7 @@ class MainWindow(QMainWindow):
         else:
             link["common"]["auto_bandwidth"] = "False"
             self.auto_bandwidth = False
-        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
+        self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
 
         # 最小化托盘
         if self.ui.auto_mini.isChecked():
@@ -757,7 +756,6 @@ class MainWindow(QMainWindow):
             self.auto_linkname_box = link["common"]["auto_name_box"]
             self.auto_address = link.getboolean("common", "auto_address")
             self.auto_bandwidth = link.getboolean("common", "auto_bandwidth")
-            self.auto_bandwidth_up = link["common"]["auto_bandwidth_up"]
             self.auto_bandwidth_down = link["common"]["auto_bandwidth_down"]
             self.auto_mini = link.getboolean("common", "auto_mini")
             self.auto_updata = link.getboolean("common", "auto_updata")
@@ -774,7 +772,6 @@ class MainWindow(QMainWindow):
             load_file()
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
-        self.ui.auto_bandwidth_up.setValue(int(self.auto_bandwidth_up))
         self.ui.auto_bandwidth_down.setValue(int(self.auto_bandwidth_down))
 
         self.ui.auto_linkname.setChecked(self.auto_linkname)
@@ -784,7 +781,6 @@ class MainWindow(QMainWindow):
         self.ui.auto_updata.setChecked(self.auto_updata)
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
-        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
         self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
     
     def default_other_data(self):
@@ -795,7 +791,6 @@ class MainWindow(QMainWindow):
         link["common"]["auto_name_box"] = "8"
         link["common"]["auto_address"] = "True"
         link["common"]["auto_bandwidth"] = "True"
-        link["common"]["auto_bandwidth_up"] = "10"
         link["common"]["auto_bandwidth_down"] = "10"
         link["common"]["auto_mini"] = "True"
         link["common"]["auto_updata"] = "True"
@@ -884,6 +879,7 @@ class MainWindow(QMainWindow):
     def on_log_message(self, message):
         # 当frp日志更新时发送到主窗口 | 变量 -> 信息
         self.ui.main_log.insertPlainText(message)
+        self.main_log_scrollbar.setValue(self.main_log_scrollbar.maximum())
 
     def on_frp_started(self):
         # 当收到Frp启动命令时向窗口的反馈
@@ -908,8 +904,8 @@ class MainWindow(QMainWindow):
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
-        self.ui.net_updata.setText("↑ - mbps")
-        self.ui.net_downdata.setText("↓ - mbps")
+        self.ui.net_updata.setText("- ms")
+        self.ui.net_downdata.setText("- mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
         self.ui.main_log.insertPlainText("frp client stopped.\n")
@@ -917,24 +913,20 @@ class MainWindow(QMainWindow):
         self.bandFrp()
 
     def on_frp_bandwidth(self, usage):
-        # 更新带宽信息
-        self.ui.net_updata.setText(f"↑ {usage[0]} mbps")
-        self.ui.net_downdata.setText(f"↓ {usage[1]} mbps")
+        # 更新信息栏
+        if usage[0] == None:
+            self.ui.net_updata.setText(f"500+ ms")
+        else:
+            self.ui.net_updata.setText(f"{usage[0]:.1f} ms")
+        self.ui.net_downdata.setText(f"{usage[1]} mbps")
+        self.ui.net_updata_2.setText(usage[2])
+        self.ui.net_downdata_2.setText(usage[3])
         if self.warning_clock > 0 :
             self.warning_clock -= 1
         elif self.auto_bandwidth == True:
-            warning = False
-            wn_str = ""
-            if usage[0] >= int(self.auto_bandwidth_up):
-                warning = True
-                wn_str += f"上传带宽超过警告阈值\n↑ {usage[0]} mbps\n"
             if usage[1] >= int(self.auto_bandwidth_down):
-                warning = True
-                wn_str += f"下载带宽超过警告阈值\n↓ {usage[1]} mbps\n"
-            if warning:
-                self.tray_icon.showMessage("带宽预警", wn_str, QSystemTrayIcon.Information, 1000)
+                self.tray_icon.showMessage("带宽预警", f"带宽超过警告阈值\n{usage[1]} mbps\n", QSystemTrayIcon.Information, 1000)
                 self.warning_clock = 60
-
 
     def updata_started(self):
         # 当检查更新开启时执行

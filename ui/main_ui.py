@@ -102,7 +102,7 @@ class Ui_MainWindow(object):
 "}")
         self.net_updata = QTextEdit(self.page)
         self.net_updata.setObjectName(u"net_updata")
-        self.net_updata.setGeometry(QRect(50, 450, 131, 24))
+        self.net_updata.setGeometry(QRect(60, 450, 81, 24))
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -116,7 +116,7 @@ class Ui_MainWindow(object):
         self.net_updata.setLineWrapMode(QTextEdit.NoWrap)
         self.net_downdata = QTextEdit(self.page)
         self.net_downdata.setObjectName(u"net_downdata")
-        self.net_downdata.setGeometry(QRect(360, 450, 131, 24))
+        self.net_downdata.setGeometry(QRect(370, 450, 121, 24))
         sizePolicy.setHeightForWidth(self.net_downdata.sizePolicy().hasHeightForWidth())
         self.net_downdata.setSizePolicy(sizePolicy)
         self.net_downdata.setLayoutDirection(Qt.LeftToRight)
@@ -138,7 +138,7 @@ class Ui_MainWindow(object):
         self.net_downdata_2.setLineWrapMode(QTextEdit.NoWrap)
         self.net_updata_2 = QTextEdit(self.page)
         self.net_updata_2.setObjectName(u"net_updata_2")
-        self.net_updata_2.setGeometry(QRect(180, 450, 131, 24))
+        self.net_updata_2.setGeometry(QRect(200, 450, 111, 24))
         sizePolicy.setHeightForWidth(self.net_updata_2.sizePolicy().hasHeightForWidth())
         self.net_updata_2.setSizePolicy(sizePolicy)
         self.net_updata_2.setLayoutDirection(Qt.LeftToRight)
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
         self.net_updata_2.setLineWrapMode(QTextEdit.NoWrap)
         self.net_updata_str = QTextEdit(self.page)
         self.net_updata_str.setObjectName(u"net_updata_str")
-        self.net_updata_str.setGeometry(QRect(0, 450, 51, 24))
+        self.net_updata_str.setGeometry(QRect(0, 450, 61, 24))
         sizePolicy.setHeightForWidth(self.net_updata_str.sizePolicy().hasHeightForWidth())
         self.net_updata_str.setSizePolicy(sizePolicy)
         self.net_updata_str.setLayoutDirection(Qt.LeftToRight)
@@ -160,7 +160,7 @@ class Ui_MainWindow(object):
         self.net_updata_str.setLineWrapMode(QTextEdit.NoWrap)
         self.net_downdata_str = QTextEdit(self.page)
         self.net_downdata_str.setObjectName(u"net_downdata_str")
-        self.net_downdata_str.setGeometry(QRect(310, 450, 51, 24))
+        self.net_downdata_str.setGeometry(QRect(310, 450, 61, 24))
         sizePolicy.setHeightForWidth(self.net_downdata_str.sizePolicy().hasHeightForWidth())
         self.net_downdata_str.setSizePolicy(sizePolicy)
         self.net_downdata_str.setLayoutDirection(Qt.LeftToRight)
@@ -169,6 +169,17 @@ class Ui_MainWindow(object):
 "		border-color: rgb(60, 60, 80);\n"
 "}")
         self.net_downdata_str.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_str_2 = QTextEdit(self.page)
+        self.net_updata_str_2.setObjectName(u"net_updata_str_2")
+        self.net_updata_str_2.setGeometry(QRect(140, 450, 61, 24))
+        sizePolicy.setHeightForWidth(self.net_updata_str_2.sizePolicy().hasHeightForWidth())
+        self.net_updata_str_2.setSizePolicy(sizePolicy)
+        self.net_updata_str_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_str_2.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_updata_str_2.setLineWrapMode(QTextEdit.NoWrap)
         self.stackedWidget.addWidget(self.page)
         self.main_log.raise_()
         self.line_5.raise_()
@@ -182,6 +193,7 @@ class Ui_MainWindow(object):
         self.net_updata_2.raise_()
         self.net_updata_str.raise_()
         self.net_downdata_str.raise_()
+        self.net_updata_str_2.raise_()
         self.page0 = QWidget()
         self.page0.setObjectName(u"page0")
         self.line_4 = QFrame(self.page0)
@@ -555,11 +567,6 @@ class Ui_MainWindow(object):
         self.auto_linkname_box.setObjectName(u"auto_linkname_box")
         self.auto_linkname_box.setGeometry(QRect(560, 90, 51, 22))
         self.auto_linkname_box.setMaximum(20)
-        self.auto_bandwidth_up = QSpinBox(self.page_2)
-        self.auto_bandwidth_up.setObjectName(u"auto_bandwidth_up")
-        self.auto_bandwidth_up.setGeometry(QRect(450, 215, 71, 22))
-        self.auto_bandwidth_up.setMaximum(1000000)
-        self.auto_bandwidth_up.setValue(10)
         self.line_7 = QFrame(self.page_2)
         self.line_7.setObjectName(u"line_7")
         self.line_7.setGeometry(QRect(10, 120, 601, 20))
@@ -780,16 +787,8 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "                    background-color: rgb(130, 130, 180);\n"
 "                }")
-        self.net_downdata_old = QLabel(self.widget_3)
-        self.net_downdata_old.setObjectName(u"net_downdata_old")
-        self.net_downdata_old.setGeometry(QRect(120, 0, 101, 20))
-        self.net_updata_old = QLabel(self.widget_3)
-        self.net_updata_old.setObjectName(u"net_updata_old")
-        self.net_updata_old.setGeometry(QRect(0, 0, 101, 20))
         self.window_mini.raise_()
         self.window_close.raise_()
-        self.net_downdata_old.raise_()
-        self.net_updata_old.raise_()
         self.page_main = QPushButton(self.centralwidget)
         self.page_main.setObjectName(u"page_main")
         self.page_main.setGeometry(QRect(0, 70, 131, 41))
@@ -884,7 +883,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> - mbps</p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> - ms</p></body></html>", None))
         self.net_downdata.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -900,7 +899,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 bit</p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 Byte</p></body></html>", None))
         self.net_updata_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -908,7 +907,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 bit</p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 Byte</p></body></html>", None))
         self.net_updata_str.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -916,7 +915,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u4e0a\u4f20</p></body></html>", None))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u7f51\u7edc</p></body></html>", None))
         self.net_downdata_str.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -924,7 +923,15 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u4e0b\u8f7d</p></body></html>", None))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u6d41\u91cf</p></body></html>", None))
+        self.net_updata_str_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u901a\u8baf</p></body></html>", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u5730\u5740", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u5730\u5740", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u7aef\u53e3", None))
@@ -982,8 +989,6 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"\u4f5c\u8005", None))
         self.window_close.setText("")
         self.window_mini.setText("")
-        self.net_downdata_old.setText(QCoreApplication.translate("MainWindow", u"\u2193 - mbps", None))
-        self.net_updata_old.setText(QCoreApplication.translate("MainWindow", u"\u2191 - mbps", None))
         self.page_main.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.page_server.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668", None))
         self.version.setText(QCoreApplication.translate("MainWindow", u"0.0.0", None))
