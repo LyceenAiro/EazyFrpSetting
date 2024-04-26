@@ -7,6 +7,7 @@ from urllib3.exceptions import InsecureRequestWarning
 import ping3
 import psutil
 import toml
+import os
 from time import sleep, time
 from collections import deque
 
@@ -129,6 +130,10 @@ class CheckServer(QThread):
             result = f"{str(int(result))} ms"
         return_list = [online, result]
         self.ping_message.emit(return_list)
+
+        if not os.path.exists("frpc.exe"):
+            self.finished.emit()
+            return
 
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW

@@ -11,7 +11,8 @@
 - 部分美化`qdarkstyle`  
 ![Example Image](https://raw.githubusercontent.com/LyceenAiro/EazyFrpSetting/doc/v3_file/show_file/2.png)
 ## 使用
-该软件基于frp_0.52.3_windows_xx版本开发
+该软件基于frp_0.57.0_windows_xx版本开发  
+适用于原版frps自建的服务器，未来有可能兼容其他分支的frp  
 需要使用该软件配置Frp首先你需要[Frp](https://github.com/fatedier/frp)的软件本体  
 - 需求文件`frpc.exe`  
 - 将`frpc.exe`放入根目录中
