@@ -97,8 +97,10 @@ class MainWindow(QMainWindow):
         self.ui.auto_bandwidth.stateChanged.connect(self.save_other_data)
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
         self.ui.auto_updata.stateChanged.connect(self.save_other_data)
+        self.ui.mux_set.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
         self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
+        self.ui.link_protocol.currentIndexChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -298,7 +300,7 @@ class MainWindow(QMainWindow):
         self.ui.linktable.setColumnCount(self.rows)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
         self.ui.linktable.setColumnWidth(1, 70)
-        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域", "传输协议"])
+        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域", "心跳延时"])
         self.ui.linktable.horizontalHeader().setStretchLastSection(True)
         self.ui.linktable.verticalHeader().setVisible(False)
         self.ui.linktable.setSelectionBehavior(QTableWidget.SelectRows)
@@ -568,7 +570,7 @@ class MainWindow(QMainWindow):
             if os.path.getmtime("./data/link.toml") > os.path.getmtime("./data/linktable.toml"):
                 return
         link = {"proxies" : []}
-        linksetup = ["name","type","localIp","localPort","remotePort","secretKey","serverName","keepTunnelOpen"]
+        linksetup = ["name","type","localIp","localPort","remotePort","secretKey","serverName","healthCheck"]
         with open("./data/linktable.toml","r+",encoding="utf-8") as u:
             for a in u.readlines():
                 b = a.split(",")
@@ -579,18 +581,22 @@ class MainWindow(QMainWindow):
                 while not tags >= 7:
                     if b[tags] == "":
                         pass
+                    elif "type" == linksetup[tags]:
+                        if len(b[tags].split("-")) == 2:
+                            in_type = b[tags].split("-")[0]
+                        else:
+                            in_type = b[tags]
+                        in_proxy[linksetup[tags]] = in_type
                     elif "Port" in linksetup[tags]:
                         in_proxy[linksetup[tags]] = int(b[tags])
-                    elif "keepTunnelOpen" in linksetup[tags]:
-                        in_proxy[linksetup[tags]] = bool(b[tags])
                     else:
                         in_proxy[linksetup[tags]] = b[tags]
                     tags += 1
                 # 第九项数据
-                if b[9] in ("默认传输", ""):
+                if b[9] in ("默认传输", "kcp传输", "quic传输", ""): # 此处为旧版本的配置文件做了兼容，将在未来取消兼容性
                     pass
                 else:
-                    in_proxy[linksetup[tags]] = b[9]
+                    in_proxy[linksetup[tags]] = {"type": in_type, "intervalSeconds": int(b[9])}
                 link["proxies"].append(in_proxy)
         with open("./data/link.toml", "w", encoding="utf-8") as file:
             file.write(toml.dumps(link))
@@ -605,12 +611,21 @@ class MainWindow(QMainWindow):
             if all(datadiff):
                 return
         self.ui.main_log.insertPlainText("frpc.toml is compile now...\n")
+        if self.mux_set:
+            frpc = 'tcpMux = true\n'
+        else:
+            frpc = 'tcpMux = false\n'
+
         with open("./data/server.toml","r+",encoding="utf-8") as u:
-            frpc = u.readlines()
-        link = configparser.ConfigParser()
-        link.read("./data/more.ini","utf-8")
+            frpc += "".join(u.readlines())
+
+        if self.link_protocol == 1:
+            frpc += '[transport]\nprotocol = "kcp"\n'
+        elif self.link_protocol == 2:
+            frpc += '[transport]\nprotocol = "quic"\n'
+
         with open("./data/link.toml", "r+", encoding="utf-8") as u:
-            frpc += u.readlines()
+            frpc += "".join(u.readlines())
 
         with open("./data/frpc.toml","w+",encoding="utf-8") as u:
             for i in frpc:
@@ -707,7 +722,7 @@ class MainWindow(QMainWindow):
             link["common"]["auto_address"] = "False"
             self.auto_address = False
 
-        # 心跳回应
+        # 带宽预警
         link["common"]["auto_bandwidth_down"] = str(self.ui.auto_bandwidth_down.value())
         self.auto_bandwidth_down = self.ui.auto_bandwidth_down.value()
         if self.ui.auto_bandwidth.isChecked():
@@ -733,6 +748,23 @@ class MainWindow(QMainWindow):
         else:
             link["common"]["auto_updata"] = "False"
             self.auto_updata = False
+            
+        # 链接方式
+        if self.ui.link_protocol.currentText() == "默认":
+            self.link_protocol = 0
+        elif self.ui.link_protocol.currentText() == "KCP":
+            self.link_protocol = 1
+        elif self.ui.link_protocol.currentText() == "QUIC":
+            self.link_protocol = 2
+        link["common"]["link_protocol"] = str(self.link_protocol)
+
+        # 端口聚合
+        if self.ui.mux_set.isChecked():
+            link["common"]["mux_set"] = "True"
+            self.mux_set = True
+        else:
+            link["common"]["mux_set"] = "False"
+            self.mux_set = False
 
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
@@ -750,6 +782,8 @@ class MainWindow(QMainWindow):
             self.auto_bandwidth_down = link["common"]["auto_bandwidth_down"]
             self.auto_mini = link.getboolean("common", "auto_mini")
             self.auto_updata = link.getboolean("common", "auto_updata")
+            self.link_protocol = link["common"]["link_protocol"]
+            self.mux_set = link.getboolean("common", "mux_set")
 
         if not os.path.exists("./data/more.ini"):
             self.default_other_data()
@@ -764,14 +798,16 @@ class MainWindow(QMainWindow):
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
         self.ui.auto_bandwidth_down.setValue(int(self.auto_bandwidth_down))
+        self.ui.link_protocol.setCurrentIndex(int(self.link_protocol))
 
         self.ui.auto_linkname.setChecked(self.auto_linkname)
         self.ui.auto_address.setChecked(self.auto_address)
         self.ui.auto_bandwidth.setChecked(self.auto_bandwidth)
         self.ui.auto_mini.setChecked(self.auto_mini)
         self.ui.auto_updata.setChecked(self.auto_updata)
+        self.ui.mux_set.setChecked(self.mux_set)
 
-        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
+        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)
         self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
     
     def default_other_data(self):
@@ -785,6 +821,8 @@ class MainWindow(QMainWindow):
         link["common"]["auto_bandwidth_down"] = "10"
         link["common"]["auto_mini"] = "True"
         link["common"]["auto_updata"] = "True"
+        link["common"]["link_protocol"] = "0"
+        link["common"]["mux_set"] = "True"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -1018,6 +1056,14 @@ class MainWindow(QMainWindow):
             if edit2.currentText() in ("tcp", "udp"):
                 edit6.setText("")
                 edit7.setText("")
+            else:
+                edit10.setText("")
+            if edit10.text() == "":
+                pass
+            elif self.portcheck(edit10.text(), 0, 999999) == False:
+                edit10.setStyleSheet("border: 1px solid red;")
+                check = False
+            
             elif edit2.currentText() in ("xtcp-host", "stcp-host"):
                 edit7.setText("")
             if check == False:
@@ -1093,9 +1139,9 @@ class MainWindow(QMainWindow):
             edit7 = QLineEdit(data[6])
             edit7.setPlaceholderText("目的服务")
 
-            edit10 = QComboBox()
-            edit10.addItems(["默认传输", "kcp传输", "quic传输"])
-            edit10.setCurrentText(data[9])
+            edit10 = QLineEdit(data[9])
+            edit10.setPlaceholderText("心跳延时")
+            edit4.setMaxLength(5)
             edit10.setFixedWidth(80)
 
             hlayout4.addWidget(edit7)
@@ -1159,7 +1205,7 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
             self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem(edit8.currentText()))
             self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
-            self.ui.linktable.setItem(selected_row, 9, QTableWidgetItem(edit10.currentText()))
+            self.ui.linktable.setItem(selected_row, 9, QTableWidgetItem(edit10.text()))
             self.save_table_data()
             dialog.deleteLater()
         else:
@@ -1203,6 +1249,11 @@ class MainWindow(QMainWindow):
                 check = False
             if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
+                check = False
+            if edit10.text() == "":
+                pass
+            elif self.portcheck(edit10.text(), 0, 999999) == False:
+                edit10.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
                 edit6.setText("")
@@ -1279,8 +1330,10 @@ class MainWindow(QMainWindow):
         edit7 = QLineEdit()
         edit7.setPlaceholderText("目的服务")
 
-        edit10 = QComboBox()
-        edit10.addItems(["默认传输", "kcp传输", "quic传输"])
+        edit10 = QLineEdit()
+        edit10.setPlaceholderText("心跳延时")
+        edit10.setMaxLength(6)
+        edit10.setFixedWidth(80)
         edit10.setFixedWidth(80)
 
         hlayout4.addWidget(edit7)
@@ -1307,7 +1360,7 @@ class MainWindow(QMainWindow):
 
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
-            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText(), edit10.currentText()])
+            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText(), edit10.text()])
             self.save_table_data()
             dialog.deleteLater()
         else:

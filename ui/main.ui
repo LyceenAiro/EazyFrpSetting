@@ -64,7 +64,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="Line" name="line_5">
@@ -1634,6 +1634,125 @@ QCheckBox::indicator::unchecked {
       </property>
       <property name="value">
        <number>10</number>
+      </property>
+     </widget>
+     <widget class="Line" name="line_12">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>350</y>
+        <width>601</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_26">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>360</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>链接方式</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="link_protocol">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>360</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>默认</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>KCP</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>QUIC</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_27">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>390</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>聚合端口</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="mux_set">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>390</y>
+        <width>52</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCheckBox {
+    background-color: #2c2c2c;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+QCheckBox::checked {
+    background-color: #4cd964;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+QCheckBox::indicator::checked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #ffffff;
+	position: relative;
+	left: 25px;
+}
+
+QCheckBox::indicator::unchecked { 
+	image: None;
+	width: 20px; height: 20px;
+	border-radius: 2px;
+	background-color: #2196F3;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>

@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHeaderView,
-    QLabel, QLineEdit, QMainWindow, QPushButton,
-    QSizePolicy, QSpinBox, QStackedWidget, QTableWidget,
-    QTableWidgetItem, QTextEdit, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QHeaderView, QLabel, QLineEdit, QMainWindow,
+    QPushButton, QSizePolicy, QSpinBox, QStackedWidget,
+    QTableWidget, QTableWidgetItem, QTextEdit, QWidget)
 from . import main_rc
 
 class Ui_MainWindow(object):
@@ -682,6 +682,56 @@ class Ui_MainWindow(object):
         self.auto_bandwidth_down.setGeometry(QRect(540, 215, 71, 22))
         self.auto_bandwidth_down.setMaximum(1000000)
         self.auto_bandwidth_down.setValue(10)
+        self.line_12 = QFrame(self.page_2)
+        self.line_12.setObjectName(u"line_12")
+        self.line_12.setGeometry(QRect(10, 350, 601, 20))
+        self.line_12.setFrameShape(QFrame.HLine)
+        self.line_12.setFrameShadow(QFrame.Sunken)
+        self.label_26 = QLabel(self.page_2)
+        self.label_26.setObjectName(u"label_26")
+        self.label_26.setGeometry(QRect(10, 360, 161, 31))
+        self.label_26.setFont(font4)
+        self.link_protocol = QComboBox(self.page_2)
+        self.link_protocol.addItem("")
+        self.link_protocol.addItem("")
+        self.link_protocol.addItem("")
+        self.link_protocol.setObjectName(u"link_protocol")
+        self.link_protocol.setGeometry(QRect(540, 360, 69, 22))
+        self.label_27 = QLabel(self.page_2)
+        self.label_27.setObjectName(u"label_27")
+        self.label_27.setGeometry(QRect(20, 390, 161, 31))
+        self.label_27.setFont(font5)
+        self.mux_set = QCheckBox(self.page_2)
+        self.mux_set.setObjectName(u"mux_set")
+        self.mux_set.setGeometry(QRect(560, 390, 52, 24))
+        self.mux_set.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
@@ -919,7 +969,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1033,6 +1083,13 @@ class Ui_MainWindow(object):
         self.auto_mini.setText("")
         self.auto_updata.setText("")
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"\u542f\u52a8\u65f6\u68c0\u67e5\u66f4\u65b0", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"\u94fe\u63a5\u65b9\u5f0f", None))
+        self.link_protocol.setItemText(0, QCoreApplication.translate("MainWindow", u"\u9ed8\u8ba4", None))
+        self.link_protocol.setItemText(1, QCoreApplication.translate("MainWindow", u"KCP", None))
+        self.link_protocol.setItemText(2, QCoreApplication.translate("MainWindow", u"QUIC", None))
+
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"\u805a\u5408\u7aef\u53e3", None))
+        self.mux_set.setText("")
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.check_updata.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.tags_version.setText(QCoreApplication.translate("MainWindow", u"self.tags.version", None))
