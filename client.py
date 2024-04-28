@@ -1005,22 +1005,26 @@ class MainWindow(QMainWindow):
             self.ui.link_open.hide()
 
     def on_close_button_clicked(self):
-        selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
-        self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("关闭"))
-        self.save_table_data()
-        row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
-        for item in row_items:
-            item.setBackground(QColor(0, 0, 0, 0))
+        # 关闭选中的所有链接
+        for i in range(len(self.ui.linktable.selectionModel().selectedRows())):
+            selected_row = self.ui.linktable.selectionModel().selectedRows()[i].row()
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("关闭"))
+            self.save_table_data()
+            row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
         self.ui.link_close.hide()
         self.ui.link_open.show()
 
     def on_open_button_clicked(self):
-        selected_row = self.ui.linktable.selectionModel().selectedRows()[0].row()
-        self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("开启"))
-        self.save_table_data()
-        row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
-        for item in row_items:
-            item.setBackground(QColor(100, 150, 100))
+        # 开启选中的所有链接
+        for i in range(len(self.ui.linktable.selectionModel().selectedRows())):
+            selected_row = self.ui.linktable.selectionModel().selectedRows()[i].row()
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("开启"))
+            self.save_table_data()
+            row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
         self.ui.link_close.show()
         self.ui.link_open.hide()
 
