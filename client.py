@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         
         # 窗口移动项
         self.mouse_press_position = None
+        self.main_log_scrollbar = self.ui.main_log.verticalScrollBar()
 
         # 预警时钟
         self.warning_clock = 0
@@ -86,6 +87,8 @@ class MainWindow(QMainWindow):
         self.ui.link_create.clicked.connect(self.on_add_button_clicked)
         self.ui.link_delete.clicked.connect(self.on_delete_button_clicked)
         self.ui.link_modify.clicked.connect(self.on_edit_button_clicked)
+        self.ui.link_close.clicked.connect(self.on_close_button_clicked)
+        self.ui.link_open.clicked.connect(self.on_open_button_clicked)
         self.ui.linktable.itemSelectionChanged.connect(self.on_table_item_selection_changed)
 
         # other
@@ -94,9 +97,10 @@ class MainWindow(QMainWindow):
         self.ui.auto_bandwidth.stateChanged.connect(self.save_other_data)
         self.ui.auto_mini.stateChanged.connect(self.save_other_data)
         self.ui.auto_updata.stateChanged.connect(self.save_other_data)
+        self.ui.mux_set.stateChanged.connect(self.save_other_data)
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
-        self.ui.auto_bandwidth_up.valueChanged.connect(self.save_other_data)
         self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
+        self.ui.link_protocol.currentIndexChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -167,7 +171,7 @@ class MainWindow(QMainWindow):
     ##
     def UIinit(self):
         # 全部UI初始化整理
-        # 该项必须放在datainit()后面,否则会导致datainit()的数据被初始化
+        # 该项必须放在datainit()前面,否则会导致datainit()的数据被初始化
         self.setWindowIcon(QIcon(":images/icon/logo.png"))
         self.TrayMenuSetting()
         self.FlagsUiSetting()
@@ -223,19 +227,6 @@ class MainWindow(QMainWindow):
     ##
     def FlagsUiSetting(self):
         # 自定义导航栏初始化
-        highlight_color = QColor(130, 130, 180)
-        botten = [self.ui.window_mini,
-                  self.ui.window_close]
-        for i in botten:
-            i.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {highlight_color.name()};
-                }}
-            """)
         icon = QIcon(":images/icon/close.png")
         self.ui.window_close.setIcon(icon)
         self.ui.window_close.setIconSize(self.ui.window_close.size())
@@ -288,20 +279,6 @@ class MainWindow(QMainWindow):
         self.botton_highlight_color = QColor(130, 130, 130)
         self.botton_highlight_color2 = QColor(100, 100, 180)
         self.botton_highlight_color3 = QColor(100, 100, 210)
-        botten = [self.ui.page_server,
-                  self.ui.page_link,
-                  self.ui.page_other,
-                  self.ui.page_tags]
-        for i in botten:
-            i.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_color.name()};
-                }}
-            """)
         self.ui.updata_tag.hide()
         self.ui.nofrpc_tag.hide()
     
@@ -318,39 +295,12 @@ class MainWindow(QMainWindow):
         self.botton_highlight_link = QColor(200, 80, 80)
         self.botton_highlight_link2 = QColor(80, 200, 80)
         self.botton_highlight_link3 = QColor(100, 100, 180)
-        self.ui.link_delete.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link.name()};
-                }}
-            """)
-        self.ui.link_create.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link2.name()};
-                }}
-            """)
-        self.ui.link_modify.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: transparent;
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link3.name()};
-                }}
-            """)
         self.ui.linktable.setStyleSheet("border-radius: 0px")
         self.rows = 10  # 在这里设置列数量
         self.ui.linktable.setColumnCount(self.rows)
         self.ui.linktable.horizontalHeader().setDefaultSectionSize(100)
         self.ui.linktable.setColumnWidth(1, 70)
-        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域", "传输协议"])
+        self.ui.linktable.setHorizontalHeaderLabels(["服务名", "协议", "源地址", "源端口", "目的端口", "密钥", "目的服务", "链接状态", "区域", "心跳延时"])
         self.ui.linktable.horizontalHeader().setStretchLastSection(True)
         self.ui.linktable.verticalHeader().setVisible(False)
         self.ui.linktable.setSelectionBehavior(QTableWidget.SelectRows)
@@ -358,6 +308,9 @@ class MainWindow(QMainWindow):
 
         self.ui.link_delete.setEnabled(False)
         self.ui.link_modify.setEnabled(False)
+
+        self.ui.link_close.hide()
+        self.ui.link_open.hide()
         
     def MainUISetting(self):
         # 开始页面UI初始化
@@ -366,15 +319,6 @@ class MainWindow(QMainWindow):
         self.highlight_color_main_stop = QColor(130, 130, 180)
         self.highlight_color_main_start = QColor(80, 160, 80)
         self.setstarthigh()
-        self.ui.main_clear.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {self.background_color_high.name()};
-                    border-radius: 0px;
-                }}
-                QPushButton:hover {{
-                    background-color: {self.botton_highlight_link.name()};
-                }}
-            """)
         icon = QIcon(":images/icon/play.png")
         self.ui.main_start.setIcon(icon)
         self.ui.main_start.setIconSize(self.ui.window_close.size())
@@ -385,17 +329,28 @@ class MainWindow(QMainWindow):
         self.ui.main_clear.setIcon(icon)
         self.ui.main_clear.setIconSize(self.ui.window_close.size())
         
-        self.ui.main_log.setStyleSheet(f"""
-                border-radius: 0px;
-                border-color: {self.background_color_high.name()};
-            """)
+        self.ui.net_updata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_updata_str_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.net_downdata_str.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.ui.main_log.setReadOnly(True)
+        self.ui.net_updata.setReadOnly(True)
+        self.ui.net_updata_2.setReadOnly(True)
+        self.ui.net_updata_str.setReadOnly(True)
+        self.ui.net_updata_str_2.setReadOnly(True)
+        self.ui.net_downdata.setReadOnly(True)
+        self.ui.net_downdata_2.setReadOnly(True)
+        self.ui.net_downdata_str.setReadOnly(True)
+
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
     
     def OtherUISetting(self):
         self.ui.auto_linkname_box.setMaximum(20)
-        self.ui.auto_bandwidth_up.setMaximum(1000000)
         self.ui.auto_bandwidth_down.setMaximum(1000000)
 
     def TagsUISetting(self):
@@ -615,7 +570,7 @@ class MainWindow(QMainWindow):
             if os.path.getmtime("./data/link.toml") > os.path.getmtime("./data/linktable.toml"):
                 return
         link = {"proxies" : []}
-        linksetup = ["name","type","localIp","localPort","remotePort","secretKey","serverName","keepTunnelOpen"]
+        linksetup = ["name","type","localIp","localPort","remotePort","secretKey","serverName","healthCheck"]
         with open("./data/linktable.toml","r+",encoding="utf-8") as u:
             for a in u.readlines():
                 b = a.split(",")
@@ -626,18 +581,22 @@ class MainWindow(QMainWindow):
                 while not tags >= 7:
                     if b[tags] == "":
                         pass
+                    elif "type" == linksetup[tags]:
+                        if len(b[tags].split("-")) == 2:
+                            in_type = b[tags].split("-")[0]
+                        else:
+                            in_type = b[tags]
+                        in_proxy[linksetup[tags]] = in_type
                     elif "Port" in linksetup[tags]:
                         in_proxy[linksetup[tags]] = int(b[tags])
-                    elif "keepTunnelOpen" in linksetup[tags]:
-                        in_proxy[linksetup[tags]] = bool(b[tags])
                     else:
                         in_proxy[linksetup[tags]] = b[tags]
                     tags += 1
                 # 第九项数据
-                if b[9] in ("默认传输", ""):
+                if b[9] in ("默认传输", "kcp传输", "quic传输", ""): # 此处为旧版本的配置文件做了兼容，将在未来取消兼容性
                     pass
                 else:
-                    in_proxy[linksetup[tags]] = b[9]
+                    in_proxy[linksetup[tags]] = {"type": in_type, "intervalSeconds": int(b[9])}
                 link["proxies"].append(in_proxy)
         with open("./data/link.toml", "w", encoding="utf-8") as file:
             file.write(toml.dumps(link))
@@ -652,12 +611,21 @@ class MainWindow(QMainWindow):
             if all(datadiff):
                 return
         self.ui.main_log.insertPlainText("frpc.toml is compile now...\n")
+        if self.mux_set:
+            frpc = 'tcpMux = true\n'
+        else:
+            frpc = 'tcpMux = false\n'
+
         with open("./data/server.toml","r+",encoding="utf-8") as u:
-            frpc = u.readlines()
-        link = configparser.ConfigParser()
-        link.read("./data/more.ini","utf-8")
+            frpc += "".join(u.readlines())
+
+        if self.link_protocol == 1:
+            frpc += '[transport]\nprotocol = "kcp"\n'
+        elif self.link_protocol == 2:
+            frpc += '[transport]\nprotocol = "quic"\n'
+
         with open("./data/link.toml", "r+", encoding="utf-8") as u:
-            frpc += u.readlines()
+            frpc += "".join(u.readlines())
 
         with open("./data/frpc.toml","w+",encoding="utf-8") as u:
             for i in frpc:
@@ -700,6 +668,7 @@ class MainWindow(QMainWindow):
             layout.addWidget(button_box, alignment=Qt.AlignHCenter)
             button_box.accepted.connect(dialog.accept)
             if dialog.exec() == QDialog.Accepted:
+                dialog.deleteLater()
                 return
         try:
             with open("./data/linktable.toml", "r", encoding="utf-8") as f:            
@@ -753,10 +722,8 @@ class MainWindow(QMainWindow):
             link["common"]["auto_address"] = "False"
             self.auto_address = False
 
-        # 心跳回应
-        link["common"]["auto_bandwidth_up"] = str(self.ui.auto_bandwidth_up.value())
+        # 带宽预警
         link["common"]["auto_bandwidth_down"] = str(self.ui.auto_bandwidth_down.value())
-        self.auto_bandwidth_up = self.ui.auto_bandwidth_up.value()
         self.auto_bandwidth_down = self.ui.auto_bandwidth_down.value()
         if self.ui.auto_bandwidth.isChecked():
             link["common"]["auto_bandwidth"] = "True"
@@ -764,7 +731,7 @@ class MainWindow(QMainWindow):
         else:
             link["common"]["auto_bandwidth"] = "False"
             self.auto_bandwidth = False
-        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
+        self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
 
         # 最小化托盘
         if self.ui.auto_mini.isChecked():
@@ -781,6 +748,23 @@ class MainWindow(QMainWindow):
         else:
             link["common"]["auto_updata"] = "False"
             self.auto_updata = False
+            
+        # 链接方式
+        if self.ui.link_protocol.currentText() == "默认":
+            self.link_protocol = 0
+        elif self.ui.link_protocol.currentText() == "KCP":
+            self.link_protocol = 1
+        elif self.ui.link_protocol.currentText() == "QUIC":
+            self.link_protocol = 2
+        link["common"]["link_protocol"] = str(self.link_protocol)
+
+        # 端口聚合
+        if self.ui.mux_set.isChecked():
+            link["common"]["mux_set"] = "True"
+            self.mux_set = True
+        else:
+            link["common"]["mux_set"] = "False"
+            self.mux_set = False
 
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
@@ -795,10 +779,11 @@ class MainWindow(QMainWindow):
             self.auto_linkname_box = link["common"]["auto_name_box"]
             self.auto_address = link.getboolean("common", "auto_address")
             self.auto_bandwidth = link.getboolean("common", "auto_bandwidth")
-            self.auto_bandwidth_up = link["common"]["auto_bandwidth_up"]
             self.auto_bandwidth_down = link["common"]["auto_bandwidth_down"]
             self.auto_mini = link.getboolean("common", "auto_mini")
             self.auto_updata = link.getboolean("common", "auto_updata")
+            self.link_protocol = link["common"]["link_protocol"]
+            self.mux_set = link.getboolean("common", "mux_set")
 
         if not os.path.exists("./data/more.ini"):
             self.default_other_data()
@@ -812,17 +797,17 @@ class MainWindow(QMainWindow):
             load_file()
 
         self.ui.auto_linkname_box.setValue(int(self.auto_linkname_box))
-        self.ui.auto_bandwidth_up.setValue(int(self.auto_bandwidth_up))
         self.ui.auto_bandwidth_down.setValue(int(self.auto_bandwidth_down))
+        self.ui.link_protocol.setCurrentIndex(int(self.link_protocol))
 
         self.ui.auto_linkname.setChecked(self.auto_linkname)
         self.ui.auto_address.setChecked(self.auto_address)
         self.ui.auto_bandwidth.setChecked(self.auto_bandwidth)
         self.ui.auto_mini.setChecked(self.auto_mini)
         self.ui.auto_updata.setChecked(self.auto_updata)
+        self.ui.mux_set.setChecked(self.mux_set)
 
-        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)            
-        self.ui.auto_bandwidth_up.setReadOnly(not self.auto_bandwidth)
+        self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)
         self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
     
     def default_other_data(self):
@@ -833,10 +818,11 @@ class MainWindow(QMainWindow):
         link["common"]["auto_name_box"] = "8"
         link["common"]["auto_address"] = "True"
         link["common"]["auto_bandwidth"] = "True"
-        link["common"]["auto_bandwidth_up"] = "10"
         link["common"]["auto_bandwidth_down"] = "10"
         link["common"]["auto_mini"] = "True"
         link["common"]["auto_updata"] = "True"
+        link["common"]["link_protocol"] = "0"
+        link["common"]["mux_set"] = "True"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -889,6 +875,7 @@ class MainWindow(QMainWindow):
                     pass
             self.shutdown()
         else:
+            dialog.deleteLater()
             return
 
     def clear_server_sertting(self):
@@ -921,6 +908,7 @@ class MainWindow(QMainWindow):
     def on_log_message(self, message):
         # 当frp日志更新时发送到主窗口 | 变量 -> 信息
         self.ui.main_log.insertPlainText(message)
+        self.main_log_scrollbar.setValue(self.main_log_scrollbar.maximum())
 
     def on_frp_started(self):
         # 当收到Frp启动命令时向窗口的反馈
@@ -945,8 +933,8 @@ class MainWindow(QMainWindow):
         self._frp_client.stop()
         self.ui.main_start.setEnabled(True)
         self.ui.main_stop.setEnabled(False)
-        self.ui.net_updata.setText("↑ - mbps")
-        self.ui.net_downdata.setText("↓ - mbps")
+        self.ui.net_updata.setText("- ms")
+        self.ui.net_downdata.setText("- mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
         self.ui.main_log.insertPlainText("frp client stopped.\n")
@@ -954,24 +942,20 @@ class MainWindow(QMainWindow):
         self.bandFrp()
 
     def on_frp_bandwidth(self, usage):
-        # 更新带宽信息
-        self.ui.net_updata.setText(f"↑ {usage[0]} mbps")
-        self.ui.net_downdata.setText(f"↓ {usage[1]} mbps")
+        # 更新信息栏
+        if usage[0] == None:
+            self.ui.net_updata.setText(f"500+ ms")
+        else:
+            self.ui.net_updata.setText(f"{usage[0]:.1f} ms")
+        self.ui.net_downdata.setText(f"{usage[1]} mbps")
+        self.ui.net_updata_2.setText(usage[2])
+        self.ui.net_downdata_2.setText(usage[3])
         if self.warning_clock > 0 :
             self.warning_clock -= 1
         elif self.auto_bandwidth == True:
-            warning = False
-            wn_str = ""
-            if usage[0] >= int(self.auto_bandwidth_up):
-                warning = True
-                wn_str += f"上传带宽超过警告阈值\n↑ {usage[0]} mbps\n"
             if usage[1] >= int(self.auto_bandwidth_down):
-                warning = True
-                wn_str += f"下载带宽超过警告阈值\n↓ {usage[1]} mbps\n"
-            if warning:
-                self.tray_icon.showMessage("带宽预警", wn_str, QSystemTrayIcon.Information, 1000)
+                self.tray_icon.showMessage("带宽预警", f"带宽超过警告阈值\n{usage[1]} mbps\n", QSystemTrayIcon.Information, 1000)
                 self.warning_clock = 60
-
 
     def updata_started(self):
         # 当检查更新开启时执行
@@ -1003,11 +987,46 @@ class MainWindow(QMainWindow):
         # 当表中数据发生修改时向窗口反馈
         selected_rows = self.ui.linktable.selectionModel().selectedRows()
         if len(selected_rows) > 0:
+            selected_row = selected_rows[0].row()
+            data = self.ui.linktable.item(selected_row, 7).text()
+            if data == "开启":
+                self.ui.link_open.hide()
+                self.ui.link_close.show()
+            else:
+                self.ui.link_open.show()
+                self.ui.link_close.hide()
             self.ui.link_modify.setEnabled(True)
             self.ui.link_delete.setEnabled(True)
+            
         else:
             self.ui.link_modify.setEnabled(False)
             self.ui.link_delete.setEnabled(False)
+            self.ui.link_close.hide()
+            self.ui.link_open.hide()
+
+    def on_close_button_clicked(self):
+        # 关闭选中的所有链接
+        for i in range(len(self.ui.linktable.selectionModel().selectedRows())):
+            selected_row = self.ui.linktable.selectionModel().selectedRows()[i].row()
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("关闭"))
+            self.save_table_data()
+            row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+            for item in row_items:
+                item.setBackground(QColor(0, 0, 0, 0))
+        self.ui.link_close.hide()
+        self.ui.link_open.show()
+
+    def on_open_button_clicked(self):
+        # 开启选中的所有链接
+        for i in range(len(self.ui.linktable.selectionModel().selectedRows())):
+            selected_row = self.ui.linktable.selectionModel().selectedRows()[i].row()
+            self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("开启"))
+            self.save_table_data()
+            row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
+            for item in row_items:
+                item.setBackground(QColor(100, 150, 100))
+        self.ui.link_close.show()
+        self.ui.link_open.hide()
 
     def on_edit_button_clicked(self):
         # 当编辑按钮被触发时弹出窗口
@@ -1041,6 +1060,14 @@ class MainWindow(QMainWindow):
             if edit2.currentText() in ("tcp", "udp"):
                 edit6.setText("")
                 edit7.setText("")
+            else:
+                edit10.setText("")
+            if edit10.text() == "":
+                pass
+            elif self.portcheck(edit10.text(), 0, 999999) == False:
+                edit10.setStyleSheet("border: 1px solid red;")
+                check = False
+            
             elif edit2.currentText() in ("xtcp-host", "stcp-host"):
                 edit7.setText("")
             if check == False:
@@ -1116,9 +1143,9 @@ class MainWindow(QMainWindow):
             edit7 = QLineEdit(data[6])
             edit7.setPlaceholderText("目的服务")
 
-            edit10 = QComboBox()
-            edit10.addItems(["默认传输", "kcp传输", "quic传输"])
-            edit10.setCurrentText(data[9])
+            edit10 = QLineEdit(data[9])
+            edit10.setPlaceholderText("心跳延时")
+            edit4.setMaxLength(5)
             edit10.setFixedWidth(80)
 
             hlayout4.addWidget(edit7)
@@ -1139,6 +1166,7 @@ class MainWindow(QMainWindow):
             layout.addLayout(hlayout5)
 
         except:
+            dialog.deleteLater()
             dialog = QDialog(self)
             dialog.setWindowTitle("无法编辑")
             dialog.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -1160,6 +1188,7 @@ class MainWindow(QMainWindow):
                 row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
                 for item in row_items:
                     item.setBackground(QColor(150, 150, 100))
+                dialog.deleteLater()
                 return
 
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
@@ -1180,9 +1209,11 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 6, QTableWidgetItem(edit7.text()))
             self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem(edit8.currentText()))
             self.ui.linktable.setItem(selected_row, 8, QTableWidgetItem(edit9.currentText()))
-            self.ui.linktable.setItem(selected_row, 9, QTableWidgetItem(edit10.currentText()))
+            self.ui.linktable.setItem(selected_row, 9, QTableWidgetItem(edit10.text()))
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
 
         status = edit8.currentText()
@@ -1222,6 +1253,11 @@ class MainWindow(QMainWindow):
                 check = False
             if self.portcheck(edit5.text(), 1, 65565) == False:
                 edit5.setStyleSheet("border: 1px solid red;")
+                check = False
+            if edit10.text() == "":
+                pass
+            elif self.portcheck(edit10.text(), 0, 999999) == False:
+                edit10.setStyleSheet("border: 1px solid red;")
                 check = False
             if edit2.currentText() in ("tcp", "udp"):
                 edit6.setText("")
@@ -1298,8 +1334,10 @@ class MainWindow(QMainWindow):
         edit7 = QLineEdit()
         edit7.setPlaceholderText("目的服务")
 
-        edit10 = QComboBox()
-        edit10.addItems(["默认传输", "kcp传输", "quic传输"])
+        edit10 = QLineEdit()
+        edit10.setPlaceholderText("心跳延时")
+        edit10.setMaxLength(6)
+        edit10.setFixedWidth(80)
         edit10.setFixedWidth(80)
 
         hlayout4.addWidget(edit7)
@@ -1326,9 +1364,11 @@ class MainWindow(QMainWindow):
 
         if dialog.exec() == QDialog.Accepted:
             # 添加数据
-            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText(), edit10.currentText()])
+            self.add_table_row([edit1.text(), edit2.currentText(), edit3.text(), edit4.text(), edit5.text(), edit6.text(), edit7.text(), edit8.currentText(), edit9.currentText(), edit10.text()])
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
         
         status = edit8.currentText()
@@ -1367,7 +1407,9 @@ class MainWindow(QMainWindow):
             for row in selected_rows:
                 self.ui.linktable.removeRow(row.row())
             self.save_table_data()
+            dialog.deleteLater()
         else:
+            dialog.deleteLater()
             return
         
     def check_service(self):

@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHeaderView,
-    QLabel, QLineEdit, QMainWindow, QPushButton,
-    QSizePolicy, QSpinBox, QStackedWidget, QTableWidget,
-    QTableWidgetItem, QTextEdit, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QHeaderView, QLabel, QLineEdit, QMainWindow,
+    QPushButton, QSizePolicy, QSpinBox, QStackedWidget,
+    QTableWidget, QTableWidgetItem, QTextEdit, QWidget)
 from . import main_rc
 
 class Ui_MainWindow(object):
@@ -64,17 +64,122 @@ class Ui_MainWindow(object):
         font1.setPointSize(14)
         font1.setBold(False)
         self.main_start.setFont(font1)
+        self.main_start.setStyleSheet(u"QPushButton {\n"
+"            background-color: rgb(60, 60, 80);\n"
+"            border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"            background-color: rgb(80, 160, 80);\n"
+"}")
         self.main_log = QTextEdit(self.page)
         self.main_log.setObjectName(u"main_log")
-        self.main_log.setGeometry(QRect(0, 100, 621, 371))
+        self.main_log.setGeometry(QRect(0, 100, 621, 351))
+        self.main_log.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
         self.main_clear = QPushButton(self.page)
         self.main_clear.setObjectName(u"main_clear")
         self.main_clear.setGeometry(QRect(560, 50, 61, 51))
         self.main_clear.setFont(font1)
+        self.main_clear.setStyleSheet(u"QPushButton {\n"
+"            background-color: rgb(60, 60, 80);\n"
+"            border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"            background-color: rgb(200, 80, 80);\n"
+"}")
         self.main_stop = QPushButton(self.page)
         self.main_stop.setObjectName(u"main_stop")
         self.main_stop.setGeometry(QRect(280, 50, 281, 51))
         self.main_stop.setFont(font1)
+        self.main_stop.setStyleSheet(u"QPushButton {\n"
+"            background-color: rgb(40, 40, 60);\n"
+"            border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"            background-color: rgb(130, 130, 180);\n"
+"}")
+        self.net_updata = QTextEdit(self.page)
+        self.net_updata.setObjectName(u"net_updata")
+        self.net_updata.setGeometry(QRect(60, 450, 81, 24))
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.net_updata.sizePolicy().hasHeightForWidth())
+        self.net_updata.setSizePolicy(sizePolicy)
+        self.net_updata.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_updata.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata = QTextEdit(self.page)
+        self.net_downdata.setObjectName(u"net_downdata")
+        self.net_downdata.setGeometry(QRect(370, 450, 121, 24))
+        sizePolicy.setHeightForWidth(self.net_downdata.sizePolicy().hasHeightForWidth())
+        self.net_downdata.setSizePolicy(sizePolicy)
+        self.net_downdata.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_downdata.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata_2 = QTextEdit(self.page)
+        self.net_downdata_2.setObjectName(u"net_downdata_2")
+        self.net_downdata_2.setGeometry(QRect(490, 450, 131, 24))
+        sizePolicy.setHeightForWidth(self.net_downdata_2.sizePolicy().hasHeightForWidth())
+        self.net_downdata_2.setSizePolicy(sizePolicy)
+        self.net_downdata_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata_2.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_downdata_2.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_2 = QTextEdit(self.page)
+        self.net_updata_2.setObjectName(u"net_updata_2")
+        self.net_updata_2.setGeometry(QRect(200, 450, 111, 24))
+        sizePolicy.setHeightForWidth(self.net_updata_2.sizePolicy().hasHeightForWidth())
+        self.net_updata_2.setSizePolicy(sizePolicy)
+        self.net_updata_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_2.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_updata_2.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_str = QTextEdit(self.page)
+        self.net_updata_str.setObjectName(u"net_updata_str")
+        self.net_updata_str.setGeometry(QRect(0, 450, 61, 24))
+        sizePolicy.setHeightForWidth(self.net_updata_str.sizePolicy().hasHeightForWidth())
+        self.net_updata_str.setSizePolicy(sizePolicy)
+        self.net_updata_str.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_str.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_updata_str.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata_str = QTextEdit(self.page)
+        self.net_downdata_str.setObjectName(u"net_downdata_str")
+        self.net_downdata_str.setGeometry(QRect(310, 450, 61, 24))
+        sizePolicy.setHeightForWidth(self.net_downdata_str.sizePolicy().hasHeightForWidth())
+        self.net_downdata_str.setSizePolicy(sizePolicy)
+        self.net_downdata_str.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata_str.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_downdata_str.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_str_2 = QTextEdit(self.page)
+        self.net_updata_str_2.setObjectName(u"net_updata_str_2")
+        self.net_updata_str_2.setGeometry(QRect(140, 450, 61, 24))
+        sizePolicy.setHeightForWidth(self.net_updata_str_2.sizePolicy().hasHeightForWidth())
+        self.net_updata_str_2.setSizePolicy(sizePolicy)
+        self.net_updata_str_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_str_2.setStyleSheet(u"QTextEdit {\n"
+"		border-radius: 0px;\n"
+"		border-color: rgb(60, 60, 80);\n"
+"}")
+        self.net_updata_str_2.setLineWrapMode(QTextEdit.NoWrap)
         self.stackedWidget.addWidget(self.page)
         self.main_log.raise_()
         self.line_5.raise_()
@@ -82,6 +187,13 @@ class Ui_MainWindow(object):
         self.main_start.raise_()
         self.main_clear.raise_()
         self.main_stop.raise_()
+        self.net_updata.raise_()
+        self.net_downdata.raise_()
+        self.net_downdata_2.raise_()
+        self.net_updata_2.raise_()
+        self.net_updata_str.raise_()
+        self.net_downdata_str.raise_()
+        self.net_updata_str_2.raise_()
         self.page0 = QWidget()
         self.page0.setObjectName(u"page0")
         self.line_4 = QFrame(self.page0)
@@ -290,15 +402,56 @@ class Ui_MainWindow(object):
         self.link_create = QPushButton(self.page1)
         self.link_create.setObjectName(u"link_create")
         self.link_create.setGeometry(QRect(520, 60, 101, 41))
+        self.link_create.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(80, 200, 80);\n"
+"}")
         self.link_delete = QPushButton(self.page1)
         self.link_delete.setObjectName(u"link_delete")
         self.link_delete.setGeometry(QRect(320, 60, 101, 41))
+        self.link_delete.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"                QPushButton:hover {\n"
+"                    background-color: rgb(200, 80, 80);\n"
+"                }")
         self.link_modify = QPushButton(self.page1)
         self.link_modify.setObjectName(u"link_modify")
         self.link_modify.setGeometry(QRect(420, 60, 101, 41))
+        self.link_modify.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"                QPushButton:hover {\n"
+"                    background-color: rgb(100, 100, 180);\n"
+"                }")
         self.linktable = QTableWidget(self.page1)
         self.linktable.setObjectName(u"linktable")
         self.linktable.setGeometry(QRect(0, 100, 621, 371))
+        self.link_close = QPushButton(self.page1)
+        self.link_close.setObjectName(u"link_close")
+        self.link_close.setGeometry(QRect(220, 60, 101, 41))
+        self.link_close.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"                QPushButton:hover {\n"
+"                    background-color: rgb(200, 80, 80);\n"
+"                }")
+        self.link_open = QPushButton(self.page1)
+        self.link_open.setObjectName(u"link_open")
+        self.link_open.setGeometry(QRect(220, 60, 101, 41))
+        self.link_open.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(80, 200, 80);\n"
+"}")
         self.stackedWidget.addWidget(self.page1)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
@@ -434,11 +587,6 @@ class Ui_MainWindow(object):
         self.auto_linkname_box.setObjectName(u"auto_linkname_box")
         self.auto_linkname_box.setGeometry(QRect(560, 90, 51, 22))
         self.auto_linkname_box.setMaximum(20)
-        self.auto_bandwidth_up = QSpinBox(self.page_2)
-        self.auto_bandwidth_up.setObjectName(u"auto_bandwidth_up")
-        self.auto_bandwidth_up.setGeometry(QRect(450, 215, 71, 22))
-        self.auto_bandwidth_up.setMaximum(1000000)
-        self.auto_bandwidth_up.setValue(10)
         self.line_7 = QFrame(self.page_2)
         self.line_7.setObjectName(u"line_7")
         self.line_7.setGeometry(QRect(10, 120, 601, 20))
@@ -534,6 +682,56 @@ class Ui_MainWindow(object):
         self.auto_bandwidth_down.setGeometry(QRect(540, 215, 71, 22))
         self.auto_bandwidth_down.setMaximum(1000000)
         self.auto_bandwidth_down.setValue(10)
+        self.line_12 = QFrame(self.page_2)
+        self.line_12.setObjectName(u"line_12")
+        self.line_12.setGeometry(QRect(10, 350, 601, 20))
+        self.line_12.setFrameShape(QFrame.HLine)
+        self.line_12.setFrameShadow(QFrame.Sunken)
+        self.label_26 = QLabel(self.page_2)
+        self.label_26.setObjectName(u"label_26")
+        self.label_26.setGeometry(QRect(10, 360, 161, 31))
+        self.label_26.setFont(font4)
+        self.link_protocol = QComboBox(self.page_2)
+        self.link_protocol.addItem("")
+        self.link_protocol.addItem("")
+        self.link_protocol.addItem("")
+        self.link_protocol.setObjectName(u"link_protocol")
+        self.link_protocol.setGeometry(QRect(540, 360, 69, 22))
+        self.label_27 = QLabel(self.page_2)
+        self.label_27.setObjectName(u"label_27")
+        self.label_27.setGeometry(QRect(20, 390, 161, 31))
+        self.label_27.setFont(font5)
+        self.mux_set = QCheckBox(self.page_2)
+        self.mux_set.setObjectName(u"mux_set")
+        self.mux_set.setGeometry(QRect(560, 390, 52, 24))
+        self.mux_set.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
@@ -639,30 +837,50 @@ class Ui_MainWindow(object):
         self.window_close.setObjectName(u"window_close")
         self.window_close.setGeometry(QRect(290, 0, 50, 25))
         self.window_close.setContextMenuPolicy(Qt.NoContextMenu)
+        self.window_close.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 180);\n"
+"                }")
         self.window_mini = QPushButton(self.widget_3)
         self.window_mini.setObjectName(u"window_mini")
         self.window_mini.setGeometry(QRect(240, 0, 50, 25))
         font9 = QFont()
         font9.setPointSize(9)
         self.window_mini.setFont(font9)
-        self.net_updata = QLabel(self.widget_3)
-        self.net_updata.setObjectName(u"net_updata")
-        self.net_updata.setGeometry(QRect(20, 0, 101, 20))
-        self.net_downdata = QLabel(self.widget_3)
-        self.net_downdata.setObjectName(u"net_downdata")
-        self.net_downdata.setGeometry(QRect(130, 0, 101, 20))
+        self.window_mini.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 180);\n"
+"                }")
         self.window_mini.raise_()
         self.window_close.raise_()
-        self.net_updata.raise_()
-        self.net_downdata.raise_()
         self.page_main = QPushButton(self.centralwidget)
         self.page_main.setObjectName(u"page_main")
         self.page_main.setGeometry(QRect(0, 70, 131, 41))
         self.page_main.setFont(font6)
+        self.page_main.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.page_server = QPushButton(self.centralwidget)
         self.page_server.setObjectName(u"page_server")
         self.page_server.setGeometry(QRect(0, 110, 131, 41))
         self.page_server.setFont(font6)
+        self.page_server.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.version = QLabel(self.centralwidget)
         self.version.setObjectName(u"version")
         self.version.setGeometry(QRect(80, 40, 51, 16))
@@ -670,14 +888,21 @@ class Ui_MainWindow(object):
         self.page_other.setObjectName(u"page_other")
         self.page_other.setGeometry(QRect(0, 190, 131, 41))
         self.page_other.setFont(font6)
+        self.page_other.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"}")
         self.label_12 = QLabel(self.centralwidget)
         self.label_12.setObjectName(u"label_12")
         self.label_12.setGeometry(QRect(8, 10, 73, 51))
-        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
-        self.label_12.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy1)
         font10 = QFont()
         font10.setPointSize(26)
         font10.setBold(True)
@@ -688,10 +913,24 @@ class Ui_MainWindow(object):
         self.page_link.setObjectName(u"page_link")
         self.page_link.setGeometry(QRect(0, 150, 131, 41))
         self.page_link.setFont(font6)
+        self.page_link.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.page_tags = QPushButton(self.centralwidget)
         self.page_tags.setObjectName(u"page_tags")
         self.page_tags.setGeometry(QRect(0, 230, 131, 41))
         self.page_tags.setFont(font6)
+        self.page_tags.setStyleSheet(u"QPushButton {\n"
+"                    background-color: transparent;\n"
+"                    border-radius: 0px;\n"
+"                }\n"
+"QPushButton:hover {\n"
+"                    background-color: rgb(130, 130, 130);\n"
+"                }")
         self.updata_tag = QPushButton(self.centralwidget)
         self.updata_tag.setObjectName(u"updata_tag")
         self.updata_tag.setEnabled(True)
@@ -730,7 +969,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -742,6 +981,62 @@ class Ui_MainWindow(object):
         self.main_start.setText("")
         self.main_clear.setText("")
         self.main_stop.setText("")
+        self.net_updata.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> - ms</p></body></html>", None))
+        self.net_downdata.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> - mbps</p></body></html>", None))
+        self.net_downdata_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 Byte</p></body></html>", None))
+        self.net_updata_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0 Byte</p></body></html>", None))
+        self.net_updata_str.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u7f51\u7edc</p></body></html>", None))
+        self.net_downdata_str.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u6d41\u91cf</p></body></html>", None))
+        self.net_updata_str_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u901a\u8baf</p></body></html>", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u5730\u5740", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u5730\u5740", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668\u7aef\u53e3", None))
@@ -773,6 +1068,8 @@ class Ui_MainWindow(object):
         self.link_create.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa", None))
         self.link_delete.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
         self.link_modify.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u8f91", None))
+        self.link_close.setText(QCoreApplication.translate("MainWindow", u"\u5173\u95ed\u94fe\u63a5", None))
+        self.link_open.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u542f\u94fe\u63a5", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u5176\u4ed6\u914d\u7f6e", None))
         self.auto_address.setText("")
         self.auto_linkname.setText("")
@@ -786,6 +1083,13 @@ class Ui_MainWindow(object):
         self.auto_mini.setText("")
         self.auto_updata.setText("")
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"\u542f\u52a8\u65f6\u68c0\u67e5\u66f4\u65b0", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"\u94fe\u63a5\u65b9\u5f0f", None))
+        self.link_protocol.setItemText(0, QCoreApplication.translate("MainWindow", u"\u9ed8\u8ba4", None))
+        self.link_protocol.setItemText(1, QCoreApplication.translate("MainWindow", u"KCP", None))
+        self.link_protocol.setItemText(2, QCoreApplication.translate("MainWindow", u"QUIC", None))
+
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"\u805a\u5408\u7aef\u53e3", None))
+        self.mux_set.setText("")
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.check_updata.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.tags_version.setText(QCoreApplication.translate("MainWindow", u"self.tags.version", None))
@@ -799,8 +1103,6 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"\u4f5c\u8005", None))
         self.window_close.setText("")
         self.window_mini.setText("")
-        self.net_updata.setText(QCoreApplication.translate("MainWindow", u"\u2191 - mbps", None))
-        self.net_downdata.setText(QCoreApplication.translate("MainWindow", u"\u2193 - mbps", None))
         self.page_main.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.page_server.setText(QCoreApplication.translate("MainWindow", u"\u670d\u52a1\u5668", None))
         self.version.setText(QCoreApplication.translate("MainWindow", u"0.0.0", None))
