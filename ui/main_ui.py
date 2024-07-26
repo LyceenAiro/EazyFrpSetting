@@ -586,7 +586,7 @@ class Ui_MainWindow(object):
         self.label_17.setFont(font5)
         self.auto_linkname_box = QSpinBox(self.page_2)
         self.auto_linkname_box.setObjectName(u"auto_linkname_box")
-        self.auto_linkname_box.setGeometry(QRect(547, 90, 61, 22))
+        self.auto_linkname_box.setGeometry(QRect(520, 90, 88, 22))
         self.auto_linkname_box.setMaximum(20)
         self.line_7 = QFrame(self.page_2)
         self.line_7.setObjectName(u"line_7")
