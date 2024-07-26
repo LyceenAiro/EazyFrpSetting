@@ -1,5 +1,5 @@
-pyside6==6.5.0
-qdarkstyle==3.1
+pyside6==6.7.2
+qdarkstyle==3.2.3
 requests==2.32.3
 toml==0.10.2
 ping3==4.0.4

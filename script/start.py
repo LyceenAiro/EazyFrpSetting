@@ -44,7 +44,22 @@ class FrpClient(QThread):
         self._process = subprocess.Popen(['frpc', '-c', 'data/frpc.toml'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=startupinfo)
         self.bandwidth_pid.emit(self._process.pid)
         for line in self._process.stdout:
-            self.log_message.emit(line.decode('utf-8').strip())
+            frp_result = line.decode("utf-8").strip()\
+                .replace("start frpc service for config file [data/frpc.toml]", "正在读取frpc.toml配置文件...")\
+                .replace("try to connect to server...", "正在连接到服务器...")\
+                .replace("login to server success, get run id", "成功登录服务器, 获取连接ID")\
+                .replace("proxy added: ", "添加了链接: ")\
+                .replace("incoming a new work connection for udp proxy", "为udp代理传入新的工作连接")\
+                .replace("start proxy success", "链接开启成功")\
+                .replace("start error: proxy", "链接开启失败")\
+                .replace("] already exists", "] 链接名称已被占用")\
+                .replace("start error: port not allowed", "链接开启失败, 目的端口无权限连接")\
+                .replace("start error: port already used", "链接开启失败, 目的端口已经被占用")\
+                .replace("i/o timeout. With loginFailExit enabled, no additional retries will be attempted", "连接服务器超时, 请检查网络或服务器设置")\
+                .replace("connect to server error", "连接服务器失败")\
+                .replace("no such host", "服务器定向失败, 请检查网络后重试")\
+                .replace("token in login doesn't match token from configuration", "登录服务器失败, token密钥不正确")
+            self.log_message.emit(frp_result)
             self.log_message.emit("\n")
         self.finished.emit()
 
