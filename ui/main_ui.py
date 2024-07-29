@@ -733,6 +733,46 @@ class Ui_MainWindow(object):
 "	background-color: #2196F3;\n"
 "}\n"
 "")
+        self.line_13 = QFrame(self.page_2)
+        self.line_13.setObjectName(u"line_13")
+        self.line_13.setGeometry(QRect(10, 420, 601, 20))
+        self.line_13.setFrameShape(QFrame.Shape.HLine)
+        self.line_13.setFrameShadow(QFrame.Shadow.Sunken)
+        self.label_28 = QLabel(self.page_2)
+        self.label_28.setObjectName(u"label_28")
+        self.label_28.setGeometry(QRect(10, 430, 251, 31))
+        self.label_28.setFont(font4)
+        self.log_translate = QCheckBox(self.page_2)
+        self.log_translate.setObjectName(u"log_translate")
+        self.log_translate.setGeometry(QRect(560, 430, 52, 24))
+        self.log_translate.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
@@ -1091,6 +1131,8 @@ class Ui_MainWindow(object):
 
         self.label_27.setText(QCoreApplication.translate("MainWindow", u"\u805a\u5408\u7aef\u53e3", None))
         self.mux_set.setText("")
+        self.label_28.setText(QCoreApplication.translate("MainWindow", u"\u7ffb\u8bd1FRP\u65e5\u5fd7\uff08\u91cd\u542f\u751f\u6548\uff09", None))
+        self.log_translate.setText("")
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.check_updata.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.tags_version.setText(QCoreApplication.translate("MainWindow", u"self.tags.version", None))

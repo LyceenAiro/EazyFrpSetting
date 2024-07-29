@@ -43,13 +43,15 @@ class MainWindow(QMainWindow):
         self.UIinit()
 
         # 初始化线程应用
-        self.bandFrp()
         self.bandCheckupdata()
         self.bandPing()
         self.bandwidth()
 
         # 数据读取
         self.datainit()
+
+        # 绑定Frp进程
+        self.bandFrp()
  
         # 绑定动作
         self.band()
@@ -101,6 +103,7 @@ class MainWindow(QMainWindow):
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
         self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
         self.ui.link_protocol.currentIndexChanged.connect(self.save_other_data)
+        self.ui.log_translate.stateChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -120,7 +123,7 @@ class MainWindow(QMainWindow):
     
     def bandFrp(self):
         # 绑定Frp客户端独立运行的subprocess信号
-        self._frp_client = FrpClient()
+        self._frp_client = FrpClient(self.log_translate)
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
@@ -764,6 +767,14 @@ class MainWindow(QMainWindow):
             link["common"]["mux_set"] = "False"
             self.mux_set = False
 
+        # 日志翻译
+        if self.ui.log_translate.isChecked():
+            link["common"]["log_translate"] = "True"
+            self.log_translate = True
+        else:
+            link["common"]["log_translate"] = "False"
+            self.log_translate = False
+
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -782,6 +793,7 @@ class MainWindow(QMainWindow):
             self.auto_updata = link.getboolean("common", "auto_updata")
             self.link_protocol = link["common"]["link_protocol"]
             self.mux_set = link.getboolean("common", "mux_set")
+            self.log_translate = link.getboolean("common", "log_translate")
 
         if not os.path.exists("./data/more.ini"):
             self.default_other_data()
@@ -807,6 +819,8 @@ class MainWindow(QMainWindow):
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)
         self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
+
+        self.ui.log_translate.setChecked(self.log_translate)
     
     def default_other_data(self):
         # more.ini缺省值
@@ -821,6 +835,7 @@ class MainWindow(QMainWindow):
         link["common"]["auto_updata"] = "True"
         link["common"]["link_protocol"] = "0"
         link["common"]["mux_set"] = "True"
+        link["common"]["log_translate"] = "False"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
