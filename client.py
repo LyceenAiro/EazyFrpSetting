@@ -43,13 +43,15 @@ class MainWindow(QMainWindow):
         self.UIinit()
 
         # 初始化线程应用
-        self.bandFrp()
         self.bandCheckupdata()
         self.bandPing()
         self.bandwidth()
 
         # 数据读取
         self.datainit()
+
+        # 绑定Frp进程
+        self.bandFrp()
  
         # 绑定动作
         self.band()
@@ -101,6 +103,7 @@ class MainWindow(QMainWindow):
         self.ui.auto_linkname_box.valueChanged.connect(self.save_other_data)
         self.ui.auto_bandwidth_down.valueChanged.connect(self.save_other_data)
         self.ui.link_protocol.currentIndexChanged.connect(self.save_other_data)
+        self.ui.log_translate.stateChanged.connect(self.save_other_data)
 
         # tags
         self.ui.check_updata.clicked.connect(self.check_updata_start)
@@ -120,7 +123,7 @@ class MainWindow(QMainWindow):
     
     def bandFrp(self):
         # 绑定Frp客户端独立运行的subprocess信号
-        self._frp_client = FrpClient()
+        self._frp_client = FrpClient(self.log_translate)
         self._frp_client.log_message.connect(self.on_log_message)
         self._frp_client.started.connect(self.on_frp_started)
         self._frp_client.finished.connect(self.on_frp_finished)
@@ -516,10 +519,10 @@ class MainWindow(QMainWindow):
         self.ui.nofrpc_tag.hide()
         if not os.path.exists("frpc.exe"):
             self.ui.nofrpc_tag.show()
-            self.ui.main_log.insertPlainText("frpc.exe is missing.\n")
+            self.ui.main_log.insertPlainText("未找到frpc.exe, 请确认frpc.exe和软件在同一目录\n")
             return
         if self.checkfile() == False:
-            self.ui.main_log.insertPlainText("necessary settings are still missing.\n")
+            self.ui.main_log.insertPlainText("必要的配置还未填写, 无法开启服务\n")
             return
         self.frpcData_save()
         self._frp_client.start()
@@ -610,7 +613,7 @@ class MainWindow(QMainWindow):
                         os.path.getmtime("./data/frpc.toml") > os.path.getmtime("./data/link.toml")]
             if all(datadiff):
                 return
-        self.ui.main_log.insertPlainText("frpc.toml is compile now...\n")
+        self.ui.main_log.insertPlainText("配置文件正在编译...\n")
         if self.mux_set:
             frpc = 'tcpMux = true\n'
         else:
@@ -689,11 +692,9 @@ class MainWindow(QMainWindow):
                         self.ui.linktable.setItem(row, col, item)
                     row_items = [self.ui.linktable.item(row, u) for u in range(self.rows)]
                     if status == "开启":
-                        for item in row_items:
-                            item.setBackground(QColor(100, 150, 100))
+                        row_items[0].setBackground(QColor(100, 150, 100))
                     else:
-                        for item in row_items:
-                            item.setBackground(QColor(0, 0, 0, 0))
+                        row_items[0].setBackground(QColor(200, 100, 100))
                     row += 1
         except:
             tableerror()
@@ -766,6 +767,14 @@ class MainWindow(QMainWindow):
             link["common"]["mux_set"] = "False"
             self.mux_set = False
 
+        # 日志翻译
+        if self.ui.log_translate.isChecked():
+            link["common"]["log_translate"] = "True"
+            self.log_translate = True
+        else:
+            link["common"]["log_translate"] = "False"
+            self.log_translate = False
+
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -784,6 +793,7 @@ class MainWindow(QMainWindow):
             self.auto_updata = link.getboolean("common", "auto_updata")
             self.link_protocol = link["common"]["link_protocol"]
             self.mux_set = link.getboolean("common", "mux_set")
+            self.log_translate = link.getboolean("common", "log_translate")
 
         if not os.path.exists("./data/more.ini"):
             self.default_other_data()
@@ -809,6 +819,8 @@ class MainWindow(QMainWindow):
 
         self.ui.auto_linkname_box.setReadOnly(not self.auto_linkname)
         self.ui.auto_bandwidth_down.setReadOnly(not self.auto_bandwidth)
+
+        self.ui.log_translate.setChecked(self.log_translate)
     
     def default_other_data(self):
         # more.ini缺省值
@@ -823,6 +835,7 @@ class MainWindow(QMainWindow):
         link["common"]["auto_updata"] = "True"
         link["common"]["link_protocol"] = "0"
         link["common"]["mux_set"] = "True"
+        link["common"]["log_translate"] = "False"
         with open("./data/more.ini", "w", encoding="utf-8") as configfile:
             link.write(configfile)
 
@@ -915,7 +928,7 @@ class MainWindow(QMainWindow):
         if not os.path.exists("frpc.exe"):
             self.ui.nofrpc_tag.show()
             return
-        self.ui.main_log.insertPlainText("frp client started.\n")
+        self.ui.main_log.insertPlainText("frp服务已开启\n")
         self.ui.main_start.setEnabled(False)
         self.ui.main_stop.setEnabled(True)
         self.push_a_action.setEnabled(False)
@@ -937,7 +950,7 @@ class MainWindow(QMainWindow):
         self.ui.net_downdata.setText("- mbps")
         self.push_a_action.setEnabled(True)
         self.push_b_action.setEnabled(False)
-        self.ui.main_log.insertPlainText("frp client stopped.\n")
+        self.ui.main_log.insertPlainText("frp服务已关闭\n")
         self.setstarthigh()
         self.bandFrp()
 
@@ -1011,8 +1024,7 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("关闭"))
             self.save_table_data()
             row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
-            for item in row_items:
-                item.setBackground(QColor(0, 0, 0, 0))
+            row_items[0].setBackground(QColor(200, 100, 100))
         self.ui.link_close.hide()
         self.ui.link_open.show()
 
@@ -1023,8 +1035,7 @@ class MainWindow(QMainWindow):
             self.ui.linktable.setItem(selected_row, 7, QTableWidgetItem("开启"))
             self.save_table_data()
             row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
-            for item in row_items:
-                item.setBackground(QColor(100, 150, 100))
+            row_items[0].setBackground(QColor(100, 150, 100))
         self.ui.link_close.show()
         self.ui.link_open.hide()
 
@@ -1219,11 +1230,9 @@ class MainWindow(QMainWindow):
         status = edit8.currentText()
         row_items = [self.ui.linktable.item(selected_row, i) for i in range(self.rows)]
         if status == "开启":
-            for item in row_items:
-                item.setBackground(QColor(100, 150, 100))
+            row_items[0].setBackground(QColor(100, 150, 100))
         else:
-            for item in row_items:
-                item.setBackground(QColor(0, 0, 0, 0))
+            row_items[0].setBackground(QColor(200, 100, 100))
  
     def on_add_button_clicked(self):
         # 当添加按钮被触发时弹出窗口
@@ -1374,11 +1383,9 @@ class MainWindow(QMainWindow):
         status = edit8.currentText()
         row_items = [self.ui.linktable.item(self.ui.linktable.rowCount() - 1, i) for i in range(self.rows)]
         if status == "开启":
-            for item in row_items:
-                item.setBackground(QColor(100, 150, 100))
+            row_items[0].setBackground(QColor(100, 150, 100))
         else:
-            for item in row_items:
-                item.setBackground(QColor(0, 0, 0, 0))
+            row_items[0].setBackground(QColor(200, 100, 100))
 
     def on_delete_button_clicked(self):
         # 当删除按钮触发时删除选中行

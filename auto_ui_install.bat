@@ -1,4 +1,5 @@
 @rem 这是一个自动化编译的脚本，自动编译最新的main.ui文件.version-230606
+@rem BUG - 编译后main_ui的import main_rc需要手动修改为import ui.main_rc
 @echo off
 
 set "file1=.\ui\main.ui" > nul

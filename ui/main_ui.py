@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QHeaderView, QLabel, QLineEdit, QMainWindow,
     QPushButton, QSizePolicy, QSpinBox, QStackedWidget,
     QTableWidget, QTableWidgetItem, QTextEdit, QWidget)
-from . import main_rc
+import ui.main_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -34,22 +34,22 @@ class Ui_MainWindow(object):
         self.line = QFrame(self.centralwidget)
         self.line.setObjectName(u"line")
         self.line.setGeometry(QRect(140, 10, 20, 481))
-        self.line.setFrameShape(QFrame.VLine)
-        self.line.setFrameShadow(QFrame.Sunken)
+        self.line.setFrameShape(QFrame.Shape.VLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
         self.stackedWidget = QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setGeometry(QRect(160, 10, 631, 481))
         self.stackedWidget.setMouseTracking(False)
-        self.stackedWidget.setContextMenuPolicy(Qt.NoContextMenu)
-        self.stackedWidget.setLayoutDirection(Qt.LeftToRight)
+        self.stackedWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self.stackedWidget.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.stackedWidget.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
         self.line_5 = QFrame(self.page)
         self.line_5.setObjectName(u"line_5")
         self.line_5.setGeometry(QRect(0, 40, 631, 16))
-        self.line_5.setFrameShape(QFrame.HLine)
-        self.line_5.setFrameShadow(QFrame.Sunken)
+        self.line_5.setFrameShape(QFrame.Shape.HLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_10 = QLabel(self.page)
         self.label_10.setObjectName(u"label_10")
         self.label_10.setGeometry(QRect(0, 0, 431, 31))
@@ -103,83 +103,83 @@ class Ui_MainWindow(object):
         self.net_updata = QTextEdit(self.page)
         self.net_updata.setObjectName(u"net_updata")
         self.net_updata.setGeometry(QRect(60, 450, 81, 24))
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.net_updata.sizePolicy().hasHeightForWidth())
         self.net_updata.setSizePolicy(sizePolicy)
-        self.net_updata.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_updata.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_updata.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_downdata = QTextEdit(self.page)
         self.net_downdata.setObjectName(u"net_downdata")
         self.net_downdata.setGeometry(QRect(370, 450, 121, 24))
         sizePolicy.setHeightForWidth(self.net_downdata.sizePolicy().hasHeightForWidth())
         self.net_downdata.setSizePolicy(sizePolicy)
-        self.net_downdata.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_downdata.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_downdata.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_downdata_2 = QTextEdit(self.page)
         self.net_downdata_2.setObjectName(u"net_downdata_2")
         self.net_downdata_2.setGeometry(QRect(490, 450, 131, 24))
         sizePolicy.setHeightForWidth(self.net_downdata_2.sizePolicy().hasHeightForWidth())
         self.net_downdata_2.setSizePolicy(sizePolicy)
-        self.net_downdata_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata_2.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_downdata_2.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_downdata_2.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata_2.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_updata_2 = QTextEdit(self.page)
         self.net_updata_2.setObjectName(u"net_updata_2")
         self.net_updata_2.setGeometry(QRect(200, 450, 111, 24))
         sizePolicy.setHeightForWidth(self.net_updata_2.sizePolicy().hasHeightForWidth())
         self.net_updata_2.setSizePolicy(sizePolicy)
-        self.net_updata_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_2.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_updata_2.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_updata_2.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_2.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_updata_str = QTextEdit(self.page)
         self.net_updata_str.setObjectName(u"net_updata_str")
         self.net_updata_str.setGeometry(QRect(0, 450, 61, 24))
         sizePolicy.setHeightForWidth(self.net_updata_str.sizePolicy().hasHeightForWidth())
         self.net_updata_str.setSizePolicy(sizePolicy)
-        self.net_updata_str.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_str.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_updata_str.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_updata_str.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_str.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_downdata_str = QTextEdit(self.page)
         self.net_downdata_str.setObjectName(u"net_downdata_str")
         self.net_downdata_str.setGeometry(QRect(310, 450, 61, 24))
         sizePolicy.setHeightForWidth(self.net_downdata_str.sizePolicy().hasHeightForWidth())
         self.net_downdata_str.setSizePolicy(sizePolicy)
-        self.net_downdata_str.setLayoutDirection(Qt.LeftToRight)
+        self.net_downdata_str.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_downdata_str.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_downdata_str.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_downdata_str.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.net_updata_str_2 = QTextEdit(self.page)
         self.net_updata_str_2.setObjectName(u"net_updata_str_2")
         self.net_updata_str_2.setGeometry(QRect(140, 450, 61, 24))
         sizePolicy.setHeightForWidth(self.net_updata_str_2.sizePolicy().hasHeightForWidth())
         self.net_updata_str_2.setSizePolicy(sizePolicy)
-        self.net_updata_str_2.setLayoutDirection(Qt.LeftToRight)
+        self.net_updata_str_2.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.net_updata_str_2.setStyleSheet(u"QTextEdit {\n"
 "		border-radius: 0px;\n"
 "		border-color: rgb(60, 60, 80);\n"
 "}")
-        self.net_updata_str_2.setLineWrapMode(QTextEdit.NoWrap)
+        self.net_updata_str_2.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         self.stackedWidget.addWidget(self.page)
         self.main_log.raise_()
         self.line_5.raise_()
@@ -199,8 +199,8 @@ class Ui_MainWindow(object):
         self.line_4 = QFrame(self.page0)
         self.line_4.setObjectName(u"line_4")
         self.line_4.setGeometry(QRect(0, 40, 641, 16))
-        self.line_4.setFrameShape(QFrame.HLine)
-        self.line_4.setFrameShadow(QFrame.Sunken)
+        self.line_4.setFrameShape(QFrame.Shape.HLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_4 = QLabel(self.page0)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(0, 0, 431, 31))
@@ -342,7 +342,7 @@ class Ui_MainWindow(object):
         font3.setPointSize(11)
         font3.setBold(True)
         self.label_25.setFont(font3)
-        self.label_25.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.label_25.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.label_25.setWordWrap(False)
         self.server_service = QLabel(self.page0)
         self.server_service.setObjectName(u"server_service")
@@ -354,7 +354,7 @@ class Ui_MainWindow(object):
         self.server_ping = QLabel(self.page0)
         self.server_ping.setObjectName(u"server_ping")
         self.server_ping.setGeometry(QRect(50, 300, 71, 20))
-        self.server_ping.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.server_ping.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.server_check = QPushButton(self.page0)
         self.server_check.setObjectName(u"server_check")
         self.server_check.setGeometry(QRect(540, 295, 61, 31))
@@ -375,7 +375,7 @@ class Ui_MainWindow(object):
         self.server_ping_2 = QLabel(self.page0)
         self.server_ping_2.setObjectName(u"server_ping_2")
         self.server_ping_2.setGeometry(QRect(150, 300, 71, 20))
-        self.server_ping_2.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.server_ping_2.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.token_service = QLabel(self.page0)
         self.token_service.setObjectName(u"token_service")
         self.token_service.setGeometry(QRect(240, 305, 14, 14))
@@ -386,15 +386,15 @@ class Ui_MainWindow(object):
         self.login_ping_3 = QLabel(self.page0)
         self.login_ping_3.setObjectName(u"login_ping_3")
         self.login_ping_3.setGeometry(QRect(270, 300, 71, 20))
-        self.login_ping_3.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.login_ping_3.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.stackedWidget.addWidget(self.page0)
         self.page1 = QWidget()
         self.page1.setObjectName(u"page1")
         self.line_3 = QFrame(self.page1)
         self.line_3.setObjectName(u"line_3")
         self.line_3.setGeometry(QRect(0, 40, 641, 16))
-        self.line_3.setFrameShape(QFrame.HLine)
-        self.line_3.setFrameShadow(QFrame.Sunken)
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_5 = QLabel(self.page1)
         self.label_5.setObjectName(u"label_5")
         self.label_5.setGeometry(QRect(0, 0, 431, 31))
@@ -432,6 +432,7 @@ class Ui_MainWindow(object):
         self.linktable = QTableWidget(self.page1)
         self.linktable.setObjectName(u"linktable")
         self.linktable.setGeometry(QRect(0, 100, 621, 371))
+        self.linktable.setStyleSheet(u"")
         self.link_close = QPushButton(self.page1)
         self.link_close.setObjectName(u"link_close")
         self.link_close.setGeometry(QRect(220, 60, 101, 41))
@@ -458,8 +459,8 @@ class Ui_MainWindow(object):
         self.line_6 = QFrame(self.page_2)
         self.line_6.setObjectName(u"line_6")
         self.line_6.setGeometry(QRect(0, 40, 641, 16))
-        self.line_6.setFrameShape(QFrame.HLine)
-        self.line_6.setFrameShadow(QFrame.Sunken)
+        self.line_6.setFrameShape(QFrame.Shape.HLine)
+        self.line_6.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_11 = QLabel(self.page_2)
         self.label_11.setObjectName(u"label_11")
         self.label_11.setGeometry(QRect(0, 0, 431, 31))
@@ -585,18 +586,18 @@ class Ui_MainWindow(object):
         self.label_17.setFont(font5)
         self.auto_linkname_box = QSpinBox(self.page_2)
         self.auto_linkname_box.setObjectName(u"auto_linkname_box")
-        self.auto_linkname_box.setGeometry(QRect(560, 90, 51, 22))
+        self.auto_linkname_box.setGeometry(QRect(520, 90, 88, 22))
         self.auto_linkname_box.setMaximum(20)
         self.line_7 = QFrame(self.page_2)
         self.line_7.setObjectName(u"line_7")
         self.line_7.setGeometry(QRect(10, 120, 601, 20))
-        self.line_7.setFrameShape(QFrame.HLine)
-        self.line_7.setFrameShadow(QFrame.Sunken)
+        self.line_7.setFrameShape(QFrame.Shape.HLine)
+        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
         self.line_8 = QFrame(self.page_2)
         self.line_8.setObjectName(u"line_8")
         self.line_8.setGeometry(QRect(10, 170, 601, 20))
-        self.line_8.setFrameShape(QFrame.HLine)
-        self.line_8.setFrameShadow(QFrame.Sunken)
+        self.line_8.setFrameShape(QFrame.Shape.HLine)
+        self.line_8.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_18 = QLabel(self.page_2)
         self.label_18.setObjectName(u"label_18")
         self.label_18.setGeometry(QRect(10, 260, 161, 31))
@@ -604,8 +605,8 @@ class Ui_MainWindow(object):
         self.line_9 = QFrame(self.page_2)
         self.line_9.setObjectName(u"line_9")
         self.line_9.setGeometry(QRect(10, 250, 601, 20))
-        self.line_9.setFrameShape(QFrame.HLine)
-        self.line_9.setFrameShadow(QFrame.Sunken)
+        self.line_9.setFrameShape(QFrame.Shape.HLine)
+        self.line_9.setFrameShadow(QFrame.Shadow.Sunken)
         self.auto_mini = QCheckBox(self.page_2)
         self.auto_mini.setObjectName(u"auto_mini")
         self.auto_mini.setGeometry(QRect(560, 260, 52, 24))
@@ -675,18 +676,18 @@ class Ui_MainWindow(object):
         self.line_10 = QFrame(self.page_2)
         self.line_10.setObjectName(u"line_10")
         self.line_10.setGeometry(QRect(10, 300, 601, 20))
-        self.line_10.setFrameShape(QFrame.HLine)
-        self.line_10.setFrameShadow(QFrame.Sunken)
+        self.line_10.setFrameShape(QFrame.Shape.HLine)
+        self.line_10.setFrameShadow(QFrame.Shadow.Sunken)
         self.auto_bandwidth_down = QSpinBox(self.page_2)
         self.auto_bandwidth_down.setObjectName(u"auto_bandwidth_down")
-        self.auto_bandwidth_down.setGeometry(QRect(540, 215, 71, 22))
+        self.auto_bandwidth_down.setGeometry(QRect(520, 220, 88, 22))
         self.auto_bandwidth_down.setMaximum(1000000)
         self.auto_bandwidth_down.setValue(10)
         self.line_12 = QFrame(self.page_2)
         self.line_12.setObjectName(u"line_12")
         self.line_12.setGeometry(QRect(10, 350, 601, 20))
-        self.line_12.setFrameShape(QFrame.HLine)
-        self.line_12.setFrameShadow(QFrame.Sunken)
+        self.line_12.setFrameShape(QFrame.Shape.HLine)
+        self.line_12.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_26 = QLabel(self.page_2)
         self.label_26.setObjectName(u"label_26")
         self.label_26.setGeometry(QRect(10, 360, 161, 31))
@@ -732,14 +733,54 @@ class Ui_MainWindow(object):
 "	background-color: #2196F3;\n"
 "}\n"
 "")
+        self.line_13 = QFrame(self.page_2)
+        self.line_13.setObjectName(u"line_13")
+        self.line_13.setGeometry(QRect(10, 420, 601, 20))
+        self.line_13.setFrameShape(QFrame.Shape.HLine)
+        self.line_13.setFrameShadow(QFrame.Shadow.Sunken)
+        self.label_28 = QLabel(self.page_2)
+        self.label_28.setObjectName(u"label_28")
+        self.label_28.setGeometry(QRect(10, 430, 251, 31))
+        self.label_28.setFont(font4)
+        self.log_translate = QCheckBox(self.page_2)
+        self.log_translate.setObjectName(u"log_translate")
+        self.log_translate.setGeometry(QRect(560, 430, 52, 24))
+        self.log_translate.setStyleSheet(u"QCheckBox {\n"
+"    background-color: #2c2c2c;\n"
+"    border-radius: 3px;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::checked {\n"
+"    background-color: #4cd964;\n"
+"	border-radius: 3px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::checked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #ffffff;\n"
+"	position: relative;\n"
+"	left: 25px;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator::unchecked { \n"
+"	image: None;\n"
+"	width: 20px; height: 20px;\n"
+"	border-radius: 2px;\n"
+"	background-color: #2196F3;\n"
+"}\n"
+"")
         self.stackedWidget.addWidget(self.page_2)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
         self.line_2 = QFrame(self.page2)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setGeometry(QRect(0, 40, 641, 16))
-        self.line_2.setFrameShape(QFrame.HLine)
-        self.line_2.setFrameShadow(QFrame.Sunken)
+        self.line_2.setFrameShape(QFrame.Shape.HLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
         self.label_6 = QLabel(self.page2)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setGeometry(QRect(0, 0, 431, 31))
@@ -814,8 +855,8 @@ class Ui_MainWindow(object):
         self.line_11 = QFrame(self.page2)
         self.line_11.setObjectName(u"line_11")
         self.line_11.setGeometry(QRect(0, 190, 641, 16))
-        self.line_11.setFrameShape(QFrame.HLine)
-        self.line_11.setFrameShadow(QFrame.Sunken)
+        self.line_11.setFrameShape(QFrame.Shape.HLine)
+        self.line_11.setFrameShadow(QFrame.Shadow.Sunken)
         self.stackedWidget.addWidget(self.page2)
         self.line_2.raise_()
         self.label_6.raise_()
@@ -836,7 +877,7 @@ class Ui_MainWindow(object):
         self.window_close = QPushButton(self.widget_3)
         self.window_close.setObjectName(u"window_close")
         self.window_close.setGeometry(QRect(290, 0, 50, 25))
-        self.window_close.setContextMenuPolicy(Qt.NoContextMenu)
+        self.window_close.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.window_close.setStyleSheet(u"QPushButton {\n"
 "                    background-color: transparent;\n"
 "                    border-radius: 0px;\n"
@@ -898,7 +939,7 @@ class Ui_MainWindow(object):
         self.label_12 = QLabel(self.centralwidget)
         self.label_12.setObjectName(u"label_12")
         self.label_12.setGeometry(QRect(8, 10, 73, 51))
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
@@ -907,7 +948,7 @@ class Ui_MainWindow(object):
         font10.setPointSize(26)
         font10.setBold(True)
         self.label_12.setFont(font10)
-        self.label_12.setTextFormat(Qt.PlainText)
+        self.label_12.setTextFormat(Qt.TextFormat.PlainText)
         self.label_12.setWordWrap(False)
         self.page_link = QPushButton(self.centralwidget)
         self.page_link.setObjectName(u"page_link")
@@ -1090,6 +1131,8 @@ class Ui_MainWindow(object):
 
         self.label_27.setText(QCoreApplication.translate("MainWindow", u"\u805a\u5408\u7aef\u53e3", None))
         self.mux_set.setText("")
+        self.label_28.setText(QCoreApplication.translate("MainWindow", u"\u7ffb\u8bd1FRP\u65e5\u5fd7\uff08\u91cd\u542f\u751f\u6548\uff09", None))
+        self.log_translate.setText("")
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.check_updata.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.tags_version.setText(QCoreApplication.translate("MainWindow", u"self.tags.version", None))
